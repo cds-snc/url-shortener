@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% set active_page = "index" %}
+
+{% block title %}URL Shortener {% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+
+
+
+<div class="container">
+{% block header %}{% endblock %}
+</div>
+
+{% block page_content %}
+<div class="container">
+<h1>Welcome to the URL Shortener</h1>
+<br><br><br>
+    <form action="/gui_shorten" method="post">
+  <div class="form-group">
+    <label for="OriginalUrl">{{ data.label }}</label>
+    <br>
+    <input class="form-control form-control-lg" type="text" id="original_url" name="original_url"  value="{{ data.url }}" placeholder="Enter url">
+  </div>
+    <button type="submit" class="btn btn-primary">{{ data.button }}</button>
+</form>
+
+{#{%  if data.button == "Shorten again" %}#}
+{#        <button onclick="copyUrl();" class="btn btn-primary">Copy</button>#}
+{#{%  endif %}#}
+
+    {% if short_url %}
+        <h2>Your shortened url is {{ short_url }}</h2>
+    {%  endif %}
+</div>
+{%  if data.error %}
+    <div class="alert alert-danger" role="alert">
+	    {{ data.error }}
+    </div>
+{%  endif  %}
+    <script type="text/javascript">
+function copyUrl() {
+  /* Get the text field */
+  let short_url = document.getElementById("original_url");
+
+  /* Select the text field */
+  short_url.select();
+  short_url.setSelectionRange(0, 99999); /* For mobile devices */
+
+   /* Copy the text inside the text field */
+  navigator.clipboard.writeText(short_url.value);
+
+  /* Alert the copied url*/
+  alert("Copied the url: " + short_url.value);
+}
+</script>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+{%  endblock %}
+
+
