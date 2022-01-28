@@ -9,7 +9,7 @@ services:
     ports:
       - 8000:8000
     environment:
-      - SQLALCHEMY_DATABASE_URI=postgresql://dev:dev@db:5432/dev
+      - DATABASE_URL=postgresql://dev:dev@db:5432/dev
     depends_on:
       - db
 
