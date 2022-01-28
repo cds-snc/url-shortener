@@ -1,20 +1,21 @@
 import os
 
 from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 if os.environ.get("CI"):
     connection_string = os.environ.get("SQLALCHEMY_DATABASE_TEST_URI")
 else:
-    connection_string = os.environ.get("SQLALCHEMY_DATABASE_URI")
-# Timeout is set to 10 seconds
-#db_engine = create_engine(connection_string, connect_args={"connect_timeout": 10})
-db_engine = create_engine("postgresql://dev:dev@db:5432/dev", connect_args={"connect_timeout": 10})
-db_session = sessionmaker(bind=db_engine)
+    connection_string = os.environ.get("DATABASE_URL")
 
+DATABASE_URL = os.getenv('DATABASE_URL')
+engine = create_engine(DATABASE_URL)
+Base = declarative_base()
+DBSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db_session():
-    session = db_session()
+    session = DBSession()
     try:
         yield session
     finally:
