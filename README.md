@@ -9,7 +9,7 @@ The url shortener is an application that uses FastAPI and it is written in pytho
 You need to have Docker installed to be able to run it 
 via docker-compose. Steps to get started are below.
 
-###Clone the repo:
+### Clone the repo:
 Clone the repo by typing
 ```
 git clone https://github.com/cds-snc/url-shortener.git
@@ -48,7 +48,7 @@ To get the webpage, you can simply run the project at http://localhost:8000
 
 To use the API, you can use [httpie](https://httpie.io/), [postman](https://www.postman.com/) or [curl](https://curl.se/)
 
-####Postman
+#### Postman
 Execute a POST request with 
 
 ```
@@ -60,14 +60,14 @@ In the body pass the following:
 }
 ```
 
-####curl
+#### curl
 ```
 curl -X POST -d '{"original_url": "https://google.com"}' -H "Content-Type: application/json" http://localhost:8000/shorten
 
 {"status":"OK","short_url":"xM_ElQWt"}
 ```
 
-####httpie
+#### httpie
 ```
 http POST localhost:8000/shorten original_url=http://www.google.com
 
