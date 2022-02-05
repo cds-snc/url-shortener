@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, Form
 from os import environ
 from pydantic import BaseSettings
-from routers import shortener, shortener_gui
+from routers import shortener
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 
@@ -23,7 +23,6 @@ app = FastAPI(
 
 # include other routes
 app.include_router(shortener.router)
-app.include_router(shortener_gui.router)
 
 templates = Jinja2Templates(directory="templates")
 
