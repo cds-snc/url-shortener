@@ -1,8 +1,8 @@
 locals {
   account_id       = "843973686572"
   domain           = ""
-  env              = "Staging"
-  product_name     = "UrlShortener"
+  env              = "staging"
+  product_name     = "urlshortener"
   cost_center_code = "${local.product_name}-${local.env}"
 }
 
