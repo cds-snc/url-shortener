@@ -20,6 +20,25 @@ resource "aws_iam_role" "api" {
     Terraform  = true
   }
 }
+
+data "aws_iam_policy_document" "api_policies" {
+
+  statement {
+
+    effect = "Allow"
+
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+
+    resources = [
+      "*"
+    ]
+  }
+}
+
 resource "aws_iam_role_policy_attachment" "AWSLambdaVPCAccessExecutionRole" {
   role       = aws_iam_role.api.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"

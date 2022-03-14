@@ -24,11 +24,3 @@ module "api" {
     data.aws_iam_policy_document.api_policies.json,
   ]
 }
-
-resource "aws_lambda_permission" "allow_cloudwatch_to_call_lambda" {
-  statement_id  = "AllowExecutionFromCloudWatch"
-  action        = "lambda:InvokeFunction"
-  function_name = module.api.function_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.assemblyline_rescan_every_24_hours.arn
-}
