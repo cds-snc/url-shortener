@@ -81,7 +81,7 @@ resource "aws_api_gateway_integration" "integration" {
 
   integration_http_method = "POST"
   type                    = "AWS_PROXY"
-  #uri                     = module.api.invoke_arn
+  uri                     = module.api.invoke_arn
 
   request_parameters = {
     "integration.request.path.proxy" = "method.request.path.proxy"
