@@ -13,26 +13,26 @@ resource "aws_acm_certificate" "url_shortener_certificate" {
   }
 }
 
-#resource "aws_route53_record" "url_shortener_dns_validation" {
-#  zone_id = var.hosted_zone_id
+resource "aws_route53_record" "url_shortener_dns_validation" {
+  zone_id = var.hosted_zone_id
 
-#  for_each = {
-#    for dvo in aws_acm_certificate.url_shortener_certificate.domain_validation_options : dvo.domain_name => {
-#      name   = dvo.resource_record_name
-#      type   = dvo.resource_record_type
-#      record = dvo.resource_record_value
-#    }
-#  }
+  for_each = {
+    for dvo in aws_acm_certificate.url_shortener_certificate.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      type   = dvo.resource_record_type
+      record = dvo.resource_record_value
+    }
+  }
 
-#  allow_overwrite = true
-#  name            = each.value.name
-#  records         = [each.value.record]
-#  type            = each.value.type
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  type            = each.value.type
 
-#  ttl = 60
-#}
+  ttl = 60
+}
 
-#resource "aws_acm_certificate_validation" "url_shortener_certificate_validation" {
-#  certificate_arn         = aws_acm_certificate.url_shortener_certificate.arn
-#  validation_record_fqdns = [for record in aws_route53_record.url_shortener_dns_validation : record.fqdn]
-#}
+resource "aws_acm_certificate_validation" "url_shortener_certificate_validation" {
+  certificate_arn         = aws_acm_certificate.url_shortener_certificate.arn
+  validation_record_fqdns = [for record in aws_route53_record.url_shortener_dns_validation : record.fqdn]
+}
