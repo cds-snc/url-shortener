@@ -138,6 +138,10 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Terragrunt and Terraform
+.terragrunt*
+.terraform.lock.hcl
+
 # pytype static type analyzer
 .pytype/
 
