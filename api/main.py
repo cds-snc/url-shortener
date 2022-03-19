@@ -33,8 +33,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def home(request: Request):
 	data = {
 		"page": "Home Page",
-		"button": "Shorten Now",
-		"label": "Enter the url to shorten",
+		"button": "Shorten",
 		"url": ""
 		}
 	return templates.TemplateResponse("index.html", {"request":request, "data": data})
