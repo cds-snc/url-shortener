@@ -84,10 +84,6 @@ h6,
 }
 
 
-#page--content:focus {
-  outline: none;
-}
-
 main {
   padding-bottom: 60px;
 }
