@@ -23,7 +23,7 @@
     <br>
     <input class="form-control form-control-lg" type="text" id="original_url" name="original_url"  value="{{ data.url }}" placeholder="Enter url">
   </div>
-    <button type="submit" class="btn btn-primary">{{ data.button }}</button>
+    <button type="submit" class="btn btn-primary">Shorten</button>
 </form>
 
 {#{%  if data.button == "Shorten again" %}#}
@@ -37,6 +37,9 @@
 {%  if data.error %}
     <div class="alert alert-danger" role="alert">
 	    {{ data.error }}
+        {% if data.form_url %}
+           You can add this domain by completing this <a href="{{ data.form_url }}">form</a>
+        {% endif %}
     </div>
 {%  endif  %}
     <script type="text/javascript">

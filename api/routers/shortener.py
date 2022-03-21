@@ -8,8 +8,14 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from pydantic import HttpUrl
 from models.ShortUrls import ShortUrls
-from utils.helpers import generate_short_url, return_short_url
+from models.AllowedDomains import AllowedDomains
+from utils.helpers import generate_short_url, return_short_url, is_domain_allowed, is_valid_url
 from fastapi.templating import Jinja2Templates
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 router = APIRouter()
 
@@ -21,15 +27,31 @@ def create_shortened_url(
 	db_session: Session = Depends(get_db_session),
 	original_url: str = Form(...)):
 	try:
-		short_url = return_short_url(original_url, db_session)
-		data = {
-			"short_url": short_url,
-			"url": "http://localhost:8000/" + short_url,
-			"button": "Shorten now"
-		}
+		# Check to see if the url confronts to a valid format. If not then display error.
+		if (not is_valid_url(original_url)):
+			data = {
+				"error": "Unable to shorten that link. It is not a valid url.",
+				"url": original_url
+			}
+		# Else if the domain is not allowed, display error and link to GC Forms page
+		elif (not is_domain_allowed(original_url, db_session)):
+			forms_url = os.getenv("FORMS_URL")
+			data = {
+				"error": "Your url is not a registered Government of Canada domain in our system.",
+				"form_url": forms_url,
+				"url": original_url
+			}
+		# Else, we are all good to shorten!
+		else:
+			short_url = return_short_url(original_url, db_session)
+			SHORTENER_DOMAIN = os.getenv("SHORTENER_DOMAIN") or None
+			data = {
+				"short_url": short_url,
+				"url": SHORTENER_DOMAIN + short_url,
+			}
 	except Exception as err:
 		data = {
-			"error" : "Error in processing shortened url"
+			"error": f"Error in processing shortened url {err}"
 			}
 	return templates.TemplateResponse("index.html", context={"request":request, "data":data})
 
@@ -43,6 +65,7 @@ def create_shortened_url(
 		return {"status": "OK", "short_url": short_url}
 	except Exception as err:
 		return{"error": f"error in processing shortened url"}
+
 
 @router.get('/{short_url}')
 def redirect_to_site (
