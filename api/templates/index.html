@@ -18,9 +18,11 @@
      <button type="submit" class="btn btn-dark">{{ data.button }}</button>
     </form>
     <br>
-    {%  if data.error %}
     <div class="alert alert-danger" role="alert">
 	    {{ data.error }}
+        {% if data.form_url %}
+           You can add this domain by completing this <a href="{{ data.form_url }}">form</a>
+        {% endif %}
     </div>
     {%  endif  %}
 {% endblock %}
