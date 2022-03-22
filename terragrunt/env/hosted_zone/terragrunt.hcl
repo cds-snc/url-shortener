@@ -3,7 +3,7 @@ terraform {
 }
 
 inputs = {
-  hosted_zone_name = "url-shortener.alpha.canada.ca"
+  hosted_zone_name = "url-shortener.cdssandbox.xy"
 }
 
 include {
