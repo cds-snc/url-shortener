@@ -12,8 +12,13 @@ services:
         VARIANT: "3.10"
         # Optional Node.js version to install
         NODE_VERSION: "none"
+        SHELLCHECK_VERSION: "0.7.2"
+        TERRAFORM_VERSION: "1.1.5"
+        TERRAGRUNT_VERSION: "0.36.1"
+        AWS_CLI_VERSION: "2.2.29"
 
     environment:
+      - SHELL=/bin/zsh
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
 
     volumes:
