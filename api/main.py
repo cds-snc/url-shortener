@@ -4,7 +4,7 @@ from pydantic import BaseSettings
 from routers import shortener
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-
+from fastapi.staticfiles import StaticFiles
 
 
 class Settings(BaseSettings):
@@ -26,13 +26,14 @@ app.include_router(shortener.router)
 
 templates = Jinja2Templates(directory="templates")
 
+# Mount static directory
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
 	data = {
 		"page": "Home Page",
-		"button": "Shorten Now",
-		"label": "Enter the url to shorten",
+		"button": "Shorten",
 		"url": ""
 		}
 	return templates.TemplateResponse("index.html", {"request":request, "data": data})

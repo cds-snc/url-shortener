@@ -25,11 +25,12 @@ def create_shortened_url(
 		data = {
 			"short_url": short_url,
 			"url": "http://localhost:8000/" + short_url,
-			"button": "Shorten now"
+			"button": "Shorten"
 		}
 	except Exception as err:
 		data = {
-			"error" : "Error in processing shortened url"
+			"button": "Shorten",
+			"error" : "Unable to shorten that link. It is not a valid url."
 			}
 	return templates.TemplateResponse("index.html", context={"request":request, "data":data})
 
