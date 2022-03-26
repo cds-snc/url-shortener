@@ -14,7 +14,9 @@ def test_creating_a_valid_shortlink(client):
 def test_known_shorturl_redirects_to_original_url(client):
     create_response = client.post("/shorten", json={"original_url": "http://example.com"})
     shorturl = create_response.json()['short_url']
-    
-    response = client.get(f"/{shorturl}")
+
+    # See https://github.com/tiangolo/fastapi/issues/790
+    # For discussion of the allow_redirect = False
+    response = client.get(f"/{shorturl}", allow_redirects = False)
     assert response.headers['location'] == 'http://example.com'
     assert response.status_code == status.HTTP_301_MOVED_PERMANENTLY
