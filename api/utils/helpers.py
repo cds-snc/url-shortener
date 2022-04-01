@@ -51,7 +51,7 @@ def is_domain_allowed(original_url, db_session):
 	   """
 	try:
 		# Obtain the domain from the url
-		domain = urlparse(original_url).hostname
+		domain = ".".join(urlparse(original_url).hostname.split(".")[-2:])
 		# Query the table allowed_domains to see if the domain exists.
 		domain_obj = db_session.query(AllowedDomains).filter(
 			AllowedDomains.domain == domain).first()

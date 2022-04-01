@@ -16,7 +16,7 @@ class AllowedDomains(Base):
 	__tablename__ = "allowed_domains"
 
 	id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-	domain = Column(String, nullable=False)
+	domain = Column(String, unique=True, index=True, nullable=False)
 	created = Column(
 		DateTime,
 		index=False,
