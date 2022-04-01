@@ -15,14 +15,15 @@
       <h1>GC URL Shortener</h1>
       <input class="form-control form-control-lg" type="url" id="original_url" name="original_url"  value="{{ data.url }}" placeholder="Shorten your link">
      </div>
-     <button type="submit" class="btn btn-dark">{{ data.button }}</button>
+     <button type="submit" class="btn btn-dark">Shorten</button>
     </form>
     <br>
+   {% if data.error %}
     <div class="alert alert-danger" role="alert">
 	    {{ data.error }}
         {% if data.form_url %}
            You can add this domain by completing this <a href="{{ data.form_url }}">form</a>
         {% endif %}
     </div>
-    {%  endif  %}
+   {% endif %}
 {% endblock %}
