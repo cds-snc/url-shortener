@@ -8,7 +8,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from models import Base, ShortUrls
+from models import Base, ShortUrls, AllowedDomains
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
