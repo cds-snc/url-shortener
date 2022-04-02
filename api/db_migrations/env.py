@@ -43,7 +43,6 @@ def run_migrations_offline():
     script output.
 
     """
-    #url = config.get_main_option("sqlalchemy.url") 
     url = config.get_main_option("sqlalchemy.url") 
     print("We are in run migrations")
     context.configure(

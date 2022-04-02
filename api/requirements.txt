@@ -2,6 +2,7 @@ advocate==1.0.0
 alembic==1.7.5
 anyio==3.4.0
 asgiref==3.4.1
+attrs==21.4.0
 certifi==2021.10.8
 cffi==1.15.0
 charset-normalizer==2.0.11
@@ -13,6 +14,7 @@ greenlet==1.1.2
 h11==0.12.0
 httptools==0.3.0
 idna==3.3
+iniconfig==1.1.1
 Jinja2==3.0.3
 logger==1.4
 logzero==1.7.0
@@ -20,11 +22,17 @@ Mako==1.1.6
 MarkupSafe==2.0.1
 ndg-httpsclient==0.5.1
 netifaces==0.11.0
-psycopg2-binary==2.9.2
+packaging==21.3
+pluggy==1.0.0
+psycopg2==2.9.3
+psycopg2-binary==2.9.3
+py==1.11.0
 pyasn1==0.4.8
 pycparser==2.21
 pydantic==1.8.2
 pyOpenSSL==22.0.0
+pyparsing==3.0.7
+pytest==7.1.1
 python-dotenv==0.19.2
 python-multipart==0.0.5
 PyYAML==6.0
@@ -33,6 +41,7 @@ six==1.16.0
 sniffio==1.2.0
 SQLAlchemy==1.4.28
 starlette==0.16.0
+tomli==2.0.1
 typing_extensions==4.0.1
 urllib3==1.26.8
 uvicorn==0.16.0

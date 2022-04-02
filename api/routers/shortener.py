@@ -56,7 +56,7 @@ def create_shortened_url(
 	return templates.TemplateResponse("index.html", context={"request":request, "data":data})
 
 
-@router.post('/shorten')
+@router.post('/shorten', status_code = status.HTTP_201_CREATED)
 def create_shortened_url(
 	db_session: Session = Depends(get_db_session),
 	original_url: HttpUrl = Body(..., embed=True)):
@@ -79,7 +79,7 @@ def redirect_to_site (
 				status_code=404,
 				detail = 'The given link does not exist.'
 			)
-		return RedirectResponse(url=short_url_obj.original_url)
+		return RedirectResponse(url = short_url_obj.original_url, status_code = status.HTTP_301_MOVED_PERMANENTLY)
 	except SQLAlchemyError as err:
 		log.error(err)
 		return {"error": "error retrieving link details"}
