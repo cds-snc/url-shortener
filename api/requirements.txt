@@ -18,7 +18,7 @@ iniconfig==1.1.1
 Jinja2==3.0.3
 logger==1.4
 logzero==1.7.0
-Mako==1.1.6
+Mako==1.2.2
 MarkupSafe==2.0.1
 ndg-httpsclient==0.5.1
 netifaces==0.11.0
