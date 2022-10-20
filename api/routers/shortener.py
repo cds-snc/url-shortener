@@ -58,7 +58,7 @@ def create_shortened_url(
 	if len(accept.split(",")) > 1:
 		return templates.TemplateResponse("index.html", context={"request":request, "data":data})
 	else:
-		return {"status": "NOT OK", "short_url": short_url}
+		return {"status": "OK", "short_url": short_url}
 
 
 @router.post('/shorten', status_code = status.HTTP_201_CREATED)
