@@ -11,19 +11,29 @@
     <form action="/" method="post">
      <div class="form-group">
       <label for="OriginalUrl">{{ data.label }}</label>
-      <br>
-      <h1>GC URL Shortener</h1>
-      <input class="form-control form-control-lg" type="url" id="original_url" name="original_url"  value="{{ data.url }}" placeholder="Shorten your link">
-     </div>
-     <button type="submit" class="btn btn-dark">Shorten</button>
-    </form>
-    <br>
-   {% if data.error %}
-    <div class="alert alert-danger" role="alert">
+      <h1>GC Link Shortener</h1>
+      <h2>Short and shareable links</h2>
+      <p>This service will shorten URLs from official government of Canada domains. 
+Save valuable space in your status updates while using a trusted GC domain. If your domain is not registered in our system, <a href="{{ data.form_url }}">request to have your domain added.</a></p>
+
+      <h2>GC URL</h2>
+      <p>Paste your link</p>
+          {%  if data.error %}
+          <div class="alert alert-danger" role="alert">
 	    {{ data.error }}
         {% if data.form_url %}
-           You can add this domain by completing this <a href="{{ data.form_url }}">form</a>
+           <a href="{{ data.form_url }}">Request to have this domain added.</a>
         {% endif %}
     </div>
-   {% endif %}
+     {% endif %}
+      <input class="form-control form-control-lg" type="url" id="original_url" name="original_url"  value="{{ data.url }}" placeholder="Shorten your link">
+     </div>
+      {% if data.short_url %}
+        <img type="image/svg+xml" src="{{ url_for('static', path='img/LinkShortened.svg') }}" alt="Success - your link is shortened" /><br><br>
+        <button type="button" onclick="parent.location=''" class="btn btn-dark">Shorten another link</button>
+        <button class="btn btn-large btn-primary" type ="button" onclick="copyURL('original_url')">Copy URL</button>
+      {% else %}
+               <button type="submit" class="btn btn-dark">Shorten</button>
+    {% endif %}
+    </form>
 {% endblock %}
