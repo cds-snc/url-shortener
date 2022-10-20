@@ -24,7 +24,6 @@ ndg-httpsclient==0.5.1
 netifaces==0.11.0
 packaging==21.3
 pluggy==1.0.0
-psycopg2==2.9.3
 psycopg2-binary==2.9.3
 py==1.11.0
 pyasn1==0.4.8
