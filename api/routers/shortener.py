@@ -26,18 +26,20 @@ def create_shortened_url(
 	request: Request,
 	db_session: Session = Depends(get_db_session),
 	original_url: str = Form(...)):
+	accept = request.headers["accept"]
+	print(accept)
 	try:
 		# Check to see if the url confronts to a valid format. If not then display error.
 		if (not is_valid_url(original_url)):
 			data = {
-				"error": "Unable to shorten that link. It is not a valid url.",
+				"error": "Unable to shorten link. Invalid URL.",
 				"url": original_url
 			}
 		# Else if the domain is not allowed, display error and link to GC Forms page
 		elif (not is_domain_allowed(original_url, db_session)):
 			forms_url = os.getenv("FORMS_URL")
 			data = {
-				"error": "Your url is not a registered Government of Canada domain in our system.",
+				"error": "URL is not registered in our system as an Official GC Domain.",
 				"form_url": forms_url,
 				"url": original_url
 			}
@@ -53,7 +55,10 @@ def create_shortened_url(
 		data = {
 			"error": f"Error in processing shortened url {err}"
 			}
-	return templates.TemplateResponse("index.html", context={"request":request, "data":data})
+	if len(accept.split(",")) > 1:
+		return templates.TemplateResponse("index.html", context={"request":request, "data":data})
+	else:
+		return {"status": "OK", "short_url": short_url}
 
 
 @router.post('/shorten', status_code = status.HTTP_201_CREATED)
