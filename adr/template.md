@@ -31,3 +31,6 @@ _TODO: Describe the way forward._
 ## Consequences
 
 _TODO: Describe foreseen and felt consequences of the decision (possible after 1-3 months)._
+
+
+# Note: Add attachments/diagrams etc to attachments folder 
