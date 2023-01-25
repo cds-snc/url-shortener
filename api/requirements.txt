@@ -48,4 +48,3 @@ uvloop==0.17.0
 validators==0.20.0
 watchgod==0.8.2
 websockets==10.4
-
