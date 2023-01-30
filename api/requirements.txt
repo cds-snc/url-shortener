@@ -19,7 +19,7 @@ Jinja2==3.1.2
 logger==1.4
 logzero==1.7.0
 Mako==1.2.4
-MarkupSafe==2.1.1
+MarkupSafe==2.1.2
 ndg-httpsclient==0.5.1
 netifaces==0.11.0
 packaging==21.3
@@ -32,7 +32,7 @@ pydantic==1.10.4
 pyOpenSSL==22.1.0
 pyparsing==3.0.9
 pytest==7.2.1
-python-dotenv==0.21.0
+python-dotenv==0.21.1
 python-multipart==0.0.5
 PyYAML==6.0
 requests==2.28.2
