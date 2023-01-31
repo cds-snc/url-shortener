@@ -53,7 +53,7 @@ def create_shortened_url(
 			}
 	except Exception as err:
 		data = {
-			"error": f"Error in processing shortened url {err}"
+			"error": f"Error in processing shortened url: {err}"
 			}
 	if len(accept.split(",")) > 1:
 		return templates.TemplateResponse("index.html", context={"request":request, "data":data})

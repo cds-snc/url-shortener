@@ -24,22 +24,19 @@ def generate_short_url(original_url: str, timestamp: float):
 
 # Function to return the shortened url
 def return_short_url(original_url, db_session):
+	timestamp = datetime.now().replace(tzinfo=timezone.utc).timestamp()
 	try:
-		timestamp = datetime.now().replace(tzinfo=timezone.utc).timestamp()
-		try:
-			resp = advocate.get(original_url)
-		except advocate.UnacceptableAddressException:
-			return {"error": "That URL points to a forbidden resource"}
-		except requests.RequestException:
-			return {"error": "Failed to connect to the specified URL"}
-		short_url = generate_short_url(original_url, timestamp)
-		short_url_obj = ShortUrls(
-			original_url=original_url, short_url=short_url)
-		db_session.add(short_url_obj)
-		db_session.commit()
-		return short_url
-	except Exception as err:
-		return {"error": f"error in processing shortened url"}
+		resp = advocate.get(original_url)
+	except advocate.UnacceptableAddressException:
+		raise Exception("That URL points to a forbidden resource")
+	except requests.RequestException:
+		raise Exception("Failed to connect to the specified URL")
+	short_url = generate_short_url(original_url, timestamp)
+	short_url_obj = ShortUrls(
+		original_url=original_url, short_url=short_url)
+	db_session.add(short_url_obj)
+	db_session.commit()
+	return short_url
 
 
 def is_domain_allowed(original_url, db_session):
