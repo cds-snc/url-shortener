@@ -10,7 +10,7 @@ from models.AllowedDomains import AllowedDomains
 
 
 # Function to generate the 8 character short url
-def generate_short_url(original_url: str, timestamp: float):
+def generate_short_url(original_url: str, timestamp: float, shortened_length: int = 8):
 	"""generate_short_url generates an 8 character string used to represent the original url. This 8 character
 	string will be used to "unshorten" to the original url submitted.
 	parameter original_url: the url that the user passes to the api
@@ -19,7 +19,7 @@ def generate_short_url(original_url: str, timestamp: float):
 	to_encode_str = f'{original_url}{timestamp}'
 	b64_encoded_str = base64.urlsafe_b64encode(
 		hashlib.sha256(to_encode_str.encode()).digest()).decode()
-	return b64_encoded_str[:8]
+	return b64_encoded_str[:shortened_length]
 
 
 # Function to return the shortened url
