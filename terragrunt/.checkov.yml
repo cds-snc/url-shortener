@@ -1,10 +1,1 @@
 skip-check:
-  - CKV_AWS_51  # ECR: `latest` tag is used for development
-  - CKV_AWS_117 # Lambda: access to VPC resources not required
-  - CKV_AWS_136 # ECR: default encryption key is acceptable 
-  - CKV_AWS_149 # SecretsManager: default encryption key is acceptable
-  - CKV_AWS_158 # CloudWatch: default encryption key is acceptable
-  - CKV_AWS_192 # WAF: False-positive, AWSManagedRulesKnownBadInputsRuleSet is being applied
-  - CKV_AWS_28  # Dynamodb point in time recovery is not required
-  - CKV_AWS_119 # AWS Managed keys are acceptable
-  - CKV2_AWS_32 # CloudFront: false-positive, distribution has a response_headers_policy_id defined
