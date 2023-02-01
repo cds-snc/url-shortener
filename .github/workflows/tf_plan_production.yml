@@ -26,9 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - module: alarms
           - module: api
-          - module: hosted_zone
 
     runs-on: ubuntu-latest
     steps:
