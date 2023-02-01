@@ -1,5 +1,5 @@
 terraform {
-  git::https://github.com/cds-snc/url-shortener//terragrunt/aws/api?ref=${get_env("INFRASTRUCTURE_VERSION")}
+  source="git::https://github.com/cds-snc/url-shortener//terragrunt/aws/api?ref=${get_env("INFRASTRUCTURE_VERSION")}"
 }
 
 include {
