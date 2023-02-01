@@ -1,9 +1,5 @@
 terraform {
-  source = "../../../aws//api"
-}
-
-inputs = {
-  oidc_exists    = true
+  git::https://github.com/cds-snc/url-shortener//terragrunt/aws/api?ref=${get_env("INFRASTRUCTURE_VERSION")}
 }
 
 include {
