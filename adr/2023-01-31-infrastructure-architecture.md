@@ -69,7 +69,9 @@ A limitation of Lambda is that on a function's first invocation, it will take lo
 
 There is a requirement for the API to check shortened URLs are still valid.  This will be accomplished by making a HEAD request to the full URL and considering it invalid if the response is in the 4xx HTTP status code range.  
 
-This will require the API to perform DNS looksup and make network requests to external URLs.  To mitigate the risk of malicious network egress, Route53 DNS safelisting will be used to only allow the API to perform DNS lookups for domains that are part of the service's allow list (e.g. `*.canada.ca` and `*.gc.ca`).
+This will require the API to perform DNS looksup and make network requests to external URLs.  To mitigate the risk of malicious network egress, Route53's DNS Resolver Firewall will be used to only allow the API to perform DNS lookups for domains that are part of the service's allow list (e.g. `*.canada.ca` and `*.gc.ca`).
+
+In addition to the above, we will limit egress to TCP on port 443 using Lambda security groups.  
 
 ### Preventing malicious requests
 
