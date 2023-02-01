@@ -43,7 +43,7 @@ We will be using `Option 1: AWS Lambda with CloudFront` for the URL Shortener's 
 1. By avoiding the use of ECS, we also do not need to include a load balancer in our architecture.  This further reduces the request bottlenecks and improves the scalability of the API.
 
 ![URL Shortener API infrastructure diagram](attachments/2023-01-31-infrastructure-architecture.png)
-__Figure 1:__ URL Shortener API infrastructure diagram ([source](attachments/2023-01-31-infrastructure-architecture.drawio?raw=true))
+__Figure 1:__ URL Shortener API infrastructure diagram ([source](attachments/2023-01-31-infrastructure-architecture.drawio))
 
 ## Consequences
 
