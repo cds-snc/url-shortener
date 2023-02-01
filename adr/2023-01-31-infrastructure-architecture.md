@@ -14,9 +14,9 @@ With the decision to host the URL Shortener as a production service, we need to 
 
 We have the following options for the API's infrastructure architecture:
 
-1. AWS Lambda with CloudFront
-1. AWS Lambda with API Gateway
-1. Persistent service using AWS Elastic Container Service (ECS)
+1. [AWS Lambda with CloudFront](#option-1-aws-lambda-with-cloudfront)
+1. [AWS Lambda with API Gateway](#option-2-aws-lambda-with-api-gateway)
+1. [Persistent service using AWS Elastic Container Service (ECS)](#option-3-persistent-service-using-aws-elastic-container-service-ecs)
 
 ### Option 1: AWS Lambda with CloudFront
 Use a Docker image based AWS Lambda function to run the API, accessed using a Lambda Function URL.  A CloudFront distribution will then provide a custom URL and caching for the API.  Data storage will be provided by AWS DynamoDB.
@@ -55,12 +55,21 @@ If we discover a future requirement that needs a persistent service, we will nee
 - Scheduled jobs can be handled with AWS CloudWatch Events and AWS Lambda.
 - Long-running jobs would have to exceed 15 minutes before they became problematic for the Lambda.  If they did, we could then look at using a Step Function or introducting a dedicated ECS task that is triggered via a CloudWatch Event.
 
-
 ### Lambda cold-start time
 
 A limitation of Lambda is that on a function's first invocation, it will take longer to execute and return a response than on subsequent invocations.  If we discover that the API's Lambda function cold-start time is impacting user experience, we can mitigate with a few different startup strategies:
 
 - Use a health check to keep Lambda function's warm.
 - Use Lambda provisioned concurrency to always have a configurable nubmer of Lambda functions warm and ready to serve requests.
+
+### Preventing malicious network egress
+
+There is a requirement for the API to check shortened URLs are still valid.  This will be accomplished by making a HEAD request to the full URL and considering it invalid if the response is in the 4xx HTTP status code range.  
+
+This will require the API to perform DNS looksup and make network requests to external URLs.  To mitigate the risk of malicious network egress, Route53 DNS safelisting will be used to only allow the API to perform DNS lookups for domains that are part of the service's allow list (e.g. `*.canada.ca` and `*.gc.ca`).
+
+### Protecting data in-transit
+
+In addition to using data encryption in-transit and at rest, we'll also setup AWS private endpoints for DynamoDB, S3 and CloudWatch.  This will prevent the API from routing any data to those services through the public internet.  It will travel directly from the API's Virtual Private Cloud (VPC) to the AWS service.
 
 # Note: Add attachments/diagrams etc to attachments folder 
