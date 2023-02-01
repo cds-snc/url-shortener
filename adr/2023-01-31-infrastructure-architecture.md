@@ -42,6 +42,9 @@ We will be using `Option 1: AWS Lambda with CloudFront` for the URL Shortener's 
 1. There is not currently a need for a persistent service, so the value of ECS in that regard is negated.
 1. By avoiding the use of ECS, we also do not need to include a load balancer in our architecture.  This further reduces the request bottlenecks and improves the scalability of the API.
 
+![URL Shortener API infrastructure diagram](attachments/2023-01-31-infrastructure-architecture.png)
+__Figure 1:__ URL Shortener API infrastructure diagram ([source](attachments/2023-01-31-infrastructure-architecture.drawio?raw=true))
+
 ## Consequences
 
 ### DynamoDB data model
@@ -80,4 +83,9 @@ AWS Web Application Firewall (WAF) and Shield Advnaced will be used to protect t
 
 In addition to using data encryption in-transit and at rest, we'll also setup AWS private endpoints for DynamoDB, S3 and CloudWatch.  This will prevent the API from routing any data to those services through the public internet.  It will travel directly from the API's Virtual Private Cloud (VPC) to the AWS service.
 
-# Note: Add attachments/diagrams etc to attachments folder 
+### Direct access to Lambda function via its Function URL
+
+The API will need to have a mechanism that prevents direct access to it using the raw Lambda Function URL.  The reason for this is that it would bypass the CloudFront distribution and WAF.  This could be accomplished by either:
+
+- having CloudFront add a secret header value and then ensuring it's present in the API's handler; or
+- by redirecting all raw Function URL requests to the main API URL. 
