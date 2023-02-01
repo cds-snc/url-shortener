@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - ".github/manifests/infrastructure_version"
-      - ".github/workflows/tf_apply_production.yml"
 
 env:
   TERRAFORM_VERSION: 1.3.7
