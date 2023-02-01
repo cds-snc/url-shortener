@@ -68,6 +68,14 @@ There is a requirement for the API to check shortened URLs are still valid.  Thi
 
 This will require the API to perform DNS looksup and make network requests to external URLs.  To mitigate the risk of malicious network egress, Route53 DNS safelisting will be used to only allow the API to perform DNS lookups for domains that are part of the service's allow list (e.g. `*.canada.ca` and `*.gc.ca`).
 
+### Preventing malicious requests
+
+AWS Web Application Firewall (WAF) and Shield Advnaced will be used to protect the API from malicious requests and DDoS attacks.  The WAF will be configured to:
+
+- Block requests that do not match an safelist of request URL patterns.
+- Block requests that contain malicious payloads (e.g. SQL injection, XSS, directory traversal, etc.).
+- Rate limit `POST` and `PUT` requests to the API by IP address.
+
 ### Protecting data in-transit
 
 In addition to using data encryption in-transit and at rest, we'll also setup AWS private endpoints for DynamoDB, S3 and CloudWatch.  This will prevent the API from routing any data to those services through the public internet.  It will travel directly from the API's Virtual Private Cloud (VPC) to the AWS service.
