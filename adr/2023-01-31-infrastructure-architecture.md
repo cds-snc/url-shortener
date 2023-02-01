@@ -85,6 +85,10 @@ AWS Web Application Firewall (WAF) and Shield Advnaced will be used to protect t
 
 In addition to using data encryption in-transit and at rest, we'll also setup AWS private endpoints for DynamoDB, S3 and CloudWatch.  This will prevent the API from routing any data to those services through the public internet.  It will travel directly from the API's Virtual Private Cloud (VPC) to the AWS service.
 
+### Intrusion detection
+
+We will be using AWS GuardDuty to detect anomalous activity in the API's AWS account.  In addition to this, the API's CloudWatch logs will be sent to Azure Sentinel where we will be able to monitor for suspicious activity.
+
 ### Direct access to Lambda function via its Function URL
 
 The API will need to have a mechanism that prevents direct access to it using the raw Lambda Function URL.  The reason for this is that it would bypass the CloudFront distribution and WAF.  This could be accomplished by either:
