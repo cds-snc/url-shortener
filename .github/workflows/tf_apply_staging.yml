@@ -39,6 +39,10 @@ jobs:
           role-session-name: TFApply
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Apply hosted_zone
+        working-directory: terragrunt/env/staging/hosted_zone
+        run: terragrunt apply --terragrunt-non-interactive -auto-approve
+
       - name: Apply api
         working-directory: terragrunt/env/staging/api
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
