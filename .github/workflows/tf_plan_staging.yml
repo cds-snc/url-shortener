@@ -27,6 +27,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - module: hosted_zone
           - module: api
 
     runs-on: ubuntu-latest
