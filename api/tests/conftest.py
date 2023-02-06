@@ -14,6 +14,7 @@ from main import app
 db_engine = create_engine(os.environ.get("DATABASE_TEST_URL"))
 LocalSession = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
 
+
 def get_test_db_session() -> Session:
     connection = db_engine.connect()
     session = LocalSession()
@@ -23,12 +24,14 @@ def get_test_db_session() -> Session:
         session.close()
         connection.close()
 
+
 @pytest.fixture(scope="session")
 def setup_test_database():
     Base.metadata.bind = db_engine
     Base.metadata.create_all()
     yield
     Base.metadata.drop_all()
+
 
 @pytest.fixture(scope="session")
 def client(setup_test_database) -> TestClient:

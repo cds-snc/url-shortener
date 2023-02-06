@@ -8,7 +8,8 @@ from fastapi.staticfiles import StaticFiles
 
 
 class Settings(BaseSettings):
-	openapi_url: str = environ.get("OPENAPI_URL", "")
+    openapi_url: str = environ.get("OPENAPI_URL", "")
+
 
 description = """ 
 API to shorten a url
@@ -16,9 +17,9 @@ API to shorten a url
 
 # initialize the app with title, version and url
 app = FastAPI(
-	title="API shortener",
-	description= description,
-	version="0.0.1",
+    title="API shortener",
+    description=description,
+    version="0.0.1",
 )
 
 # include other routes
@@ -29,11 +30,8 @@ templates = Jinja2Templates(directory="templates")
 # Mount static directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-	data = {
-		"page": "Home Page",
-		"button": "Shorten",
-		"url": ""
-		}
-	return templates.TemplateResponse("index.html", {"request":request, "data": data})
+    data = {"page": "Home Page", "button": "Shorten", "url": ""}
+    return templates.TemplateResponse("index.html", {"request": request, "data": data})
