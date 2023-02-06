@@ -1,7 +1,7 @@
 .PHONY: fmt install lint test fmt-ci lint-ci install-dev
 
 fmt:
-	black . $(ARGS) --target-version py310
+	black . $(ARGS) --target-version py311
 
 install:
 	pip3 install --user -r requirements.txt
@@ -20,4 +20,4 @@ lint-ci:
 	flake8 .
 
 fmt-ci:
-	black --check . --target-version py310
+	black --check . --target-version py311
