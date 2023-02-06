@@ -53,3 +53,4 @@ jobs:
         run: make test
         env:
           DATABASE_URL: postgresql://postgres:postgres@127.0.0.1/url-shortener
+          DATABASE_TEST_URL: postgresql://postgres:postgres@127.0.0.1/url-shortener
