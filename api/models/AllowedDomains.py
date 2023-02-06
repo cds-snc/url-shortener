@@ -2,15 +2,15 @@ import datetime
 import uuid
 
 from models import Base
-from sqlalchemy import DateTime, Column, Integer, String
+from sqlalchemy import DateTime, Column, String
 from sqlalchemy.dialects.postgresql import UUID
 
 """
 Class AllowedDomains
-	table = allowed domains
-	primary key, id - UUID type
-	domain - property in the table to indicate a domain (Example is www.canada.ca)
-	created - the date and time the entry was created in the database
+    table = allowed domains
+    primary key, id - UUID type
+    domain - property in the table to indicate a domain (Example is www.canada.ca)
+    created - the date and time the entry was created in the database
 """
 
 

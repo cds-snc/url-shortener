@@ -28,7 +28,7 @@ def return_short_url(original_url, db_session):
     try:
         timestamp = datetime.now().replace(tzinfo=timezone.utc).timestamp()
         try:
-            resp = advocate.get(original_url)
+            advocate.get(original_url)
         except advocate.UnacceptableAddressException:
             return {"error": "That URL points to a forbidden resource"}
         except requests.RequestException:
@@ -38,8 +38,8 @@ def return_short_url(original_url, db_session):
         db_session.add(short_url_obj)
         db_session.commit()
         return short_url
-    except Exception as err:
-        return {"error": f"error in processing shortened url"}
+    except Exception:
+        return {"error": "error in processing shortened url"}
 
 
 def is_domain_allowed(original_url, db_session):
@@ -61,7 +61,7 @@ def is_domain_allowed(original_url, db_session):
         if domain_obj is not None:
             return True
         return False
-    except Exception as err:
+    except Exception:
         return {"error": "error retrieving domain"}
 
 

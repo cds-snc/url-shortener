@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request
 from os import environ
 from pydantic import BaseSettings
 from routers import shortener
@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     openapi_url: str = environ.get("OPENAPI_URL", "")
 
 
-description = """ 
+description = """
 API to shorten a url
 """
 

@@ -1,11 +1,9 @@
 from database.db import get_db_session
-from datetime import datetime, timezone
 from fastapi import (
     APIRouter,
     Depends,
     Body,
     HTTPException,
-    Response,
     status,
     Request,
     Form,
@@ -14,12 +12,9 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from logger import log
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
 from pydantic import HttpUrl
 from models.ShortUrls import ShortUrls
-from models.AllowedDomains import AllowedDomains
 from utils.helpers import (
-    generate_short_url,
     return_short_url,
     is_domain_allowed,
     is_valid_url,
@@ -78,15 +73,15 @@ def create_shortened_url(
 
 
 @router.post("/shorten", status_code=status.HTTP_201_CREATED)
-def create_shortened_url(
+def create_shortened_url_api(
     db_session: Session = Depends(get_db_session),
     original_url: HttpUrl = Body(..., embed=True),
 ):
     try:
         short_url = return_short_url(original_url, db_session)
         return {"status": "OK", "short_url": short_url}
-    except Exception as err:
-        return {"error": f"error in processing shortened url"}
+    except Exception:
+        return {"error": "error in processing shortened url"}
 
 
 @router.get("/{short_url}")
