@@ -30,6 +30,14 @@
 		"ms-python.vscode-pylance"
 	],
 
+	"features": {
+		"terraform": {
+			"version": "1.3.7",
+			"tflint": "latest",
+			"terragrunt": "0.40.2"
+		}
+	},	
+
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// This can be used to network with other containers or the host.
 	// "forwardPorts": [5000, 5432],
