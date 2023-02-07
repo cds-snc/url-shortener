@@ -12,17 +12,19 @@ from sqlalchemy.exc import SQLAlchemyError
 from logger import log
 
 
-def generate_short_url(original_url: str, timestamp: float):
-    """generate_short_url generates an 8 character string used to represent the original url. This 8 character
+def generate_short_url(original_url: str, timestamp: float, shortened_length: int = 8):
+    """generate_short_url generates an shortened_length character string used to represent the original url. This shortened_length character
     string will be used to "unshorten" to the original url submitted.
     parameter original_url: the url that the user passes to the api
     parameter timestamp: the current datatime timestamp
-    returns: an 8 character string representing the shortened url"""
+    returns: an shortened_length character string representing the shortened url"""
+    if shortened_length < 4:
+        shortened_length = 4
     to_encode_str = f"{original_url}{timestamp}"
     b64_encoded_str = base64.urlsafe_b64encode(
         hashlib.sha256(to_encode_str.encode()).digest()
     ).decode()
-    return b64_encoded_str[:8]
+    return b64_encoded_str[:shortened_length]
 
 
 def is_domain_allowed(original_url, db_session):
