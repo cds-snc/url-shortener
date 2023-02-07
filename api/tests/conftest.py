@@ -1,49 +1,48 @@
-import os
 import pytest
-
+import os
+import boto3
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-from sqlalchemy.orm import sessionmaker
-
-from database.db import get_db_session
-from models import Base
-from models.AllowedDomains import AllowedDomains
 
 from main import app
 
-db_engine = create_engine(os.environ.get("DATABASE_TEST_URL"))
-LocalSession = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
+dynamodb_client = boto3.client(
+    "dynamodb",
+    endpoint_url=("http://dynamodb-local:8000"),
+    region_name="ca-central-1",
+)
+
+table_name = os.environ.get("TABLE_NAME", "url_shortener_test")
 
 
-def get_test_db_session() -> Session:
-    connection = db_engine.connect()
-    session = LocalSession()
-    try:
-        yield session
-    finally:
-        session.close()
-        connection.close()
-
-
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 def setup_test_database():
-    Base.metadata.bind = db_engine
-    Base.metadata.create_all()
-    seed_authorized_domains()
-    yield
-    Base.metadata.drop_all()
+    try:
+        dynamodb_client.delete_table(TableName=table_name)
+    except dynamodb_client.exceptions.ResourceNotFoundException:
+        pass
+    table = dynamodb_client.create_table(
+        TableName=table_name,
+        KeySchema=[
+            {
+                "AttributeName": "short_url",
+                "KeyType": "HASH",
+            },
+        ],
+        AttributeDefinitions=[
+            {
+                "AttributeName": "short_url",
+                "AttributeType": "S",
+            },
+        ],
+        ProvisionedThroughput={
+            "ReadCapacityUnits": 1,
+            "WriteCapacityUnits": 1,
+        },
+    )
+    yield table
+    dynamodb_client.delete_table(TableName=table_name)
 
 
 @pytest.fixture(scope="session")
-def client(setup_test_database) -> TestClient:
-    app.dependency_overrides[get_db_session] = get_test_db_session
-    client = TestClient(app)
-    yield client
-
-
-def seed_authorized_domains():
-    session = LocalSession()
-    session.add(AllowedDomains(domain="canada.ca"))
-    session.add(AllowedDomains(domain="canada.gc.ca"))
-    session.commit()
+def client() -> TestClient:
+    yield TestClient(app)
