@@ -10,17 +10,10 @@ from fastapi import (
 )
 from fastapi.responses import RedirectResponse, HTMLResponse
 from sqlalchemy.orm import Session
-from logger import log
-from sqlalchemy.exc import SQLAlchemyError
+
 from pydantic import HttpUrl
-from models.ShortUrls import ShortUrls
-from utils.helpers import (
-    return_short_url,
-    is_domain_allowed,
-    is_valid_url,
-)
+from utils.helpers import resolve_short_url, validate_and_shorten_url
 from fastapi.templating import Jinja2Templates
-import os
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -31,45 +24,22 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 
+@router.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    data = {"page": "Home Page", "button": "Shorten", "url": ""}
+    return templates.TemplateResponse("index.html", {"request": request, "data": data})
+
+
 @router.post("/", response_class=HTMLResponse)
 def create_shortened_url(
     request: Request,
     db_session: Session = Depends(get_db_session),
-    original_url: str = Form(...),
+    original_url: str = Form(),
 ):
-    accept = request.headers["accept"]
-    print(accept)
-    try:
-        # Check to see if the url confronts to a valid format. If not then display error.
-        if not is_valid_url(original_url):
-            data = {
-                "error": "Unable to shorten link. Invalid URL.",
-                "url": original_url,
-            }
-        # Else if the domain is not allowed, display error and link to GC Forms page
-        elif not is_domain_allowed(original_url, db_session):
-            forms_url = os.getenv("FORMS_URL")
-            data = {
-                "error": "URL is not registered in our system as an Official GC Domain.",
-                "form_url": forms_url,
-                "url": original_url,
-            }
-        # Else, we are all good to shorten!
-        else:
-            short_url = return_short_url(original_url, db_session)
-            SHORTENER_DOMAIN = os.getenv("SHORTENER_DOMAIN") or None
-            data = {
-                "short_url": short_url,
-                "url": SHORTENER_DOMAIN + short_url,
-            }
-    except Exception as err:
-        data = {"error": f"Error in processing shortened url {err}"}
-    if len(accept.split(",")) > 1:
-        return templates.TemplateResponse(
-            "index.html", context={"request": request, "data": data}
-        )
-    else:
-        return {"status": "OK", "short_url": short_url}
+    data = validate_and_shorten_url(original_url, db_session)
+    return templates.TemplateResponse(
+        "index.html", context={"request": request, "data": data}
+    )
 
 
 @router.post("/shorten", status_code=status.HTTP_201_CREATED)
@@ -77,27 +47,18 @@ def create_shortened_url_api(
     db_session: Session = Depends(get_db_session),
     original_url: HttpUrl = Body(..., embed=True),
 ):
-    try:
-        short_url = return_short_url(original_url, db_session)
-        return {"status": "OK", "short_url": short_url}
-    except Exception:
-        return {"error": "error in processing shortened url"}
+    resp = validate_and_shorten_url(original_url, db_session)
+    if resp["status"] == "ERROR":
+        raise HTTPException(status_code=400, detail=resp)
+    return resp
 
 
 @router.get("/{short_url}")
 def redirect_to_site(short_url: str, db_session: Session = Depends(get_db_session)):
-    try:
-        short_url_obj = (
-            db_session.query(ShortUrls).filter(ShortUrls.short_url == short_url).first()
-        )
-        if short_url_obj is None:
-            raise HTTPException(
-                status_code=404, detail="The given link does not exist."
-            )
-        return RedirectResponse(
-            url=short_url_obj.original_url,
-            status_code=status.HTTP_301_MOVED_PERMANENTLY,
-        )
-    except SQLAlchemyError as err:
-        log.error(err)
-        return {"error": "error retrieving link details"}
+    short_url_obj = resolve_short_url(short_url, db_session)
+    if not short_url_obj:
+        raise HTTPException(status_code=404, detail="The given link does not exist.")
+    return RedirectResponse(
+        url=short_url_obj.original_url,
+        status_code=status.HTTP_302_FOUND,
+    )
