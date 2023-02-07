@@ -22,6 +22,11 @@ def test_creating_a_valid_shortlink(client):
     assert response.json()["status"] == "OK"
 
 
+def test_creating_a_blocked_shortlink(client):
+    response = client.post("/shorten", json={"original_url": "https://www.example.ca"})
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+
 def test_known_shorturl_redirects_to_original_url(client):
     response = client.post("/shorten", json={"original_url": "https://www.canada.ca"})
     shorturl = response.json()["short_url"]

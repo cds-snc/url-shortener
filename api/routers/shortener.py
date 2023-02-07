@@ -47,7 +47,10 @@ def create_shortened_url_api(
     db_session: Session = Depends(get_db_session),
     original_url: HttpUrl = Body(..., embed=True),
 ):
-    return validate_and_shorten_url(original_url, db_session)
+    resp = validate_and_shorten_url(original_url, db_session)
+    if resp["status"] == "ERROR":
+        raise HTTPException(status_code=400, detail=resp)
+    return resp
 
 
 @router.get("/{short_url}")
