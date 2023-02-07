@@ -8,11 +8,13 @@ from sqlalchemy.orm import sessionmaker
 
 from database.db import get_db_session
 from models import Base
+from models.AllowedDomains import AllowedDomains
 
 from main import app
 
 db_engine = create_engine(os.environ.get("DATABASE_TEST_URL"))
 LocalSession = sessionmaker(autocommit=False, autoflush=False, bind=db_engine)
+
 
 def get_test_db_session() -> Session:
     connection = db_engine.connect()
@@ -23,15 +25,25 @@ def get_test_db_session() -> Session:
         session.close()
         connection.close()
 
+
 @pytest.fixture(scope="session")
 def setup_test_database():
     Base.metadata.bind = db_engine
     Base.metadata.create_all()
+    seed_authorized_domains()
     yield
     Base.metadata.drop_all()
+
 
 @pytest.fixture(scope="session")
 def client(setup_test_database) -> TestClient:
     app.dependency_overrides[get_db_session] = get_test_db_session
     client = TestClient(app)
     yield client
+
+
+def seed_authorized_domains():
+    session = LocalSession()
+    session.add(AllowedDomains(domain="canada.ca"))
+    session.add(AllowedDomains(domain="canada.gc.ca"))
+    session.commit()
