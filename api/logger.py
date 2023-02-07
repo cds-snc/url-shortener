@@ -1,4 +1,4 @@
 import logzero
 
 logzero.json()
-log=logzero.logger
+log = logzero.logger

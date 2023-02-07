@@ -1,0 +1,56 @@
+name: Lint, format and test code
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - api/**
+      - .github/workflows/ci_code.yml
+
+env:
+  TERRAGRUNT_VERSION: v0.31.1
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: url-shortener
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+
+      - name: Setup python
+        uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
+        with:
+          python-version: "3.11"
+
+      - name: Install dev dependencies
+        working-directory: ./api
+        run: make install-dev
+
+      - name: Install dependencies
+        working-directory: ./api
+        run: make install
+
+      - name: Lint
+        working-directory: ./api
+        run: make lint-ci
+
+      - name: Format
+        working-directory: ./api
+        run: make fmt-ci
+
+      - name: Test
+        working-directory: ./api
+        run: make test
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1/url-shortener
+          DATABASE_TEST_URL: postgresql://postgres:postgres@127.0.0.1/url-shortener
