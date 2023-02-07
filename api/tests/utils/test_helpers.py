@@ -16,6 +16,14 @@ def test_generate_short_url():
     assert short_url == "XjbS35ah"
 
 
+def test_generate_short_url_with_short_string():
+    original_url = "http://example.com"
+    timestamp = 123456789
+    short_url = helpers.generate_short_url(original_url, timestamp, 3)
+    assert len(short_url) == 4
+    assert short_url == "XjbS"
+
+
 @patch("utils.helpers.generate_short_url")
 @patch("utils.helpers.advocate")
 def test_return_short_url_succeeds_if_advoacte_passes(
