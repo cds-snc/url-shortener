@@ -27,7 +27,7 @@ jobs:
       matrix:
         include:
           - module: hosted_zone
-	  - module: api
+          - module: api
           - module: ecr
 
     runs-on: ubuntu-latest
