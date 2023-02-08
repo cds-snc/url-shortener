@@ -4,9 +4,7 @@ import os
 
 client = boto3.client(
     "dynamodb",
-    endpoint_url=(
-        os.environ.get("DYNAMODB_HOST", None)
-    ),
+    endpoint_url=(os.environ.get("DYNAMODB_HOST", None)),
     region_name="ca-central-1",
 )
 
