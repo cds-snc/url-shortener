@@ -19,7 +19,6 @@ jobs:
           - 9000:8000
         volumes:
           - "./docker/dynamodb:/home/dynamodblocal/data"
-        options: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
 
     steps:
       - name: Checkout
