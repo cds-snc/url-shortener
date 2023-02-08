@@ -52,7 +52,7 @@ To use the API, you can use [httpie](https://httpie.io/), [postman](https://www.
 Execute a POST request with 
 
 ```
-http://localhost:8000/shorten 
+http://localhost:8000/v1 
 ```
 In the body pass the following:
 ```{
@@ -62,14 +62,14 @@ In the body pass the following:
 
 #### curl
 ```
-curl -X POST -d '{"original_url": "https://google.com"}' -H "Content-Type: application/json" http://localhost:8000/shorten
+curl -X POST -d '{"original_url": "https://google.com"}' -H "Content-Type: application/json" http://localhost:8000/v1
 
 {"status":"OK","short_url":"xM_ElQWt"}
 ```
 
 #### httpie
 ```
-http POST localhost:8000/shorten original_url=http://www.google.com
+http POST localhost:8000/v1 original_url=http://www.google.com
 
 HTTP/1.1 200 OK
 content-length: 38

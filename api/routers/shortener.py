@@ -35,7 +35,7 @@ def create_shortened_url(
     )
 
 
-@router.post("/shorten", status_code=status.HTTP_201_CREATED)
+@router.post("/v1", status_code=status.HTTP_201_CREATED)
 def create_shortened_url_api(
     original_url: HttpUrl = Body(..., embed=True),
 ):

@@ -17,18 +17,18 @@ def test_POST_homepage_returns_200(client):
 
 
 def test_creating_a_valid_shortlink(client):
-    response = client.post("/shorten", json={"original_url": "https://www.canada.ca"})
+    response = client.post("/v1", json={"original_url": "https://www.canada.ca"})
     assert response.status_code == status.HTTP_201_CREATED
     assert response.json()["status"] == "OK"
 
 
 def test_creating_a_blocked_shortlink(client):
-    response = client.post("/shorten", json={"original_url": "https://www.example.ca"})
+    response = client.post("/v1", json={"original_url": "https://www.example.ca"})
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
 def test_known_shorturl_redirects_to_original_url(client):
-    response = client.post("/shorten", json={"original_url": "https://www.canada.ca"})
+    response = client.post("/v1", json={"original_url": "https://www.canada.ca"})
     shorturl = response.json()["short_url"].split("/")[-1]
 
     # See https://github.com/tiangolo/fastapi/issues/790
