@@ -36,9 +36,9 @@ data "aws_vpc" "url_shortener_vpc" {
 }
 
 resource "aws_vpc_endpoint" "dynamodb" {
-  vpc_id              = module.url_shortener_vpc.vpc_id
-  vpc_endpoint_type   = "Gateway"
-  service_name        = "com.amazonaws.${var.region}.dynamodb"
+  vpc_id            = module.url_shortener_vpc.vpc_id
+  vpc_endpoint_type = "Gateway"
+  service_name      = "com.amazonaws.${var.region}.dynamodb"
   route_table_ids   = [data.aws_vpc.url_shortener_vpc.main_route_table_id]
 }
 

@@ -14,7 +14,7 @@ resource "aws_security_group" "api" {
     Name       = "${var.product_name}_api_sg"
   }
 
- egress {
+  egress {
     description = "Allow API outbound connections to the internet"
     from_port   = 443
     to_port     = 443
