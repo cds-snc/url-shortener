@@ -22,6 +22,7 @@ services:
       AWS_ACCESS_KEY_ID: 'AWS_ACCESS_KEY_ID'
       AWS_SECRET_ACCESS_KEY: 'AWS_SECRET_ACCESS_KEY'
       AWS_REGION: 'ca-central-1'
+      AWS_DYNAMODB_ENDPOINT: 'http://db:8000'
 
     volumes:
       - ..:/workspace:cached
@@ -30,7 +31,7 @@ services:
     command: sleep infinity
 
     # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
-    network_mode: service:db
+    # network_mode: service:db
     # Uncomment the next line to use a non-root user for all processes.
     # user: vscode
 

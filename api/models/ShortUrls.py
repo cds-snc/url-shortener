@@ -5,7 +5,7 @@ import os
 client = boto3.client(
     "dynamodb",
     endpoint_url=(
-        "http://dynamodb-local:8000" if os.environ.get("DEV", None) else None
+        "http://dynamodb-local:8000" if os.environ.get("DYNAMODB_HOST", None) else None
     ),
     region_name="ca-central-1",
 )
