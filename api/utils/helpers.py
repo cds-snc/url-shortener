@@ -6,9 +6,7 @@ import requests
 import validators
 from datetime import datetime, timezone
 from urllib.parse import urlparse
-from models.ShortUrls import ShortUrls
-from models.AllowedDomains import AllowedDomains
-from sqlalchemy.exc import SQLAlchemyError
+from models import ShortUrls
 from logger import log
 
 
@@ -27,25 +25,14 @@ def generate_short_url(original_url: str, timestamp: float, shortened_length: in
     return b64_encoded_str[:shortened_length]
 
 
-def is_domain_allowed(original_url, db_session):
-    """is_domain_allowed function determines if a passed in url is in the allowed list of government
-    domains. It queries the table allowed_domains to determine if the url is allowed to be shortened
+def is_domain_allowed(original_url):
+    """is_domain_allowed determines if the domain of the url passed in as a parameter is allowed in a list of allowed domains
     parameter original_url: the url that the user passes to the api
-    parameter db_session: the database sesion
-    returns: True if the url contains a domain that is allowed or False if it does not
-    """
+    returns: True if the domain is allowed and False if it is not."""
     try:
         # Obtain the domain from the url
         domain = ".".join(urlparse(original_url).hostname.split(".")[-2:])
-        # Query the table allowed_domains to see if the domain exists.
-        domain_obj = (
-            db_session.query(AllowedDomains)
-            .filter(AllowedDomains.domain == domain)
-            .first()
-        )
-        if domain_obj is not None:
-            return True
-        return False
+        return domain in os.getenv("ALLOWED_DOMAINS").split(",")
     except Exception:
         return {"error": "error retrieving domain"}
 
@@ -57,52 +44,49 @@ def is_valid_url(original_url):
     try:
         return validators.url(original_url)
     except Exception:
+        log.info(f"Error in validating url: {original_url}")
         return False
 
 
-def resolve_short_url(short_url, db_session):
+def resolve_short_url(short_url):
     """resolve_short_url function resolves the short url to the original url
     parameter short_url: the shortened url
-    parameter db_session: the database session
-    returns: the original url or an error message if the short url does not exist"""
-    try:
-        short_url_obj = (
-            db_session.query(ShortUrls).filter(ShortUrls.short_url == short_url).first()
-        )
-        if short_url_obj is None:
-            return False
-        return short_url_obj
-    except SQLAlchemyError as err:
-        log.error(err)
+    returns: the original url or False if the short url cannot be resolved"""
+    result = ShortUrls.get_short_url(short_url)
+    if result is None:
+        log.info(f"Error in resolving url: {short_url}")
         return False
+    return result
 
 
-def return_short_url(original_url, db_session):
-    """return_short_url function returns a shortened url if the original url is valid and allowed
+def return_short_url(original_url):
+    """return_short_url function returns the shortened url
     parameter original_url: the url that the user passes to the api
-    parameter db_session: the database session
-    returns: the shortened url or an error message if the short url cannot be generated"""
+    returns: the shortened url or an error message if the shortened url cannot be generated"""
     try:
         timestamp = datetime.now().replace(tzinfo=timezone.utc).timestamp()
         try:
             advocate.get(original_url)
         except advocate.UnacceptableAddressException:
+            log.info(f"Unacceptable address: {original_url}")
             return {"error": "That URL points to a forbidden resource"}
         except requests.RequestException:
+            log.info(f"Failed to connect: {original_url}")
             return {"error": "Failed to connect to the specified URL"}
         short_url = generate_short_url(original_url, timestamp)
-        short_url_obj = ShortUrls(original_url=original_url, short_url=short_url)
-        db_session.add(short_url_obj)
-        db_session.commit()
+        short_url_obj = ShortUrls.create_short_url(original_url, short_url)
+        if not short_url_obj:
+            log.info(f"Could not save URL: {original_url} | {short_url}")
+            return {"error": "Error in processing shortened url"}
         return short_url
-    except Exception:
+    except Exception as err:
+        log.error(f"Error processing URL: {original_url} | {err}")
         return {"error": "Error in processing shortened url"}
 
 
-def validate_and_shorten_url(original_url, db_session):
+def validate_and_shorten_url(original_url):
     """validate_and_shorten_url function validates the url passed in as a parameter and then shortens it
     parameter original_url: the url that the user passes to the api
-    parameter db_session: the database session
     returns: a dictionary containing the shortened url and the original url"""
     try:
         # Check to see if the url confronts to a valid format. If not then display error.
@@ -113,7 +97,7 @@ def validate_and_shorten_url(original_url, db_session):
                 "status": "ERROR",
             }
         # Else if the domain is not allowed, display error and link to GC Forms page
-        elif not is_domain_allowed(original_url, db_session):
+        elif not is_domain_allowed(original_url):
             forms_url = os.getenv("FORMS_URL")
             data = {
                 "error": "URL is not registered in our system as an Official GC Domain.",
@@ -123,7 +107,7 @@ def validate_and_shorten_url(original_url, db_session):
             }
         # Else, we are all good to shorten!
         else:
-            short_url = return_short_url(original_url, db_session)
+            short_url = return_short_url(original_url)
 
             if isinstance(short_url, dict):
                 return {

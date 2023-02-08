@@ -1,23 +1,41 @@
+import boto3
 import datetime
-import uuid
+import os
 
-from models import Base
-from sqlalchemy import DateTime, Column, String
-from sqlalchemy.dialects.postgresql import UUID
+client = boto3.client(
+    "dynamodb",
+    endpoint_url=(os.environ.get("DYNAMODB_HOST", None)),
+    region_name="ca-central-1",
+)
+
+table = os.environ.get("TABLE_NAME", "url_shortener")
 
 
-class ShortUrls(Base):
-    __tablename__ = "short_urls"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    original_url = Column(String, nullable=False)
-    short_url = Column(String, nullable=False)
-    # click_count = Column(Integer, nullable=False, default=0)
-    # service = Column(String, nullable=False)
-    created = Column(
-        DateTime,
-        index=False,
-        unique=False,
-        nullable=False,
-        default=datetime.datetime.utcnow,
+def create_short_url(original_url, short_url):
+    response = client.put_item(
+        TableName=table,
+        Item={
+            "short_url": {"S": short_url},
+            "original_url": {"S": original_url},
+            "click_count": {"N": "0"},
+            "active": {"BOOL": True},
+            "created": {"S": str(datetime.datetime.utcnow())},
+        },
     )
+
+    if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
+        return short_url
+    else:
+        return None
+
+
+def get_short_url(short_url):
+    response = client.get_item(
+        TableName=table,
+        Key={"short_url": {"S": short_url}},
+        ProjectionExpression="short_url, original_url, click_count, active, created",
+    )
+    if response["ResponseMetadata"]["HTTPStatusCode"] == 200 and "Item" in response:
+        return response["Item"]
+    else:
+        return None
