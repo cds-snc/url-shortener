@@ -7,7 +7,7 @@ from main import app
 
 dynamodb_client = boto3.client(
     "dynamodb",
-    endpoint_url=("http://dynamodb-local:8000"),
+    endpoint_url=(os.environ.get("DYNAMODB_HOST", None)),
     region_name="ca-central-1",
 )
 

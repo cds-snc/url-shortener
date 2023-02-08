@@ -16,7 +16,7 @@ jobs:
       dynamodb-local:
         image: "amazon/dynamodb-local"
         ports:
-          - 8000:8000
+          - 9000:8000
 
     steps:
       - name: Checkout
