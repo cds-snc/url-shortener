@@ -7,6 +7,7 @@ import validators
 from datetime import datetime, timezone
 from urllib.parse import urlparse
 from models import ShortUrls
+from logger import log
 
 
 def generate_short_url(original_url: str, timestamp: float, shortened_length: int = 8):
@@ -43,6 +44,7 @@ def is_valid_url(original_url):
     try:
         return validators.url(original_url)
     except Exception:
+        log.info(f"Error in validating url: {original_url}")
         return False
 
 
@@ -52,6 +54,7 @@ def resolve_short_url(short_url):
     returns: the original url or False if the short url cannot be resolved"""
     result = ShortUrls.get_short_url(short_url)
     if result is None:
+        log.info(f"Error in resolving url: {short_url}")
         return False
     return result
 
@@ -65,15 +68,19 @@ def return_short_url(original_url):
         try:
             advocate.get(original_url)
         except advocate.UnacceptableAddressException:
+            log.info(f"Unacceptable address: {original_url}")
             return {"error": "That URL points to a forbidden resource"}
         except requests.RequestException:
+            log.info(f"Failed to connect: {original_url}")
             return {"error": "Failed to connect to the specified URL"}
         short_url = generate_short_url(original_url, timestamp)
         short_url_obj = ShortUrls.create_short_url(original_url, short_url)
         if not short_url_obj:
+            log.info(f"Could not save URL: {original_url} | {short_url}")
             return {"error": "Error in processing shortened url"}
         return short_url
-    except Exception:
+    except Exception as err:
+        log.error(f"Error processing URL: {original_url} | {err}")
         return {"error": "Error in processing shortened url"}
 
 

@@ -1,3 +1,5 @@
+aws dynamodb delete-table --table-name url_shortener --endpoint-url http://dynamodb-local:8000 --no-cli-pager
+
 aws dynamodb create-table \
    --table-name url_shortener \
    --attribute-definitions AttributeName=short_url,AttributeType=S \

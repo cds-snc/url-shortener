@@ -1,71 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-      <meta charset="utf-8">
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-      <!-- Bootstrap CSS -->
-      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-      <!-- Google fonts -->
-      <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
-      <link rel="preload" as="style" href="https://fonts.googleapis.com/css?family=Lato:400,700%7CNoto+Sans:400,700&amp;display=fallback" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700%7CNoto+Sans:400,700&amp;display=fallback" />
-      <link href="{{ url_for('static', path='css/styles.css') }}" rel="stylesheet">
-      <link href="{{ url_for('static', path='css/normalize.css') }}" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-     <title>{% block title %}{%endblock %}</title>
-  </head>
-  <body>
-   <div class="container">
-      <header>
-            <div class="page--container">
-             <div class="fip-container">
-              <div class="canada-flag">
-               <img type="image/svg+xml" src="{{ url_for('static', path='img/sig-blk-en.svg') }}" alt="Government of Canada" />
-              </div>
+  <!-- Google fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css?family=Lato:400,700%7CNoto+Sans:400,700&amp;display=fallback" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Lato:400,700%7CNoto+Sans:400,700&amp;display=fallback" />
+  <link href="{{ url_for('static', path='css/styles.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', path='css/normalize.css') }}" rel="stylesheet">
 
-              <nav class="nav--header" aria-label="Language and account navigation">
-               <ul>
-                <li>
-                  <h2 class="visually-hidden">Language selection</h2>
-                  <a href="./fr.htm">Français</a>
-                </li>
-               </ul>
-              </nav>
-              </div>
-             </div>
-            <div class="page--container">
-            </div>
-      </header>
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Ctext%20x='0'%20y='14'%3E🍁%3C/text%3E%3C/svg%3E"
+    type="image/svg+xml" />
 
-     <main id="content">
-       <nav class="nav--main anonymous" aria-label="Product navigation">
-        <div class="page--container"></div>
-       </nav>
-       <div class="page--container" id="page--content" tabindex="-1">
-        <div class="content--container">
-         {% block page_content %} {% endblock %}
+  <title>{% block title %}{%endblock %}</title>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <div class="page--container">
+        <div class="fip-container">
+          <div class="canada-flag">
+            <img type="image/svg+xml" src="{{ url_for('static', path='img/sig-blk-en.svg') }}"
+              alt="Government of Canada" />
+          </div>
+
+          <nav class="nav--header" aria-label="Language and account navigation">
+            <ul>
+              <li>
+                <h2 class="visually-hidden">Language selection</h2>
+                <a href="./fr.htm">Français</a>
+              </li>
+            </ul>
+          </nav>
         </div>
-       </div>
-     </main>
+      </div>
+      <div class="page--container">
+      </div>
+    </header>
+
+    <main id="content">
+      <nav class="nav--main anonymous" aria-label="Product navigation">
+        <div class="page--container"></div>
+      </nav>
+      <div class="page--container" id="page--content" tabindex="-1">
+        <div class="content--container">
+          {% block page_content %} {% endblock %}
+        </div>
+      </div>
+    </main>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"></script>
 
-   <!-- Load the copy function js file -->
-   <script type="text/javascript" src="{{ url_for('static', path='js/copy.js') }}"></script>
-   <footer>
-     <div class="page--container">
-      <div class="footer-links"></div>
-       <div class="canada-wordmark"><img type="image/svg+xml" src="{{ url_for('static', path='img/wmms-blk.svg') }}" alt="Symbol of the Government of Canada" /></div>
-    </div>
-   </footer>
-   </div>
-  </body>
+    <!-- Load the copy function js file -->
+    <script type="text/javascript" src="{{ url_for('static', path='js/copy.js') }}"></script>
+    <footer>
+      <div class="page--container">
+        <div class="footer-links"></div>
+        <div class="canada-wordmark"><img type="image/svg+xml" src="{{ url_for('static', path='img/wmms-blk.svg') }}"
+            alt="Symbol of the Government of Canada" /></div>
+      </div>
+    </footer>
+  </div>
+</body>
 
 </html>
