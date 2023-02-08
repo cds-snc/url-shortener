@@ -1,6 +1,6 @@
 from utils import helpers
 
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, patch
 
 import advocate
 import requests
@@ -119,20 +119,18 @@ def test_is_valid_url_returns_false_if_throws_an_exception(mock_validators):
     assert result is False
 
 
-def test_resolve_short_url_returns_original_url():
+@patch("utils.helpers.ShortUrls")
+def test_resolve_short_url_returns_original_url(mock_short_urls_model):
     short_url = "XjbS35ah"
+    mock_short_urls_model.get_short_url.return_value = "http://example.com"
     result = helpers.resolve_short_url(short_url)
-    assert result is True
+    assert result == "http://example.com"
 
 
-def test_resolve_short_url_returns_false_if_it_does_not_exist():
+@patch("utils.helpers.ShortUrls")
+def test_resolve_short_url_returns_false_if_it_does_not_exist(mock_short_urls_model):
     short_url = "XjbS35ah"
-    result = helpers.resolve_short_url(short_url)
-    assert result is False
-
-
-def test_resolve_short_url_returns_exception():
-    short_url = "XjbS35ah"
+    mock_short_urls_model.get_short_url.return_value = None
     result = helpers.resolve_short_url(short_url)
     assert result is False
 
@@ -196,7 +194,7 @@ def test_validate_and_shorten_url_returns_success():
     result = helpers.validate_and_shorten_url(original_url)
     assert result == {
         "original_url": original_url,
-        "short_url": "XjbS35ah",
+        "short_url": "http://127.0.0.1:8000/XjbS35ah",
         "status": "OK",
     }
 

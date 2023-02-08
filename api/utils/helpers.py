@@ -73,7 +73,7 @@ def return_short_url(original_url):
         if not short_url_obj:
             return {"error": "Error in processing shortened url"}
         return short_url
-    except Exception as e:
+    except Exception:
         return {"error": "Error in processing shortened url"}
 
 
@@ -90,7 +90,7 @@ def validate_and_shorten_url(original_url):
                 "status": "ERROR",
             }
         # Else if the domain is not allowed, display error and link to GC Forms page
-        elif not is_domain_allowed(original_url, db_session):
+        elif not is_domain_allowed(original_url):
             forms_url = os.getenv("FORMS_URL")
             data = {
                 "error": "URL is not registered in our system as an Official GC Domain.",
@@ -100,7 +100,7 @@ def validate_and_shorten_url(original_url):
             }
         # Else, we are all good to shorten!
         else:
-            short_url = return_short_url(original_url, db_session)
+            short_url = return_short_url(original_url)
 
             if isinstance(short_url, dict):
                 return {

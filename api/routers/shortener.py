@@ -51,6 +51,6 @@ def redirect_to_site(short_url: str):
     if not short_url_obj:
         raise HTTPException(status_code=404, detail="The given link does not exist.")
     return RedirectResponse(
-        url=short_url_obj.original_url,
+        url=short_url_obj["original_url"]["S"],
         status_code=status.HTTP_302_FOUND,
     )

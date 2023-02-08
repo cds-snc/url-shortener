@@ -37,8 +37,7 @@ def get_short_url(short_url):
         Key={"short_url": {"S": short_url}},
         ProjectionExpression="short_url, original_url, click_count, active, created",
     )
-
-    if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
+    if response["ResponseMetadata"]["HTTPStatusCode"] == 200 and "Item" in response:
         return response["Item"]
     else:
         return None

@@ -29,7 +29,7 @@ def test_creating_a_blocked_shortlink(client):
 
 def test_known_shorturl_redirects_to_original_url(client):
     response = client.post("/shorten", json={"original_url": "https://www.canada.ca"})
-    shorturl = response.json()["short_url"]
+    shorturl = response.json()["short_url"].split("/")[-1]
 
     # See https://github.com/tiangolo/fastapi/issues/790
     # For discussion of the allow_redirect = False
