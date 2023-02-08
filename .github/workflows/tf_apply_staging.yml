@@ -46,3 +46,7 @@ jobs:
       - name: Apply api
         working-directory: terragrunt/env/staging/api
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
+
+      - name: Apply ecr 
+        working-directory: terragrunt/env/staging/ecr
+        run: terragrunt apply --terragrunt-non-interactive -auto-approve

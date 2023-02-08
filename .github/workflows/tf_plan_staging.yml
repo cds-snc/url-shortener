@@ -29,6 +29,7 @@ jobs:
         include:
           - module: hosted_zone
           - module: api
+          - module: ecr 
 
     runs-on: ubuntu-latest
     steps:
