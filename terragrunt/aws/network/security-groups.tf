@@ -1,3 +1,7 @@
+# 
+# Security Groups
+#
+
 resource "aws_security_group" "api" {
 
   name        = "${var.product_name}_api_sg"
