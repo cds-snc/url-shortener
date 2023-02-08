@@ -1,5 +1,5 @@
 # 
-# Security Groups
+# Security Groups for the VPC URL shortener
 #
 
 resource "aws_security_group" "api" {

@@ -1,3 +1,7 @@
+#
+# VPC
+#
+
 module "url_shortener_vpc" {
   source            = "github.com/cds-snc/terraform-modules?ref=v0.0.31//vpc"
   name              = var.product_name
