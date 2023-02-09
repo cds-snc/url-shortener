@@ -28,12 +28,12 @@ resource "aws_security_group" "vpc_endpoint" {
 }
 
 resource "aws_security_group_rule" "api_egress_internet" {
-  description = "Allow TCP egress connections to the internet on port 443"
-  type        = "egress"
-  from_port   = 443
-  to_port     = 443
-  protocol    = "TCP"
-  cidr_blocks = ["0.0.0.0/0"]
+  description       = "Allow TCP egress connections to the internet on port 443"
+  type              = "egress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "TCP"
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.api.id
 }
 
