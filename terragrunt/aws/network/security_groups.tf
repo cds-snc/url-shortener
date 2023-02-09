@@ -27,15 +27,27 @@ resource "aws_security_group" "vpc_endpoint" {
   }
 }
 
-resource "aws_security_group" "api_egress_internet {
-    description = "Allow TCP egress connections to the internet on port 443"
-    type        = "egress"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "TCP"
-    cidr_blocks = ["0.0.0.0/0"]
-    security_group_id = aws_security_group.api.id
-  }
+resource "aws_security_group_rule" "vpc_endpoint_interface_ingress" {
+  description              = "Ingress from the API security group to the private interface endpoints"
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.vpc_endpoint.id
+  source_security_group_id = aws_security_group.api.id
+}
+
+resource "aws_security_group_rule" "vpc_endpoint_dynamodb_ingress" {
+  description       = "Ingress from the private DynamoDB endpoint"
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.vpc_endpoint.id
+  prefix_list_ids = [
+    aws_vpc_endpoint.dynamodb.prefix_list_id
+  ]
+}
 
 resource "aws_security_group_rule" "s3_private_endpoint_ingress" {
   description       = "Ingress from the private S3 endpoint"
