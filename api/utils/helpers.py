@@ -117,6 +117,7 @@ def validate_and_shorten_url(original_url):
                 }
 
             shortener_domain = os.getenv("SHORTENER_DOMAIN") or ""
+            log.info(f"Shortened URL: {short_url} from {original_url}")
             data = {
                 "short_url": f"{shortener_domain}{short_url}",
                 "original_url": original_url,
