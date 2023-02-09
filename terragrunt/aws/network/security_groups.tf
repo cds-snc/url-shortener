@@ -13,14 +13,6 @@ resource "aws_security_group" "api" {
     CostCentre = var.billing_code
     Name       = "${var.product_name}_api_sg"
   }
-
-  egress {
-    description = "Allow API outbound connections to the internet"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "TCP"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 }
 
 resource "aws_security_group" "vpc_endpoint" {
@@ -34,6 +26,16 @@ resource "aws_security_group" "vpc_endpoint" {
     Terraform  = true
   }
 }
+
+resource "aws_security_group" "api_egress_internet {
+    description = "Allow TCP egress connections to the internet on port 443"
+    type        = "egress"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+    security_group_id = aws_security_group.api.id
+  }
 
 resource "aws_security_group_rule" "s3_private_endpoint_ingress" {
   description       = "Ingress from the private S3 endpoint"
