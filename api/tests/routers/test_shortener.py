@@ -27,6 +27,14 @@ def test_creating_a_blocked_shortlink(client):
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
+def test_creating_a_blocked_shortlink_with_ending_match(client):
+    response = client.post("/v1", json={"original_url": "https://www.examplegc.ca"})
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    response = client.post("/v1", json={"original_url": "https://www.examplecanada.ca"})
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+
 def test_known_shorturl_displays_original_url(client):
     response = client.post(
         "/v1",
