@@ -8,7 +8,7 @@ output "private_subnet_ids" {
   value       = module.url_shortener_vpc.private_subnet_ids
 }
 
-output "api_id" {
+output "api_security_group_id" {
   description = "Api security group Id"
   value       = aws_security_group.api.id
 }
