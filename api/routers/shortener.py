@@ -6,7 +6,7 @@ from fastapi import (
     Request,
     Form,
 )
-from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi.responses import HTMLResponse
 
 from pydantic import HttpUrl
 from utils.helpers import resolve_short_url, validate_and_shorten_url
@@ -45,12 +45,19 @@ def create_shortened_url_api(
     return resp
 
 
-@router.get("/{short_url}")
-def redirect_to_site(short_url: str):
+@router.get("/{short_url}", response_class=HTMLResponse)
+def redirect_to_site(short_url: str, request: Request):
     short_url_obj = resolve_short_url(short_url)
     if not short_url_obj:
-        raise HTTPException(status_code=404, detail="The given link does not exist.")
-    return RedirectResponse(
-        url=short_url_obj["original_url"]["S"],
-        status_code=status.HTTP_302_FOUND,
+        resp = templates.TemplateResponse("404.html", context={"request": request})
+        resp.status_code = status.HTTP_404_NOT_FOUND
+        return resp
+    resp = templates.TemplateResponse(
+        "redirect.html",
+        context={
+            "request": request,
+            "data": {"url": short_url_obj["original_url"]["S"]},
+        },
     )
+    resp.status_code = status.HTTP_200_OK
+    return resp
