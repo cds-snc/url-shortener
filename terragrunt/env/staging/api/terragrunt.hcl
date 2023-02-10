@@ -33,6 +33,7 @@ inputs = {
   private_subnet_ids	= dependency.network.outputs.private_subnet_ids
   ecr_repository_arn	= dependency.ecr.outputs.ecr_repository_arn
   ecr_repository_url	= dependency.ecr.outputs.ecr_repository_url
+  ecr_tag		= "latest"
 }  
 
 include {

@@ -26,6 +26,10 @@ variable "api_security_group_id" {
 
 variable "private_subnet_ids" {
   description = "List of the URL Shortner VPC private subnet ids"
-  type        = string
+  type        = list(string)
 }
 
+variable "ecr_tag" {
+  description = "The tag used for the ECR to specifiy either a specific version or latest"
+  type        = string
+}
