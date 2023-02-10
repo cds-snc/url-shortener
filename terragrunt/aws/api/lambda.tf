@@ -2,7 +2,7 @@ module "url_shortener_lambda" {
   source                 = "github.com/cds-snc/terraform-modules?ref=v5.0.0//lambda"
   name                   = "${var.product_name}-api"
   billing_tag_value      = var.billing_code
-  ecr_arn                = aws_ecr_repository.api.arn
+  ecr_arn                = aws_ecr_repository.api.arn 
   enable_lambda_insights = true
   image_uri              = "${aws_ecr_repository.api.repository_url}:latest"
   memory                 = 3008
@@ -15,7 +15,7 @@ module "url_shortener_lambda" {
   }
 
   environment_variables = {
-    DOMAIN                    = var.domain_name
+    DOMAIN                    = var.domain
     API_AUTH_TOKEN_SECRET_ARN = aws_ssm_parameter.api_auth_token
   }
 
