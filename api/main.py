@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from os import environ
 from pydantic import BaseSettings
 from routers import shortener
-from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import PlainTextResponse
 
 from dotenv import load_dotenv
 
@@ -37,7 +37,15 @@ app = FastAPI(
 # include other routes
 app.include_router(shortener.router)
 
-templates = Jinja2Templates(directory="templates")
-
 # Mount static directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Response for /.well-known/security.txt
+app.get("/.well-known/security.txt", response_class=PlainTextResponse)(
+    lambda: """Contact: mailto:security-securite@cds-snc.ca
+Preferred-Languages: en, fr
+Policy: https://digital.canada.ca/legal/security-notice
+Hiring: https://digital.canada.ca/join-our-team/
+Hiring: https://numerique.canada.ca/rejoindre-notre-equipe/
+"""
+)
