@@ -19,7 +19,7 @@ variable "ecr_repository_url" {
   type        = string
 }
 
-variable "api_id" {
+variable "api_security_group_id" {
   description = "Api security group Id"
   type        = string
 }
