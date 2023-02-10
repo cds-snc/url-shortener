@@ -5,23 +5,14 @@
 
 {% block page_content %}
 <h1>Redirect Notice / Avis de redirection</h1>
-The previous page is sending you to / La page précédente vous envoie à :
-<br />
-<br />
-<a class="redirect_link" href="{{ data.url }}">{{ data.url }}</a>
-<br />
-<br />
-If you want to continue, please click the link above.
-<br />
-<br />
-Si vous voulez continuer, cliquez sur le lien ci-dessus.
-<br />
-<br />
-If you do not want to visit that page, you can <a class="redirect_link" href="#" onclick="history.back()">return to the
-    previous page</a>.
-<br />
-<br />
-Si vous ne voulez pas visiter cette page, vous pouvez <a class="redirect_link" href="#"
-    onclick="history.back()">retourner à la page
-    précédente</a>.
+<p>The previous page is sending you to / La page précédente vous envoie à:</p>
+<p><a class="redirect_link" href="{{ data.url }}">{{ data.url }}</a></p>
+<p>If you want to continue, please click the link above.</p>
+<p>Si vous voulez continuer, cliquez sur le lien ci-dessus.</p>
+<p>If you do not want to visit that page, you can <a class="redirect_link" href="#" onclick="history.back()">return to
+        the
+        previous page</a>.</p>
+<p>Si vous ne voulez pas visiter cette page, vous pouvez <a class="redirect_link" href="#"
+        onclick="history.back()">retourner à la page
+        précédente</a>.</p>
 {% endblock %}
