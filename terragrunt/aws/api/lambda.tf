@@ -13,8 +13,8 @@ module "url_shortener_lambda" {
   }
 
   environment_variables = {
-    DOMAIN                    = var.domain
-    API_AUTH_TOKEN_SECRET     = var.api_auth_token
+    DOMAIN                = var.domain
+    API_AUTH_TOKEN_SECRET = var.api_auth_token
   }
 
   policies = [
