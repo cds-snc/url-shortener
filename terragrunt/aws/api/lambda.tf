@@ -5,6 +5,8 @@ module "url_shortener_lambda" {
   ecr_arn                = var.ecr_repository_arn
   enable_lambda_insights = true
   image_uri              = "${var.ecr_repository_url}:${var.ecr_tag}"
+  memory                 = 3008
+  timeout                = 300
 
 
   vpc = {
