@@ -34,7 +34,8 @@ inputs = {
   ecr_repository_arn	= dependency.ecr.outputs.ecr_repository_arn
   ecr_repository_url	= dependency.ecr.outputs.ecr_repository_url
   ecr_tag		= "latest"
-}  
+  url_shortener_table_name = "url_shortener_table"
+  }  
 
 include {
   path = find_in_parent_folders()
