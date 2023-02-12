@@ -15,7 +15,7 @@ module "url_shortener_lambda" {
   }
 
   environment_variables = {
-    DOMAIN                = var.domain
+    DOMAIN                    = var.domain
     API_AUTH_TOKEN_SECRET_ARN = aws_ssm_parameter.api_auth_token.arn
   }
 
