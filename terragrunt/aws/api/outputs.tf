@@ -13,7 +13,7 @@ output "invoke_arn" {
   value       = module.url_shortener_lambda.invoke_arn
 }
 
-output "api_function_url" {
+output "function_url" {
   description = "The URL of the Lambda function"
   value       = aws_lambda_function_url.url_shortener_url.function_url
 }
