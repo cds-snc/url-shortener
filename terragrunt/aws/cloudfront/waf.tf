@@ -243,12 +243,10 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
     regex_string = "^/v1$"
   }
 
-
   # allow base64 and get short url
   regular_expression {
     regex_string = "^/[0-9A-Za-z+/=]{8}$"
   }
-
 
   tags = {
     CostCentre = var.billing_code
