@@ -5,8 +5,8 @@ resource "aws_cloudfront_distribution" "url_shortener_api" {
   web_acl_id  = aws_wafv2_web_acl.api_waf.arn
 
   origin {
-    domain_name = split("/", var.api_function_url)[2]
-    origin_id   = var.api_function_name
+    domain_name = split("/", var.function_url)[2]
+    origin_id   = var.function_name
 
     custom_origin_config {
       http_port              = 80
@@ -20,11 +20,38 @@ resource "aws_cloudfront_distribution" "url_shortener_api" {
     allowed_methods = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods  = ["GET", "HEAD"]
 
-    target_origin_id           = var.api_function_name
+    target_origin_id           = var.function_name
     viewer_protocol_policy     = "redirect-to-https"
     response_headers_policy_id = aws_cloudfront_response_headers_policy.security_headers_api.id
+
+    min_ttl     = 1
+    default_ttl = 86400    # 24 hours
+    max_ttl     = 31536000 # 365 days
+    compress    = true
   }
 
+  # Prevent caching of healthcheck calls
+  ordered_cache_behavior {
+    path_pattern    = "/healthcheck"
+    allowed_methods = ["GET", "HEAD"]
+    cached_methods  = ["GET", "HEAD"]
+
+    forwarded_values {
+      query_string = false
+      cookies {
+        forward = "none"
+      }
+    }
+
+    target_origin_id           = var.function_name
+    viewer_protocol_policy     = "redirect-to-https"
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.security_headers_api.id
+
+    min_ttl     = 0
+    default_ttl = 0
+    max_ttl     = 0
+    compress    = true
+  }
 
   restrictions {
     geo_restriction {
@@ -33,7 +60,7 @@ resource "aws_cloudfront_distribution" "url_shortener_api" {
   }
 
   viewer_certificate {
-    acm_certificate_arn      = aws_acm_certificate_validation.scan_files_certificate_validation.certificate_arn
+    acm_certificate_arn      = aws_acm_certificate_validation.url_shortener_certificate_validation.certificate_arn
     minimum_protocol_version = "TLSv1.2_2021"
     ssl_support_method       = "sni-only"
   }
@@ -45,7 +72,7 @@ resource "aws_cloudfront_distribution" "url_shortener_api" {
 }
 
 resource "aws_cloudfront_response_headers_policy" "security_headers_api" {
-  name = "scan-files-security-headers-api"
+  name = "url-shortener-security-headers-api"
 
   security_headers_config {
     frame_options {

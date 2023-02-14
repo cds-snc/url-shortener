@@ -1,5 +1,5 @@
 module "url_shortener_lambda" {
-  source                 = "github.com/cds-snc/terraform-modules?ref=v5.0.0//lambda"
+  source                 = "github.com/cds-snc/terraform-modules?ref=v5.0.2//lambda"
   name                   = "${var.product_name}-api"
   billing_tag_value      = var.billing_code
   ecr_arn                = var.ecr_repository_arn
@@ -25,6 +25,7 @@ module "url_shortener_lambda" {
 }
 
 resource "aws_lambda_function_url" "url_shortener_url" {
-  function_name      = module.url_shortener_lambda.function_name
+  # function_name      = module.url_shortener_lambda.function_name
+  function_name = module.url_shortener_lambda.function_name
   authorization_type = "NONE"
 }
