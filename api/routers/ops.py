@@ -4,7 +4,7 @@ API routes for for operational and status requests
 from os import environ
 from fastapi import APIRouter
 import boto3
-import botocore
+from logger import log
 
 
 router = APIRouter()
@@ -31,12 +31,8 @@ def healthcheck():
         )
         table_name = environ.get("TABLE_NAME", "url_shortener")
         client.describe_table(TableName=table_name)
-    except botocore.exceptions.ClientError as err:
-        return {
-            "status": "ERROR",
-            "message": f"Couldn't check for existence of {table_name}. Here's why: {err.response['Error']['Code']}: {err.response['Error']['Message']}",
-        }
-    # catch all other exceptions and return the error message
+    # Catch all errors and return an error message
     except Exception as err:
-        return {"status": "ERROR", "message": str(err)}
-    return {"status": "OK"}
+        log.error(f"Error in healthcheck: {err}")
+        return {"status": "ERROR", "message": "There is an error with the service"}
+    return {"status": "OK", "message": "The service is running"}

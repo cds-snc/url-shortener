@@ -28,7 +28,7 @@ def test_healthcheck_failure_host_empty():
     assert response.status_code == 200
     expected_val = {
         "status": "ERROR",
-        "message": "Invalid endpoint: ",
+        "message": "There is an error with the service",
     }
     assert response.json() == expected_val
 
@@ -40,7 +40,7 @@ def test_healthcheck_failure_wrong_host():
     assert response.status_code == 200
     expected_val = {
         "status": "ERROR",
-        "message": "Invalid endpoint: foo_db",
+        "message": "There is an error with the service",
     }
     assert response.json() == expected_val
 
@@ -50,9 +50,13 @@ def test_healthcheck_failure_wrong_host():
 def test_healthcheck_failure_empty_table_name():
     response = client.get("/healthcheck")
     assert response.status_code == 200
+    # expected_val = {
+    #     "status": "ERROR",
+    #     "message": "Parameter validation failed:\nInvalid length for parameter TableName, value: 0, valid min length: 3",
+    # }
     expected_val = {
         "status": "ERROR",
-        "message": "Parameter validation failed:\nInvalid length for parameter TableName, value: 0, valid min length: 3",
+        "message": "There is an error with the service",
     }
     assert response.json() == expected_val
 
@@ -64,7 +68,7 @@ def test_healthcheck_failure_wrong_table_name():
     assert response.status_code == 200
     expected_val = {
         "status": "ERROR",
-        "message": "Couldn't check for existence of foo. Here's why: UnrecognizedClientException: The security token included in the request is invalid.",
+        "message": "There is an error with the service",
     }
     assert response.json() == expected_val
 
@@ -74,7 +78,10 @@ def test_healthcheck_failure_wrong_table_name():
 def test_healthcheck_failure_wrong_host_and_table():
     response = client.get("/healthcheck")
     assert response.status_code == 200
-    expected_val = {"status": "ERROR", "message": "Invalid endpoint: foo_db"}
+    expected_val = {
+        "status": "ERROR",
+        "message": "There is an error with the service",
+    }
     assert response.json() == expected_val
 
 
@@ -82,5 +89,5 @@ def test_healthcheck_failure_wrong_host_and_table():
 def test_healthcheck_success():
     response = client.get("/healthcheck")
     assert response.status_code == 200
-    expected_val = {"status": "OK"}
+    expected_val = {"status": "OK", "message": "The service is running"}
     assert response.json() == expected_val
