@@ -28,7 +28,7 @@ def test_healthcheck_failure_host_empty():
     assert response.status_code == 200
     expected_val = {
         "status": "ERROR",
-        "message": "There is an error with the service",
+        "message": "Not able to connect to the database",
     }
     assert response.json() == expected_val
 
@@ -40,7 +40,7 @@ def test_healthcheck_failure_wrong_host():
     assert response.status_code == 200
     expected_val = {
         "status": "ERROR",
-        "message": "There is an error with the service",
+        "message": "Not able to connect to the database",
     }
     assert response.json() == expected_val
 
@@ -56,7 +56,7 @@ def test_healthcheck_failure_empty_table_name():
     # }
     expected_val = {
         "status": "ERROR",
-        "message": "There is an error with the service",
+        "message": "Not able to connect to the database",
     }
     assert response.json() == expected_val
 
@@ -68,7 +68,7 @@ def test_healthcheck_failure_wrong_table_name():
     assert response.status_code == 200
     expected_val = {
         "status": "ERROR",
-        "message": "There is an error with the service",
+        "message": "Not able to connect to the database",
     }
     assert response.json() == expected_val
 
@@ -80,7 +80,7 @@ def test_healthcheck_failure_wrong_host_and_table():
     assert response.status_code == 200
     expected_val = {
         "status": "ERROR",
-        "message": "There is an error with the service",
+        "message": "Not able to connect to the database",
     }
     assert response.json() == expected_val
 
@@ -89,5 +89,5 @@ def test_healthcheck_failure_wrong_host_and_table():
 def test_healthcheck_success():
     response = client.get("/healthcheck")
     assert response.status_code == 200
-    expected_val = {"status": "OK", "message": "The service is running"}
+    expected_val = {"status": "OK", "message": "Able to connect to the database"}
     assert response.json() == expected_val

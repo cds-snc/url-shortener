@@ -34,5 +34,5 @@ def healthcheck():
     # Catch all errors and return an error message
     except Exception as err:
         log.error(f"Error in healthcheck: {err}")
-        return {"status": "ERROR", "message": "There is an error with the service"}
-    return {"status": "OK", "message": "The service is running"}
+        return {"status": "ERROR", "message": "Not able to connect to the database"}
+    return {"status": "OK", "message": "Able to connect to the database"}
