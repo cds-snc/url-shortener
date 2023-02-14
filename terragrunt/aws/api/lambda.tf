@@ -25,7 +25,6 @@ module "url_shortener_lambda" {
 }
 
 resource "aws_lambda_function_url" "url_shortener_url" {
-  # function_name      = module.url_shortener_lambda.function_name
-  function_name = module.url_shortener_lambda.function_name
+  function_name      = module.url_shortener_lambda.function_name
   authorization_type = "NONE"
 }
