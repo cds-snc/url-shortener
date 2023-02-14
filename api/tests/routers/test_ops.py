@@ -50,10 +50,6 @@ def test_healthcheck_failure_wrong_host():
 def test_healthcheck_failure_empty_table_name():
     response = client.get("/healthcheck")
     assert response.status_code == 200
-    # expected_val = {
-    #     "status": "ERROR",
-    #     "message": "Parameter validation failed:\nInvalid length for parameter TableName, value: 0, valid min length: 3",
-    # }
     expected_val = {
         "status": "ERROR",
         "message": "Not able to connect to the database",
