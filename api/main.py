@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from os import environ
 from pydantic import BaseSettings
-from routers import shortener
+from routers import shortener, ops
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import PlainTextResponse
 
@@ -35,6 +35,7 @@ app = FastAPI(
 )
 
 # include other routes
+app.include_router(ops.router)
 app.include_router(shortener.router)
 
 # Mount static directory
