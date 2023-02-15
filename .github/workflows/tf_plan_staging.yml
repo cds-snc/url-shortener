@@ -33,6 +33,7 @@ jobs:
           - module: ecr
           - module: api
           - module: cloudfront 
+          - module: dynamodb
 
     runs-on: ubuntu-latest
     steps:

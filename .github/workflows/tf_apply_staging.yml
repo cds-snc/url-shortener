@@ -60,3 +60,7 @@ jobs:
       - name: Apply cloudfront 
         working-directory: terragrunt/env/staging/cloudfront
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
+
+      - name: Apply dynamodb 
+        working-directory: terragrunt/env/staging/dynamodb
+        run: terragrunt apply --terragrunt-non-interactive -auto-approve
