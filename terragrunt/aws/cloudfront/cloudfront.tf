@@ -35,8 +35,8 @@ resource "aws_cloudfront_distribution" "url_shortener_api" {
       cookies {
         forward = "none"
       }
+    }
   }
-}
 
   # Prevent caching of healthcheck calls
   ordered_cache_behavior {
