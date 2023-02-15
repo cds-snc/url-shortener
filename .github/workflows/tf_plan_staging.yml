@@ -32,6 +32,7 @@ jobs:
           - module: network
           - module: ecr
           - module: api
+          - module: cloudfront 
 
     runs-on: ubuntu-latest
     steps:

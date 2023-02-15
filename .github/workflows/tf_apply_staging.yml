@@ -56,3 +56,7 @@ jobs:
       - name: Apply api
         working-directory: terragrunt/env/staging/api
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
+
+      - name: Apply cloudfront 
+        working-directory: terragrunt/env/staging/cloudfront
+        run: terragrunt apply --terragrunt-non-interactive -auto-approve
