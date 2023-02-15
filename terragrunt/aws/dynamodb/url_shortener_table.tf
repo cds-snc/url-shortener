@@ -13,26 +13,6 @@ resource "aws_dynamodb_table" "url_shortener" {
     type = "S"
   }
 
-  attribute {
-    name = "original_url"
-    type = "S"
-  }
-
-  attribute {
-    name = "click_count"
-    type = "N"
-  }
-
-  attribute {
-    name = "active"
-    type = "B"
-  }
-
-  attribute {
-    name = "created"
-    type = "S"
-  }
-
   point_in_time_recovery {
     enabled = true
   }
