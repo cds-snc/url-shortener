@@ -10,21 +10,6 @@ resource "aws_route53_record" "url_shortener_A" {
   }
 }
 
-resource "aws_route53_health_check" "url_shortener_A" {
-  fqdn              = aws_route53_record.url_shortener_A.fqdn
-  port              = 443
-  type              = "HTTPS"
-  resource_path     = "/healthcheck"
-  failure_threshold = "5"
-  request_interval  = "30"
-  regions           = ["us-east-1", "us-west-1", "us-west-2"]
-
-  tags = {
-    CostCentre = var.billing_code
-    Terraform  = true
-  }
-}
-
 #
 # Route53 DNS logging and query firewall
 #

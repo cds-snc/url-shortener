@@ -230,12 +230,12 @@ resource "aws_wafv2_web_acl" "api_waf" {
 resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
   provider    = aws.us-east-1
   name        = "valid-api-paths"
-  description = "Regex to match the API's valid paths"
+  description = "Regex to match the valid paths of hte API"
   scope       = "CLOUDFRONT"
 
   # ops
   regular_expression {
-    regex_string = "^/(version|docs|openapi.json|\\.well-known\\/security\\.txt)$"
+    regex_string = "^/(version|openapi.json|.well-known/security.txt)$"
   }
 
   # api call to shorten url
