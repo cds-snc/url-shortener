@@ -28,7 +28,15 @@ resource "aws_cloudfront_distribution" "url_shortener_api" {
     default_ttl = 86400    # 24 hours
     max_ttl     = 31536000 # 365 days
     compress    = true
+
+    forwarded_values {
+      query_string = true
+      headers      = ["Authorization"]
+      cookies {
+        forward = "none"
+      }
   }
+}
 
   # Prevent caching of healthcheck calls
   ordered_cache_behavior {
