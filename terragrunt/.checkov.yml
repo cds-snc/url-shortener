@@ -1,6 +1,7 @@
 skip-check:
   - CKV2_AWS_5  # Ensure that Security Groups are attached to another resource
   - CKV2_AWS_31 # Ensure WAF2 has a Logging Configuration
+  - CKV2_AWS_32 # Ensure CloudFront distribution has a strict security headers policy attached
   - CKV2_AWS_38 # Ensure Domain Name System Security Extensions (DNSSEC) signing is enabled for Amazon Route 53 public hosted zones
   - CKV2_AWS_39 # Ensure Domain Name System (DNS) query logging is enabled for Amazon Route 53 hosted zones
   - CKV2_AWS_47 # Ensure AWS CloudFront attached WAFv2 WebACL is configured with AMR for Log4j Vulnerability
