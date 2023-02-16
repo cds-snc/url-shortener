@@ -29,6 +29,7 @@ jobs:
           - module: hosted_zone
           - module: network
           - module: ecr
+          - module: dynamodb 
           - module: api
           - module: cloudfront 
 
