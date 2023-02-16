@@ -6,11 +6,11 @@ on:
       - main
     paths:
       - "terragrunt/**"
-      - ".github/workflows/terraform-security-scan.yml"
+      - ".github/workflows/terraform_security_scan.yml"
   pull_request:
     paths:
       - "terragrunt/**"
-      - ".github/workflows/terraform-security-scan.yml"
+      - ".github/workflows/terraform_security_scan.yml"
 
 jobs:
   terraform-security-scan:
