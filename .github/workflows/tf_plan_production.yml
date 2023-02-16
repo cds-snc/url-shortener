@@ -29,9 +29,9 @@ jobs:
           - module: hosted_zone
           - module: network
           - module: ecr
+          - module: dynamodb 
           - module: api
           - module: cloudfront 
-          - module: dynamodb 
 
     runs-on: ubuntu-latest
     steps:

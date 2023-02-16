@@ -31,9 +31,9 @@ jobs:
           - module: hosted_zone
           - module: network
           - module: ecr
+          - module: dynamodb
           - module: api
           - module: cloudfront 
-          - module: dynamodb
 
     runs-on: ubuntu-latest
     steps:
@@ -57,4 +57,4 @@ jobs:
           comment-title: "Staging: ${{ matrix.module }}"
           directory: ./terragrunt/env/staging/${{ matrix.module }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          terragrunt: true
+          erragrunt: true

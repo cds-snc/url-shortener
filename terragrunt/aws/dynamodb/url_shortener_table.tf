@@ -17,9 +17,8 @@ resource "aws_dynamodb_table" "url_shortener" {
     enabled = true
   }
 
-  global_secondary_index {
-    name            = "ShortUrlIndex"
-    hash_key        = "short_url"
-    projection_type = "ALL"
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
   }
 }
