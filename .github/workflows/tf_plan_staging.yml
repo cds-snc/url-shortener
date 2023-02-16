@@ -57,4 +57,4 @@ jobs:
           comment-title: "Staging: ${{ matrix.module }}"
           directory: ./terragrunt/env/staging/${{ matrix.module }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          erragrunt: true
+          terragrunt: true
