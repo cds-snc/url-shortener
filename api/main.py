@@ -4,6 +4,7 @@ from pydantic import BaseSettings
 from routers import shortener, ops
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import PlainTextResponse
+from mangum import Mangum
 
 from dotenv import load_dotenv
 
@@ -37,6 +38,9 @@ app = FastAPI(
 # include other routes
 app.include_router(ops.router)
 app.include_router(shortener.router)
+
+# include the lambda handler function
+handler = Mangum(app)
 
 # Mount static directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
