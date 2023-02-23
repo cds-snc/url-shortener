@@ -40,7 +40,7 @@ app.include_router(ops.router)
 app.include_router(shortener.router)
 
 # include the lambda handler function
-handler = Mangum (app)
+handler = Mangum(app)
 
 # Mount static directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
