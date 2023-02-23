@@ -2,6 +2,7 @@ advocate==1.0.0
 anyio==3.6.2
 asgiref==3.6.0
 attrs==21.4.0
+awslambdaric==2.0.4
 boto3==1.26.65
 certifi==2022.12.7
 cffi==1.15.1
@@ -19,6 +20,7 @@ Jinja2==3.1.2
 logger==1.4
 logzero==1.7.0
 Mako==1.2.4
+mangum==0.17.0
 MarkupSafe==2.1.2
 ndg-httpsclient==0.5.1
 netifaces==0.11.0
