@@ -91,7 +91,7 @@ resource "aws_cloudfront_response_headers_policy" "security_headers_api" {
       override = true
     }
     content_security_policy {
-      content_security_policy = "report-uri https://csp-report-to.security.cdssandbox.xyz/report; default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self'; frame-ancestors 'self'; form-action 'self';"
+      content_security_policy = "report-uri https://csp-report-to.security.cdssandbox.xyz/report; default-src 'none'; script-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com/bootstrap/ https://code.jquery.com https://${var.domain}/static/js/ https://cdnjs.cloudflare.com/ajax/libs/ https://cdnjs.cloudflare.com/ajax/libs/; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; img-src 'self' https://${var.domain}/static/img/ http://www.w3.org/2000; style-src 'self' 'unsafe-inline' https://${var.domain}/static/css/  https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css https://fonts.gstatic.com https://fonts.googleapis.com; frame-ancestors 'self'; form-action 'self';"
       override                = false
     }
     referrer_policy {
