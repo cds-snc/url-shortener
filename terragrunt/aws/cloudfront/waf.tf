@@ -235,7 +235,7 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
 
   # ops
   regular_expression {
-    regex_string = "^/(version|openapi.json|.well-known/security.txt)$"
+    regex_string = "^/(version|healthcheck|openapi.json|.well-known/security.txt)$"
   }
 
   # api call to shorten url
@@ -245,7 +245,12 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
 
   # allow base64 and get short url
   regular_expression {
-    regex_string = "^/[0-9A-Za-z+/=]{8}$"
+    regex_string = "^/[0-9A-Za-z+_/=]{8}$"
+  }
+
+  # allow homepage 
+  regular_expression {
+    regex_string = "^/$"
   }
 
   tags = {
