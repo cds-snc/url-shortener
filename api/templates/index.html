@@ -31,7 +31,7 @@
       value="{{ data.short_url }}" placeholder="Shorten your link">
   </div>
   {% if data.short_url %}
-  <img type="image/svg+xml" src="{{ url_for('static', path='img/LinkShortened.svg') }}"
+  <img type="image/svg+xml" src="/static/img/LinkShortened.svg"
     alt="Success - your link is shortened" /><br><br>
   <button type="button" onclick="parent.location=''" class="btn btn-dark">Shorten another link</button>
   <button class="btn btn-large btn-primary" type="button" onclick="copyURL('original_url')">Copy URL</button>
