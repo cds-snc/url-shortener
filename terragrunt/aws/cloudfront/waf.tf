@@ -253,6 +253,11 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
     regex_string = "^/$"
   }
 
+ # allow static files 
+  regular_expression {
+    regex_string = "^/static/*"
+  }
+
   tags = {
     CostCentre = var.billing_code
     Terraform  = true
