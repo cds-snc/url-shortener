@@ -253,7 +253,7 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
     regex_string = "^/$"
   }
 
- # allow static files 
+  # allow static files 
   regular_expression {
     regex_string = "^/static/*"
   }
