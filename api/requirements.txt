@@ -3,7 +3,7 @@ anyio==3.6.2
 asgiref==3.6.0
 attrs==21.4.0
 awslambdaric==2.0.4
-boto3==1.26.65
+boto3==1.26.74
 certifi==2022.12.7
 cffi==1.15.1
 charset-normalizer==2.1.1
@@ -29,7 +29,7 @@ pluggy==1.0.0
 py==1.11.0
 pyasn1==0.4.8
 pycparser==2.21
-pydantic==1.10.4
+pydantic==1.10.5
 pyOpenSSL==22.1.0
 pyparsing==3.0.9
 pytest==7.2.1
