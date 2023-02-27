@@ -1,4 +1,4 @@
-variable "api_function_name" {
+variable function_name" {
   description = "The name of the API function."
   type        = string
 }
