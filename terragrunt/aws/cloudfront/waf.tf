@@ -245,7 +245,7 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
 
   # allow base64 and get short url
   regular_expression {
-    regex_string = "^/[0-9A-Za-z+_/=]{8}$"
+    regex_string = "^/[0-9A-Za-z-+_/=]{8}$"
   }
 
   # allow homepage 
