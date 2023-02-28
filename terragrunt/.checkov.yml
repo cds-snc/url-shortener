@@ -1,5 +1,6 @@
 skip-check:
   - CKV2_AWS_5  # Security Groups: False positive, this is attached to the lambda 
+  - CKV_AWS_26  # Encryption-at-rest not required for alarm topic 
   - CKV2_AWS_31 # WAF: WAF logging is not required
   - CKV2_AWS_32 # CloudFront: False-positive, strict header security policy is being applied 
   - CKV2_AWS_38 # Route53: DNS Secruity Extensions (DNSSEC) signing not required 

@@ -14,6 +14,7 @@ env:
   TERRAGRUNT_VERSION: 0.40.2
   AWS_REGION: ca-central-1
   TF_VAR_api_auth_token: ${{ secrets.STAGING_API_AUTH_TOKEN }}
+  TF_VAR_slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL_STAGING }}
 
 
 permissions:
@@ -63,4 +64,8 @@ jobs:
 
       - name: Apply cloudfront 
         working-directory: terragrunt/env/staging/cloudfront
+        run: terragrunt apply --terragrunt-non-interactive -auto-approve
+
+      - name: Apply alarms 
+        working-directory: terragrunt/env/staging/alarms
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
