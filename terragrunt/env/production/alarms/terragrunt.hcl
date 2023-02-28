@@ -12,13 +12,12 @@ dependency "api" {
   mock_outputs_allowed_terraform_commands = ["init", "fmt", "validate", "plan", "show"]
   mock_outputs_merge_strategy_with_state  = "shallow"
   mock_outputs = {
-    function_log_group_name        = "/aws/lambda/url-shortener-api"
+    function_name        = "/aws/lambda/url-shortener-api"
   }
 }
 
 inputs = {
-  url_shortener_api_log_group_name  = dependency.api.outputs.function_log_group_name
-
+  function_name  = dependency.api.outputs.function_name
   api_error_threshold                = "1"
   api_warning_threshold              = "5"
 }
