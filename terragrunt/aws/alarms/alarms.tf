@@ -45,8 +45,8 @@ resource "aws_cloudwatch_metric_alarm" "url_shoretener_api_warning" {
   alarm_description   = "Warnings logged by the URL Shortener API lambda function"
   comparison_operator = "GreaterThanOrEqualToThreshold"
 
-  metric_name        = aws_cloudwatch_log_metric_filter.url_shortener_api_error.metric_transformation[0].name
-  namespace          = aws_cloudwatch_log_metric_filter.url_shortener_api_error.metric_transformation[0].namespace
+  metric_name        = aws_cloudwatch_log_metric_filter.url_shortener_api_warning.metric_transformation[0].name
+  namespace          = aws_cloudwatch_log_metric_filter.url_shortener_api_warning.metric_transformation[0].namespace
   period             = "60"
   evaluation_periods = "1"
   statistic          = "Sum"
