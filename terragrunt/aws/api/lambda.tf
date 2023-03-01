@@ -17,6 +17,7 @@ module "url_shortener_lambda" {
   environment_variables = {
     API_AUTH_TOKEN_SECRET_ARN = aws_ssm_parameter.api_auth_token.arn
     SHORTENER_DOMAIN          = "https://${var.domain}/"
+    ALLOWED_DOMAINS           = "canada.ca,gc.ca"
   }
 
   policies = [
