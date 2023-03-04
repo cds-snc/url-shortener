@@ -3,7 +3,7 @@ anyio==3.6.2
 asgiref==3.6.0
 attrs==21.4.0
 awslambdaric==2.0.4
-boto3==1.26.74
+boto3==1.26.79
 certifi==2022.12.7
 cffi==1.15.1
 charset-normalizer==2.1.1
