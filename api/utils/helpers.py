@@ -10,19 +10,22 @@ from models import ShortUrls
 from logger import log
 
 
-def generate_short_url(original_url: str, timestamp: float, shortened_length: int = 8):
-    """generate_short_url generates an shortened_length character string used to represent the original url. This shortened_length character
-    string will be used to "unshorten" to the original url submitted.
+def generate_short_url(original_url: str, pepper: str, length: int = 4):
+    """
+    generate_short_url generates an length character hex digest used to
+    represent the original url.
+
     parameter original_url: the url that the user passes to the api
-    parameter timestamp: the current datatime timestamp
-    returns: an shortened_length character string representing the shortened url"""
-    if shortened_length < 4:
-        shortened_length = 4
-    to_encode_str = f"{original_url}{timestamp}"
-    b64_encoded_str = base64.urlsafe_b64encode(
-        hashlib.sha256(to_encode_str.encode()).digest()
-    ).decode()
-    return b64_encoded_str[:shortened_length]
+    parameter pepper: secret to add to hashing
+    returns: a hexdigest representing the shortened url
+    """
+    length = min(length, 2)
+
+    data = original_url + pepper
+    digest = hashlib.shake_256()
+    digest.update(data.encode())
+
+    return digest.hexdigest(length)
 
 
 def is_domain_allowed(original_url):
@@ -64,7 +67,6 @@ def return_short_url(original_url):
     parameter original_url: the url that the user passes to the api
     returns: the shortened url or an error message if the shortened url cannot be generated"""
     try:
-        timestamp = datetime.now().replace(tzinfo=timezone.utc).timestamp()
         try:
             advocate.get(original_url)
         except advocate.UnacceptableAddressException:
@@ -73,11 +75,18 @@ def return_short_url(original_url):
         except requests.RequestException:
             log.info(f"Failed to connect: {original_url}")
             return {"error": "Failed to connect to the specified URL"}
-        short_url = generate_short_url(original_url, timestamp)
-        short_url_obj = ShortUrls.create_short_url(original_url, short_url)
-        if not short_url_obj:
-            log.info(f"Could not save URL: {original_url} | {short_url}")
+
+        #for pepper in os.getenv("PEPPERS").split(","):
+        short_url = generate_short_url(original_url, 'ejp8zh0QHl1BKPMvH4d9zFvS1rkbnYz9uqaEae9uwmY=')
+        try:
+            short_url_obj = ShortUrls.create_short_url(original_url, short_url)
+            if not short_url_obj:
+                log.info(f"Could not save URL: {original_url} | {short_url}")
             return {"error": "Error in processing shortened url"}
+        except ValueError as e:
+            # collision
+            log.info(f"need to handle collision {original_url} {short_url}")
+
         return short_url
     except Exception as err:
         log.error(f"Error processing URL: {original_url} | {err}")
@@ -110,6 +119,7 @@ def validate_and_shorten_url(original_url):
             short_url = return_short_url(original_url)
 
             if isinstance(short_url, dict):
+                log.info(f"oh oh {short_url}")
                 return {
                     "error": short_url["error"],
                     "original_url": original_url,
