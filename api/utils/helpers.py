@@ -84,10 +84,11 @@ def return_short_url(original_url, peppers):
             pepper = next(peppers_iter)
             try:
                 candidate_url = generate_short_url(original_url, pepper)
-                short_url = ShortUrls.create_short_url(original_url, candidate_url)               
+                short_url = ShortUrls.create_short_url(original_url, candidate_url)
             except ValueError as err:
                 # collision
-                log.info(f"Retrying, collision detected for {candidate_url} "
+                log.info(
+                    f"Retrying, collision detected for {candidate_url} "
                     f"generated for {original_url}: {err}")
         except StopIteration:
             log.error("Could not generate URL, pepper(s) exhausted")
