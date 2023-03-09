@@ -22,28 +22,8 @@ permissions:
   security-events: write
 
 jobs:
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      images: ${{ steps.filter.outputs.changes }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-
-      - uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50 # tag=v2.11.1
-        id: filter
-        with:
-          filters: |
-            api: 'api/**'
   build-push:
-    if: needs.changes.outputs.images != '[]'
     runs-on: ubuntu-latest
-    needs: changes
-    strategy:
-      fail-fast: false
-      matrix:
-        image: ${{ fromJSON(needs.changes.outputs.images) }}
-
     steps:
       - name: Checkout
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
@@ -56,33 +36,33 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Build image
-        working-directory: ./${{ matrix.image }}
+        working-directory: ./api
         run: |
           docker build \
           --build-arg GIT_SHA=$GITHUB_SHA \
-          -t $REGISTRY/${{ matrix.image }}:$GITHUB_SHA \
-          -t $REGISTRY/${{ matrix.image }}:latest .
+          -t $REGISTRY/api:$GITHUB_SHA \
+          -t $REGISTRY/api:latest .
       - name: Login to ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@261a7de32bda11ba01f4d75c4ed6caf3739e54be # v1.5.3
 
       - name: Push image to ECR
         run: |
-          docker push $REGISTRY/${{ matrix.image }}:$GITHUB_SHA
-          docker push $REGISTRY/${{ matrix.image }}:latest
+          docker push $REGISTRY/api:$GITHUB_SHA
+          docker push $REGISTRY/api:latest
       - name: Docker generate SBOM
         uses: cds-snc/security-tools/.github/actions/generate-sbom@cfec0943e40dbb78cee115bbbe89dc17f07b7a0f # v2.1.3
         with:
-          docker_image: "${{ env.REGISTRY }}/${{ matrix.image }}:${{ env.GITHUB_SHA }}"
-          dockerfile_path: "${{ matrix.image }}/Dockerfile"
-          sbom_name: "${{ matrix.image }}"
+          docker_image: "${{ env.REGISTRY }}/api:${{ env.GITHUB_SHA }}"
+          dockerfile_path: "api/Dockerfile"
+          sbom_name: "api"
           token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Deploy new image
         run: |
           aws lambda update-function-code \
-            --function-name ${{ env.FUNCTION_PREFIX }}-${{ matrix.image }} \
-            --image-uri $REGISTRY/${{ matrix.image }}:$GITHUB_SHA  > /dev/null 2>&1
+            --function-name ${{ env.FUNCTION_PREFIX }}-api \
+            --image-uri $REGISTRY/api:$GITHUB_SHA  > /dev/null 2>&1
 
       - name: Logout of Amazon ECR
         run: docker logout ${{ steps.login-ecr.outputs.registry }}
