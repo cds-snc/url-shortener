@@ -35,6 +35,8 @@ jobs:
         with:
           filters: |
             api: 'api/**'
+            terragrunt: 'terragrunt/**'
+
   build-push:
     if: needs.changes.outputs.images != '[]'
     runs-on: ubuntu-latest
