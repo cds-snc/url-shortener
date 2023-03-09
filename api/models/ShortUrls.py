@@ -25,24 +25,19 @@ def create_short_url(original_url, short_url):
             },
             ConditionExpression='attribute_not_exists(short_url)'
         )
-    except botocore.exceptions.ClientError as e:
-        if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+        if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
+            raise RuntimeError(response)
+    except botocore.exceptions.ClientError as err:
+        if err.response['Error']['Code'] == 'ConditionalCheckFailedException':
             # key already exists
-            # if value matches, this is a no-op, otherwise, it's a collision
-            #if get_short_url(short_url)['original_url'] == original_url:
-            o = get_short_url(short_url)['original_url']['S']
-            print(f"---> fetched original url:  {o} <> {original_url}")
-            if o == original_url:
-                return short_url
-            else:
+            # if value (original url) does not match, this is a collision
+            # otherwise no-op
+            if get_short_url(short_url)['original_url']['S'] != original_url:
                 raise ValueError(f"Key exists: {short_url}")
         else:
             raise
 
-    if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
-        return short_url
-    else:
-        return None
+    return short_url
 
 
 def get_short_url(short_url):

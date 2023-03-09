@@ -1,16 +1,14 @@
 import hashlib
-import base64
 import advocate
 import os
 import requests
 import validators
-from datetime import datetime, timezone
 from urllib.parse import urlparse
 from models import ShortUrls
 from logger import log
 
 
-def generate_short_url(original_url: str, pepper: str, length: int = 4):
+def generate_short_url(original_url: str, pepper: str, length: int = 4, hint=None):
     """
     generate_short_url generates an length character hex digest used to
     represent the original url.
@@ -19,7 +17,10 @@ def generate_short_url(original_url: str, pepper: str, length: int = 4):
     parameter pepper: secret to add to hashing
     returns: a hexdigest representing the shortened url
     """
-    length = min(length, 2)
+    if hint:
+        return hint
+
+    length = max(length, 2)
 
     data = original_url + pepper
     digest = hashlib.shake_256()
@@ -62,35 +63,37 @@ def resolve_short_url(short_url):
     return result
 
 
-def return_short_url(original_url):
+def return_short_url(original_url, peppers):
     """return_short_url function returns the shortened url
     parameter original_url: the url that the user passes to the api
     returns: the shortened url or an error message if the shortened url cannot be generated"""
     try:
-        try:
-            advocate.get(original_url)
-        except advocate.UnacceptableAddressException:
-            log.info(f"Unacceptable address: {original_url}")
-            return {"error": "That URL points to a forbidden resource"}
-        except requests.RequestException:
-            log.info(f"Failed to connect: {original_url}")
-            return {"error": "Failed to connect to the specified URL"}
+        advocate.get(original_url)
+    except advocate.UnacceptableAddressException:
+        log.info(f"Unacceptable address: {original_url}")
+        return {"error": "That URL points to a forbidden resource"}
+    except requests.RequestException:
+        log.info(f"Failed to connect: {original_url}")
+        return {"error": "Failed to connect to the specified URL"}
 
-        #for pepper in os.getenv("PEPPERS").split(","):
-        short_url = generate_short_url(original_url, 'ejp8zh0QHl1BKPMvH4d9zFvS1rkbnYz9uqaEae9uwmY=')
-        try:
-            short_url_obj = ShortUrls.create_short_url(original_url, short_url)
-            if not short_url_obj:
-                log.info(f"Could not save URL: {original_url} | {short_url}")
-                return {"error": "Error in processing shortened url"}
-        except ValueError as e:
-            # collision
-            log.info(f"need to handle collision {original_url} {short_url}")
+    peppers_iter = iter(peppers)
+    short_url = None
 
-        return short_url
-    except Exception as err:
-        log.error(f"Error processing URL: {original_url} | {err}")
-        return {"error": "Error in processing shortened url"}
+    while short_url is None:
+        try:
+            pepper = next(peppers_iter)
+            try:
+                candidate_url = generate_short_url(original_url, pepper)
+                short_url = ShortUrls.create_short_url(original_url, candidate_url)               
+            except ValueError as err:
+                # collision
+                log.info(f"Retrying, collision detected for {candidate_url} "
+                    f"generated for {original_url}: {err}")
+        except StopIteration:
+            log.error("Could not generate URL, pepper(s) exhausted")
+            return {"error": "Internal error, could not generate url"}
+
+    return short_url
 
 
 def validate_and_shorten_url(original_url):
@@ -116,7 +119,7 @@ def validate_and_shorten_url(original_url):
             }
         # Else, we are all good to shorten!
         else:
-            short_url = return_short_url(original_url)
+            short_url = return_short_url(original_url, os.getenv("PEPPERS").split(","))
 
             if isinstance(short_url, dict):
                 return {
