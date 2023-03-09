@@ -82,7 +82,7 @@ def return_short_url(original_url):
             short_url_obj = ShortUrls.create_short_url(original_url, short_url)
             if not short_url_obj:
                 log.info(f"Could not save URL: {original_url} | {short_url}")
-            return {"error": "Error in processing shortened url"}
+                return {"error": "Error in processing shortened url"}
         except ValueError as e:
             # collision
             log.info(f"need to handle collision {original_url} {short_url}")
@@ -119,7 +119,6 @@ def validate_and_shorten_url(original_url):
             short_url = return_short_url(original_url)
 
             if isinstance(short_url, dict):
-                log.info(f"oh oh {short_url}")
                 return {
                     "error": short_url["error"],
                     "original_url": original_url,
