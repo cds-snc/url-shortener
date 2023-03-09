@@ -38,13 +38,12 @@ jobs:
             terragrunt: 'terragrunt/**'
 
   build-push:
-    if: needs.changes.outputs.images != '[]'
     runs-on: ubuntu-latest
     needs: changes
     strategy:
       fail-fast: false
       matrix:
-        image: ${{ fromJSON(needs.changes.outputs.images) }}
+        image: api 
 
     steps:
       - name: Checkout
