@@ -23,16 +23,16 @@ def create_short_url(original_url, short_url):
                 "active": {"BOOL": True},
                 "created": {"S": str(datetime.datetime.utcnow())},
             },
-            ConditionExpression='attribute_not_exists(short_url)'
+            ConditionExpression="attribute_not_exists(short_url)",
         )
         if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
             raise RuntimeError(response)
     except botocore.exceptions.ClientError as err:
-        if err.response['Error']['Code'] == 'ConditionalCheckFailedException':
+        if err.response["Error"]["Code"] == "ConditionalCheckFailedException":
             # key already exists
             # if value (original url) does not match, this is a collision
             # otherwise no-op
-            if get_short_url(short_url)['original_url']['S'] != original_url:
+            if get_short_url(short_url)["original_url"]["S"] != original_url:
                 raise ValueError(f"Key exists: {short_url}")
         else:
             raise

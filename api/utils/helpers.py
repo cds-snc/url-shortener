@@ -66,7 +66,8 @@ def resolve_short_url(short_url):
 def return_short_url(original_url, peppers):
     """return_short_url function returns the shortened url
     parameter original_url: the url that the user passes to the api
-    returns: the shortened url or an error message if the shortened url cannot be generated"""
+    returns: the shortened url or an error message if the shortened url cannot be generated
+    """
     try:
         advocate.get(original_url)
     except advocate.UnacceptableAddressException:
@@ -89,7 +90,8 @@ def return_short_url(original_url, peppers):
                 # collision
                 log.info(
                     f"Retrying, collision detected for {candidate_url} "
-                    f"generated for {original_url}: {err}")
+                    f"generated for {original_url}: {err}"
+                )
         except StopIteration:
             log.error("Could not generate URL, pepper(s) exhausted")
             return {"error": "Internal error, could not generate url"}
