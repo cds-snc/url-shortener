@@ -47,7 +47,10 @@ def setup_test_database():
 @pytest.fixture(autouse=True)
 def mock_settings_env_vars():
     with mock.patch.dict(
-        os.environ, {"PEPPERS": "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=,dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY="}
+        os.environ,
+        {
+            "PEPPERS": "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=,dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY="
+        },
     ):
         yield
 
