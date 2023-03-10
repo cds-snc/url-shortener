@@ -1,5 +1,4 @@
 from utils import helpers
-
 from unittest.mock import MagicMock, patch
 
 import advocate
@@ -7,82 +6,84 @@ import requests
 import os
 
 
-def test_generate_short_url():
+def test_generate_short_url__length_equals_8_digits():
     original_url = "http://example.com"
-    timestamp = 123456789
-    short_url = helpers.generate_short_url(original_url, timestamp)
+    pepper = "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8="
+    short_url = helpers.generate_short_url(original_url, pepper)
     assert len(short_url) == 8
-    assert short_url == "XjbS35ah"
 
 
-def test_generate_short_url_with_short_string():
+def test_generate_short_url__hash_is_same():
     original_url = "http://example.com"
-    timestamp = 123456789
-    short_url = helpers.generate_short_url(original_url, timestamp, 3)
+    pepper = "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8="
+    url_a = helpers.generate_short_url(original_url, pepper)
+    url_b = helpers.generate_short_url(original_url, pepper)
+    assert url_a == url_b
+
+
+def test_generate_short_url__min_length_equals_4_digits():
+    original_url = "http://example.com"
+    pepper = "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8="
+    short_url = helpers.generate_short_url(original_url, pepper, 1)
     assert len(short_url) == 4
-    assert short_url == "XjbS"
 
 
 @patch("utils.helpers.ShortUrls")
 @patch("utils.helpers.generate_short_url")
 @patch("utils.helpers.advocate")
-def test_return_short_url_succeeds_if_advoacte_passes(
+def test_return_short_url_succeeds_if_advocate_passes(
     mock_advocate, mock_generate_short_url, mock_short_urls_model
 ):
     original_url = "http://example.com"
     mock_advocate.get.return_value = True
-    mock_short_urls_model.create_short_url.return_value = True
+    mock_short_urls_model.create_short_url.return_value = "FizzBuzz"
     mock_generate_short_url.return_value = "FizzBuzz"
-    short_url = helpers.return_short_url(original_url)
-    assert len(short_url) == 8
+    peppers = [
+        "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=",
+        "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
+    ]
+    short_url = helpers.return_short_url(original_url, peppers)
     assert short_url == "FizzBuzz"
 
 
 @patch("utils.helpers.ShortUrls")
 @patch("utils.helpers.generate_short_url")
 @patch("utils.helpers.advocate")
-def test_return_short_url_succeeds_if_advoacte_passes_but_save_fails(
+def test_return_short_url_succeeds_if_advocate_passes_but_save_fails(
     mock_advocate, mock_generate_short_url, mock_short_urls_model
 ):
     original_url = "http://example.com"
     mock_advocate.get.return_value = True
     mock_short_urls_model.create_short_url.return_value = None
     mock_generate_short_url.return_value = "FizzBuzz"
-    result = helpers.return_short_url(original_url)
-    assert result == {"error": "Error in processing shortened url"}
+    peppers = [
+        "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=",
+        "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
+    ]
+    result = helpers.return_short_url(original_url, peppers)
+    assert result == {"error": "Internal error, could not generate url"}
 
 
 def test_return_short_url_unacceptable_address_exception():
     original_url = "http://example.com"
     advocate.get = MagicMock(side_effect=advocate.UnacceptableAddressException)
-    result = helpers.return_short_url(original_url)
+    peppers = [
+        "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=",
+        "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
+    ]
+    result = helpers.return_short_url(original_url, peppers)
     assert result == {"error": "That URL points to a forbidden resource"}
 
 
 def test_return_short_url_request_exception():
     original_url = "http://example.com"
     advocate.get = MagicMock(side_effect=requests.RequestException)
-    result = helpers.return_short_url(original_url)
+    peppers = [
+        "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=",
+        "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
+    ]
+    result = helpers.return_short_url(original_url, peppers)
     assert result == {"error": "Failed to connect to the specified URL"}
-
-
-def test_return_short_url_exception():
-    original_url = "http://example.com"
-    advocate.get = MagicMock(side_effect=Exception)
-    result = helpers.return_short_url(original_url)
-    assert result == {"error": "Error in processing shortened url"}
-
-
-@patch("utils.helpers.ShortUrls")
-@patch("utils.helpers.advocate")
-def test_return_short_url_ShortUrls_model_exception(
-    mock_advocate, mock_short_urls_model
-):
-    original_url = "http://example.com"
-    mock_advocate.get.return_value = True
-    mock_short_urls_model.create_short_url.side_effect = Exception
-    result = helpers.return_short_url(original_url)
-    assert result == {"error": "Error in processing shortened url"}
 
 
 def test_is_domain_allowed_returns_true_if_it_exists():
@@ -199,7 +200,14 @@ def test_validate_and_shorten_url_returns_success():
     }
 
 
-@patch.dict(os.environ, {"SHORTENER_DOMAIN": "https://foo.bar/"}, clear=True)
+@patch.dict(
+    os.environ,
+    {
+        "SHORTENER_DOMAIN": "https://foo.bar/",
+        "PEPPERS": "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=,dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
+    },
+    clear=True,
+)
 def test_validate_and_shorten_url_returns_success_with_domain():
     original_url = "http://example.com"
     helpers.is_valid_url = MagicMock(return_value=True)
