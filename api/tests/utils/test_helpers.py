@@ -136,13 +136,6 @@ def test_resolve_short_url_returns_false_if_it_does_not_exist(mock_short_urls_mo
     assert result is False
 
 
-@patch.dict(
-    os.environ,
-    {
-        "PEPPERS": "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=,dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
-    },
-    clear=True,
-)
 def test_validate_and_shorten_url_returns_error_if_invalid_url():
     original_url = "http://example.com"
     helpers.is_valid_url = MagicMock(return_value=False)
@@ -154,14 +147,7 @@ def test_validate_and_shorten_url_returns_error_if_invalid_url():
     }
 
 
-@patch.dict(
-    os.environ,
-    {
-        "FORMS_URL": "foo",
-        "PEPPERS": "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=,dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
-    },
-    clear=True,
-)
+@patch.dict(os.environ, {"FORMS_URL": "foo"}, clear=True)
 def test_validate_and_shorten_url_returns_error_if_domain_not_allowed():
     original_url = "http://example.com"
     helpers.is_valid_url = MagicMock(return_value=True)
@@ -175,13 +161,6 @@ def test_validate_and_shorten_url_returns_error_if_domain_not_allowed():
     }
 
 
-@patch.dict(
-    os.environ,
-    {
-        "PEPPERS": "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=,dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
-    },
-    clear=True,
-)
 def test_validate_and_shorten_url_returns_error_if_return_short_url_exception():
     original_url = "http://example.com"
     helpers.is_valid_url = MagicMock(return_value=True)
@@ -197,13 +176,6 @@ def test_validate_and_shorten_url_returns_error_if_return_short_url_exception():
     }
 
 
-@patch.dict(
-    os.environ,
-    {
-        "PEPPERS": "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=,dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
-    },
-    clear=True,
-)
 def test_validate_and_shorten_url_returns_error_if_any_type_of_exception():
     original_url = "http://example.com"
     helpers.is_valid_url.side_effect = Exception("FAILED")
@@ -215,14 +187,7 @@ def test_validate_and_shorten_url_returns_error_if_any_type_of_exception():
     }
 
 
-@patch.dict(
-    os.environ,
-    {
-        "SHORTENER_DOMAIN": "http://127.0.0.1:8000/",
-        "PEPPERS": "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=,dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
-    },
-    clear=True,
-)
+@patch.dict(os.environ, {"SHORTENER_DOMAIN": "http://127.0.0.1:8000/"})
 def test_validate_and_shorten_url_returns_success():
     original_url = "http://example.com"
     helpers.is_valid_url = MagicMock(return_value=True)
@@ -236,14 +201,7 @@ def test_validate_and_shorten_url_returns_success():
     }
 
 
-@patch.dict(
-    os.environ,
-    {
-        "SHORTENER_DOMAIN": "https://foo.bar/",
-        "PEPPERS": "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=,dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
-    },
-    clear=True,
-)
+@patch.dict(os.environ, {"SHORTENER_DOMAIN": "https://foo.bar/"})
 def test_validate_and_shorten_url_returns_success_with_domain():
     original_url = "http://example.com"
     helpers.is_valid_url = MagicMock(return_value=True)
