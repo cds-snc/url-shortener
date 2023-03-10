@@ -56,7 +56,6 @@ def create_short_url(original_url, short_url):
 def get_short_url(short_url):
     """
     get_short_url returns original_url for a given short_url.
-    
     parameter short_url: short url mapped to the original url
 
     returns: response object containing original url.
