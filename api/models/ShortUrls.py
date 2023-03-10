@@ -13,6 +13,19 @@ table = os.environ.get("TABLE_NAME", "url_shortener")
 
 
 def create_short_url(original_url, short_url):
+    """
+    create_short_url creates a new entry with short_url as key.
+    If an entry already exists, the original_url is compared.
+    If the original_url(s) are the same, then this is a no-op, and
+    the shortened URL is returned.
+    Otherwise, this is a collision and a ValueError exception is raised.
+    The caller should try again with a new short_url.
+
+    parameter original_url: the url that the user passes to the api
+    parameter short_url: short url mapped to the original url
+
+    returns: shortened url
+    """
     try:
         response = client.put_item(
             TableName=table,
@@ -41,6 +54,13 @@ def create_short_url(original_url, short_url):
 
 
 def get_short_url(short_url):
+    """
+    get_short_url returns original_url for a given short_url.
+    
+    parameter short_url: short url mapped to the original url
+
+    returns: response object containing original url.
+    """
     response = client.get_item(
         TableName=table,
         Key={"short_url": {"S": short_url}},

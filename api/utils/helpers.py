@@ -15,6 +15,9 @@ def generate_short_url(original_url: str, pepper: str, length: int = 4, hint=Non
 
     parameter original_url: the url that the user passes to the api
     parameter pepper: secret to add to hashing
+    parameter length: output length in bytes
+    parameter hint: overrides output with specified value
+
     returns: a hexdigest representing the shortened url
     """
     if hint:
@@ -22,6 +25,7 @@ def generate_short_url(original_url: str, pepper: str, length: int = 4, hint=Non
 
     length = max(length, 2)
 
+    # note that the normal convention is to add pepper as a suffix
     data = original_url + pepper
     digest = hashlib.shake_256()
     digest.update(data.encode())
@@ -66,6 +70,7 @@ def resolve_short_url(short_url):
 def return_short_url(original_url, peppers):
     """return_short_url function returns the shortened url
     parameter original_url: the url that the user passes to the api
+    parameter peppers: peppers iterable used for hashing input
     returns: the shortened url or an error message if the shortened url cannot be generated
     """
     try:
