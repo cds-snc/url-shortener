@@ -1,6 +1,8 @@
 #!/bin/sh
 # shellcheck disable=SC2120
 
+set -e
+
 ENV_PATH="/tmp/url-shortener"
 TMP_ENV_FILE="$ENV_PATH/.env"
 
@@ -44,13 +46,21 @@ else
     if [ ! -f "$ENV_PATH/.env" ]; then
         if [ ! -d "$ENV_PATH" ]; then
             mkdir "$ENV_PATH"
-       fi
-       aws ssm get-parameters \
+        fi
+
+        aws ssm get-parameters \
             --region ca-central-1 \
             --with-decryption \
             --names api_auth_token \
             --query 'Parameters[*].Value' \
             --output text > "$TMP_ENV_FILE"
+        
+        aws ssm get-parameters \
+            --region ca-central-1 \
+            --with-decryption \
+            --names hashing_peppers \
+            --query 'Parameters[*].Value' \
+            --output text >> "$TMP_ENV_FILE"
     fi
     load_non_existing_envs
 
