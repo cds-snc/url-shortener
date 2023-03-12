@@ -3,19 +3,20 @@ import advocate
 import os
 import requests
 import validators
+import math
 from urllib.parse import urlparse
 from models import ShortUrls
 from logger import log
 
 
-def generate_short_url(original_url: str, pepper: str, length: int = 4, hint=None):
+def generate_short_url(original_url: str, pepper: str, length: int = 8, hint=None):
     """
     generate_short_url generates an length character hex digest used to
     represent the original url.
 
     parameter original_url: the url that the user passes to the api
     parameter pepper: secret to add to hashing
-    parameter length: output length in bytes
+    parameter length: output length
     parameter hint: overrides output with specified value
 
     returns: a hexdigest representing the shortened url
@@ -23,14 +24,14 @@ def generate_short_url(original_url: str, pepper: str, length: int = 4, hint=Non
     if hint:
         return hint
 
-    length = max(length, 2)
+    length = max(length, 4)
 
     # note that the normal convention is to add pepper as a suffix
     data = original_url + pepper
     digest = hashlib.shake_256()
     digest.update(data.encode())
 
-    return digest.hexdigest(length)
+    return digest.hexdigest(math.ceil(length / 2))
 
 
 def is_domain_allowed(original_url):
@@ -89,7 +90,9 @@ def return_short_url(original_url, peppers):
         try:
             pepper = next(peppers_iter)
             try:
-                candidate_url = generate_short_url(original_url, pepper)
+                candidate_url = generate_short_url(
+                    original_url, pepper, int(os.getenv("SHORTENER_PATH_LENGTH"))
+                )
                 short_url = ShortUrls.create_short_url(original_url, candidate_url)
             except ValueError as err:
                 # collision
