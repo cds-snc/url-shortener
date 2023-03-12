@@ -50,7 +50,7 @@ def mock_settings_env_vars():
         os.environ,
         {
             "PEPPERS": "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=,dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
-            "SHORTENER_PATH_LENGTH": "8"
+            "SHORTENER_PATH_LENGTH": "8",
         },
     ):
         yield
