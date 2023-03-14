@@ -17,6 +17,11 @@ resource "aws_dynamodb_table" "url_shortener" {
     enabled = true
   }
 
+  ttl {
+    attribute_name = "TimeToExist"
+    enabled        = false
+  }
+
   tags = {
     CostCentre = var.billing_code
     Terraform  = true
