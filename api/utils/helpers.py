@@ -4,12 +4,29 @@ import os
 import requests
 import validators
 import math
+import base64
 from urllib.parse import urlparse
 from models import ShortUrls
 from logger import log
 
 
-def generate_short_url(original_url: str, pepper: str, length: int = 8, hint=None):
+def calculate_hash_bytes(length: int):
+    """
+    calculate_hash_bytes determines the number of bytes required for
+    shake256 hashing algo given a desired output length.
+
+    Base64 encodes three bytes to four characters. The calculation
+    does not consider trimmed padding, if any exists.
+
+    parameter length: desired output length
+    returns: bytes required for shake 256 hashing
+    """
+    return math.ceil(3 * (length / 4))
+
+
+def generate_short_url(
+    original_url: str, pepper: str, length: int = 8, hint=None, padding=False
+):
     """
     generate_short_url generates an length character hex digest used to
     represent the original url.
@@ -19,7 +36,7 @@ def generate_short_url(original_url: str, pepper: str, length: int = 8, hint=Non
     parameter length: output length
     parameter hint: overrides output with specified value
 
-    returns: a hexdigest representing the shortened url
+    returns: base64 encoding, without padding, representing the shortened url
     """
     if hint:
         return hint
@@ -31,7 +48,11 @@ def generate_short_url(original_url: str, pepper: str, length: int = 8, hint=Non
     digest = hashlib.shake_256()
     digest.update(data.encode())
 
-    return digest.hexdigest(math.ceil(length / 2))
+    return (
+        base64.b64encode(digest.digest(calculate_hash_bytes(length)), altchars=b"AZ")
+        .decode()
+        .rstrip("=" if not padding else "")
+    )
 
 
 def is_domain_allowed(original_url):

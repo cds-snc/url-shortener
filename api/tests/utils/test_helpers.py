@@ -4,13 +4,32 @@ from unittest.mock import MagicMock, patch
 import advocate
 import requests
 import os
+import math
 
 
-def test_generate_short_url__length_equals_8_digits():
+def round_to(n, roundto):
+    return (n + (roundto - 1)) & ~(roundto - 1)
+
+
+def test_calculate_hash_bytes_ok():
+    for length, b in [(4, 3), (5, 4), (6, 5), (7, 6), (8, 6), (9, 7), (10, 8)]:
+        assert helpers.calculate_hash_bytes(length) == b
+
+
+def test_generate_short_url__length_ok():
     original_url = "http://example.com"
     pepper = "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8="
-    short_url = helpers.generate_short_url(original_url, pepper)
-    assert len(short_url) == 8
+    for n in range(4, 11):
+        assert len(
+            helpers.generate_short_url(original_url, pepper, n, padding=True)
+        ) == round_to(n, 4)
+
+
+def test_generate_short_url__no_padding():
+    original_url = "http://example.com"
+    pepper = "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8="
+    for n in range(4, 11):
+        assert "=" not in helpers.generate_short_url(original_url, pepper, n)
 
 
 def test_generate_short_url__hash_is_same():
