@@ -16,7 +16,7 @@ def test_calculate_hash_bytes_ok():
 
 
 def test_generate_short_url__length_ok():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     pepper = "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8="
     for n in range(4, 11):
         assert len(
@@ -25,14 +25,14 @@ def test_generate_short_url__length_ok():
 
 
 def test_generate_short_url__no_padding():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     pepper = "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8="
     for n in range(4, 11):
         assert "=" not in helpers.generate_short_url(original_url, pepper, n)
 
 
 def test_generate_short_url__hash_is_same():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     pepper = "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8="
     url_a = helpers.generate_short_url(original_url, pepper)
     url_b = helpers.generate_short_url(original_url, pepper)
@@ -40,7 +40,7 @@ def test_generate_short_url__hash_is_same():
 
 
 def test_generate_short_url__min_length_equals_4_digits():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     pepper = "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8="
     short_url = helpers.generate_short_url(original_url, pepper, 1)
     assert len(short_url) == 4
@@ -52,7 +52,7 @@ def test_generate_short_url__min_length_equals_4_digits():
 def test_return_short_url_succeeds_if_advocate_passes(
     mock_advocate, mock_generate_short_url, mock_short_urls_model
 ):
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     mock_advocate.get.return_value = True
     mock_short_urls_model.create_short_url.return_value = "FizzBuzz"
     mock_generate_short_url.return_value = "FizzBuzz"
@@ -70,7 +70,7 @@ def test_return_short_url_succeeds_if_advocate_passes(
 def test_return_short_url_succeeds_if_advocate_passes_but_save_fails(
     mock_advocate, mock_generate_short_url, mock_short_urls_model
 ):
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     mock_advocate.get.return_value = True
     mock_short_urls_model.create_short_url.return_value = None
     mock_generate_short_url.return_value = "FizzBuzz"
@@ -83,7 +83,7 @@ def test_return_short_url_succeeds_if_advocate_passes_but_save_fails(
 
 
 def test_return_short_url_unacceptable_address_exception():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     advocate.get = MagicMock(side_effect=advocate.UnacceptableAddressException)
     peppers = [
         "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=",
@@ -94,7 +94,7 @@ def test_return_short_url_unacceptable_address_exception():
 
 
 def test_return_short_url_request_exception():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     advocate.get = MagicMock(side_effect=requests.RequestException)
     peppers = [
         "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=",
@@ -105,20 +105,20 @@ def test_return_short_url_request_exception():
 
 
 def test_is_domain_allowed_returns_true_if_it_exists():
-    original_url = "http://canada.ca"
+    original_url = "https://canada.ca"
     result = helpers.is_domain_allowed(original_url)
     assert result is True
 
 
 def test_is_domain_allowed_returns_false_if_it_does_not_exist():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     result = helpers.is_domain_allowed(original_url)
     assert result is False
 
 
 @patch("utils.helpers.urlparse")
 def test_is_domain_allowed_returns_exception(mock_urlparse):
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     mock_urlparse.side_effect = Exception
     result = helpers.is_domain_allowed(original_url)
     assert result == {"error": "error retrieving domain"}
@@ -132,7 +132,7 @@ def test_is_valid_url_returns_true_if_valid():
 
 @patch("utils.helpers.validators")
 def test_is_valid_url_returns_false_if_throws_an_exception(mock_validators):
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     mock_validators.url.side_effect = Exception
     result = helpers.is_valid_url(original_url)
     assert result is False
@@ -141,9 +141,9 @@ def test_is_valid_url_returns_false_if_throws_an_exception(mock_validators):
 @patch("utils.helpers.ShortUrls")
 def test_resolve_short_url_returns_original_url(mock_short_urls_model):
     short_url = "XjbS35ah"
-    mock_short_urls_model.get_short_url.return_value = "http://example.com"
+    mock_short_urls_model.get_short_url.return_value = "https://example.com"
     result = helpers.resolve_short_url(short_url)
-    assert result == "http://example.com"
+    assert result == "https://example.com"
 
 
 @patch("utils.helpers.ShortUrls")
@@ -155,7 +155,7 @@ def test_resolve_short_url_returns_false_if_it_does_not_exist(mock_short_urls_mo
 
 
 def test_validate_and_shorten_url_returns_error_if_invalid_url():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     helpers.is_valid_url = MagicMock(return_value=False)
     result = helpers.validate_and_shorten_url(original_url)
     assert result == {
@@ -167,7 +167,7 @@ def test_validate_and_shorten_url_returns_error_if_invalid_url():
 
 @patch.dict(os.environ, {"FORMS_URL": "foo"}, clear=True)
 def test_validate_and_shorten_url_returns_error_if_domain_not_allowed():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     helpers.is_valid_url = MagicMock(return_value=True)
     helpers.is_domain_allowed = MagicMock(return_value=False)
     result = helpers.validate_and_shorten_url(original_url)
@@ -180,7 +180,7 @@ def test_validate_and_shorten_url_returns_error_if_domain_not_allowed():
 
 
 def test_validate_and_shorten_url_returns_error_if_return_short_url_exception():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     helpers.is_valid_url = MagicMock(return_value=True)
     helpers.is_domain_allowed = MagicMock(return_value=True)
     helpers.return_short_url = MagicMock(
@@ -195,7 +195,7 @@ def test_validate_and_shorten_url_returns_error_if_return_short_url_exception():
 
 
 def test_validate_and_shorten_url_returns_error_if_any_type_of_exception():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     helpers.is_valid_url.side_effect = Exception("FAILED")
     result = helpers.validate_and_shorten_url(original_url)
     assert result == {
@@ -207,7 +207,7 @@ def test_validate_and_shorten_url_returns_error_if_any_type_of_exception():
 
 @patch.dict(os.environ, {"SHORTENER_DOMAIN": "http://127.0.0.1:8000/"})
 def test_validate_and_shorten_url_returns_success():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     helpers.is_valid_url = MagicMock(return_value=True)
     helpers.is_domain_allowed = MagicMock(return_value=True)
     helpers.return_short_url = MagicMock(return_value="XjbS35ah")
@@ -221,7 +221,7 @@ def test_validate_and_shorten_url_returns_success():
 
 @patch.dict(os.environ, {"SHORTENER_DOMAIN": "https://foo.bar/"})
 def test_validate_and_shorten_url_returns_success_with_domain():
-    original_url = "http://example.com"
+    original_url = "https://example.com"
     helpers.is_valid_url = MagicMock(return_value=True)
     helpers.is_domain_allowed = MagicMock(return_value=True)
     helpers.return_short_url = MagicMock(return_value="XjbS35ah")
@@ -231,3 +231,11 @@ def test_validate_and_shorten_url_returns_success_with_domain():
         "short_url": "https://foo.bar/XjbS35ah",
         "status": "OK",
     }
+
+
+def test_is_valid_scheme_https_ok():
+    assert helpers.is_valid_scheme("https://example.com")
+
+
+def test_is_valid_scheme_http_ko():
+    assert not helpers.is_valid_scheme("http://example.com")

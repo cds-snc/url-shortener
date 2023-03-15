@@ -78,6 +78,13 @@ def is_valid_url(original_url):
         return False
 
 
+def is_valid_scheme(original_url):
+    """is_valid_scheme determines if scheme is https
+    parameter original_url: the url that the user passes to the api
+    returns: True if scheme is https, False otherwise"""
+    return urlparse(original_url).scheme.casefold() == "https".casefold()
+
+
 def resolve_short_url(short_url):
     """resolve_short_url function resolves the short url to the original url
     parameter short_url: the shortened url
@@ -137,6 +144,13 @@ def validate_and_shorten_url(original_url):
         if not is_valid_url(original_url):
             data = {
                 "error": "Unable to shorten link. Invalid URL.",
+                "original_url": original_url,
+                "status": "ERROR",
+            }
+        # Else if scheme is invalid (i.e. not https), display error
+        elif not is_valid_scheme(original_url):
+            data = {
+                "error": "Unable to shorten link. Invalid Scheme; only https is permitted",
                 "original_url": original_url,
                 "status": "ERROR",
             }
