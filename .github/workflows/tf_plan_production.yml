@@ -12,6 +12,7 @@ env:
   TERRAGRUNT_VERSION: 0.40.2
   TF_VAR_api_auth_token: ${{ secrets.PROD_API_AUTH_TOKEN }}
   TF_VAR_slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL_PROD }}
+  TF_VAR_hashing_peppers: ${{ secrets.PROD_HASHING_PEPPERS }}
 
 permissions:
   id-token: write

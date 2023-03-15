@@ -8,3 +8,14 @@ resource "aws_ssm_parameter" "api_auth_token" {
     Terraform  = true
   }
 }
+
+resource "aws_ssm_parameter" "hashing_peppers" {
+  name  = "hashing_peppers"
+  type  = "SecureString"
+  value = "PEPPERS=${var.hashing_peppers}"
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}

@@ -1,13 +1,27 @@
 # URL Shortener 
 
-Url shortener is an API written in Python using the FastAPI framework that can shorten a particular url. You execute a POST request to the API or you can 
-use the home page to generate an 8 character shortened url from long url that you enter. The returned shortened url
-will redirect the user to the original long url when the shortened url is used in a browser or in some other redirection mechanism.
+Url shortener is an API written in Python using the FastAPI framework that can shorten a particular url
+You execute a POST request to the API or you can use the home page to generate an 8 character shortened url from long url that you enter
+The returned shortened url will redirect the user to the original long url when the shortened url is used in a browser or in some other redirection mechanism.
 
-## Running the project
-The url shortener is an application that uses FastAPI and it is written in python. The simplest way to run it is if you use Docker and docker-compose.
-You need to have Docker installed to be able to run it 
-via docker-compose. Steps to get started are below.
+## Shortening Algorithm
+
+The shortened URL has the following design goals and constraints:
+- Shortened URL MUST be deterministic
+   - Given the same input, the same shortened URL must be produced as an output.
+- Shortened URL MUST have a shorter length (8)
+   - The length SHOULD be configurable
+- Shortened URL's character set MUST be: `A-Za-z0-9`
+- Shortened URL SHOULD not be easily guessed
+   - This reduces the surface area of a threat
+
+[Shake 256](https://en.wikipedia.org/wiki/SHA-3#Instances:~:text=d%2C128) is used as the hashing algorithm.
+SHAKE is an extendable-output functions (XOFs), i.e. it can produce a variable length deterministic output.
+The default output character set is hex digits: `a-z0-9`
+
+See also:
+- https://github.com/cds-snc/url-shortener/issues/87
+- https://medium.com/asecuritysite-when-bob-met-alice/shake-stirs-up-crypto-7d87f3cf39f4
 
 ### Clone the repo:
 Clone the repo by typing
@@ -18,6 +32,25 @@ And now change into the project directory
 ```
 cd url-shortener
 ```
+## Running the project
+
+The url shortener is an application that uses FastAPI and it is written in python.
+
+There are two ways to run the app:
+- Codespaces
+- Docker Compose
+
+### Running using Codespaces
+Since we are using codespaces as a dev environment, we won't actually be using docker-compose to spin up the app.
+Otherwise, you will run into issues with container within a container.
+
+Spin up the app: 
+```
+cd api
+make install-dev
+make dev
+```
+Logs go to stdout.
 
 ### Running using Docker Compose
 Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration.
