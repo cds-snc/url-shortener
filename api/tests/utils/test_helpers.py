@@ -238,7 +238,7 @@ def test_resolve_short_url_returns_original_url_with_valid_ttl(mock_short_urls_m
 
 
 @patch("utils.helpers.ShortUrls")
-def test_resolve_short_url_does_not_return_original_url_invalid_ttl(
+def test_resolve_short_url_does_not_return_original_url_expired_ttl(
     mock_short_urls_model,
 ):
     mock_short_urls_model.create_short_url = MagicMock(
