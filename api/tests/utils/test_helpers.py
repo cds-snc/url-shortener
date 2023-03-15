@@ -4,7 +4,6 @@ from unittest.mock import MagicMock, patch
 import advocate
 import requests
 import os
-import math
 
 
 def round_to(n, roundto):
