@@ -18,7 +18,7 @@ resource "aws_dynamodb_table" "url_shortener" {
   }
 
   ttl {
-    attribute_name = "TimeToExist"
+    attribute_name = "ttl"
     enabled        = false
   }
 
