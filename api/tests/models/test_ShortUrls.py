@@ -34,7 +34,9 @@ class TestCreateShortUrl(unittest.TestCase):
     def test_ttl_is_invalid():
         future_epoch_time = int(
             time.mktime(
-                (datetime.datetime.today() + datetime.timedelta(days=(365 * 5))).timetuple()
+                (
+                    datetime.datetime.today() + datetime.timedelta(days=(365 * 5))
+                ).timetuple()
             )
         )
         short_url = ShortUrls.get_short_url("test")
