@@ -16,22 +16,22 @@ class TestCreateShortUrl(unittest.TestCase):
         assert url_a == url_b
 
     @patch("models.ShortUrls.client.put_item")
-    def test_create_short_url_with_existing_url(mock_put_item):
+    def test_create_short_url_with_existing_url(self, mock_put_item):
         mock_put_item.return_value = {"ResponseMetadata": {"HTTPStatusCode": 400}}
         short_url = ShortUrls.create_short_url("https://www.canada.ca", "test")
         assert short_url is None
 
-    def test_get_short_url():
+    def test_get_short_url(self):
         ShortUrls.create_short_url("https://www.canada.ca", "test")
         short_url = ShortUrls.get_short_url("test")
         assert short_url["original_url"]["S"] == "https://www.canada.ca"
 
-    def test_ttl_is_valid():
+    def test_ttl_is_valid(self):
         short_url = ShortUrls.get_short_url("test")
         epoch_time_now = int(time.time())
         assert int(short_url["ttl"]["N"]) > epoch_time_now
 
-    def test_ttl_is_invalid():
+    def test_ttl_is_invalid(self):
         future_epoch_time = int(
             time.mktime(
                 (
