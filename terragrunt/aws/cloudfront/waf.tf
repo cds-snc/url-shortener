@@ -270,7 +270,7 @@ resource "aws_kms_key" "wafv2-log-group-kms-key" {
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
   is_enabled               = true
   enable_key_rotation      = true
-  policy                   = aws_iam_policy_document.cloudfront_policies.json
+  policy                   = data.aws_iam_policy_document.cloudfront_policies.json
 
   tags = {
     CostCentre = var.billing_code
