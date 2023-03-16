@@ -264,9 +264,23 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
   }
 }
 
+resource "aws_kms_key" "wafv2-log-group-kms-key" {
+  description              = "WAF Cloudwatch logs KMS key"
+  key_usage                = "ENCRYPT_DECRYPT"
+  customer_master_key_spec = "SYMMETRIC_DEFAULT"
+  is_enabled               = true
+  enable_key_rotation      = true
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}
+
 resource "aws_cloudwatch_log_group" "wafv2-log-group" {
   name              = "aws-waf-logs-url-shortener"
   retention_in_days = 90
+  kms_key_id        = aws_kms_key.wafv2-log-group-kms-key.arn
 
   tags = {
     CostCentre = var.billing_code
