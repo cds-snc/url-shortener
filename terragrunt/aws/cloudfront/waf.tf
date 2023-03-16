@@ -263,3 +263,23 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
     Terraform  = true
   }
 }
+
+resource "aws_cloudwatch_log_group" "wafv2-log-group" {
+  name              = "aws-waf-logs-url-shortener"
+  retention_in_days = 90
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}
+
+resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_configuration" {
+  log_destination_configs = [aws_cloudwatch_log_group.wafv2-log-group.arn]
+  resource_arn            = aws_wafv2_web_acl.api_waf.arn
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}
