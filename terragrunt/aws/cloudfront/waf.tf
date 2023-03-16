@@ -277,9 +277,4 @@ resource "aws_cloudwatch_log_group" "wafv2-log-group" {
 resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_configuration" {
   log_destination_configs = [aws_cloudwatch_log_group.wafv2-log-group.arn]
   resource_arn            = aws_wafv2_web_acl.api_waf.arn
-
-  tags = {
-    CostCentre = var.billing_code
-    Terraform  = true
-  }
 }
