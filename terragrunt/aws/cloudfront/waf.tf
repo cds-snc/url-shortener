@@ -270,6 +270,7 @@ resource "aws_kms_key" "wafv2-log-group-kms-key" {
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
   is_enabled               = true
   enable_key_rotation      = true
+  policy                   = aws_iam_policy_document.cloudfront_policies.json
 
   tags = {
     CostCentre = var.billing_code
@@ -278,7 +279,7 @@ resource "aws_kms_key" "wafv2-log-group-kms-key" {
 }
 
 resource "aws_cloudwatch_log_group" "wafv2-log-group" {
-  name              = "aws-waf-logs-url-shortener"
+  name              = "aws-waf-logs-${var.product_name}"
   retention_in_days = 90
   kms_key_id        = aws_kms_key.wafv2-log-group-kms-key.arn
 
