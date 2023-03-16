@@ -21,7 +21,6 @@ def create_short_url(original_url, short_url):
     the shortened URL is returned.
     Otherwise, this is a collision and a ValueError exception is raised.
     The caller should try again with a new short_url.
-    
     parameter original_url: the url that the user passes to the api
     parameter short_url: short url mapped to the original url
 
@@ -32,16 +31,16 @@ def create_short_url(original_url, short_url):
     expiry_date = int(time.mktime(two_years_time.timetuple()))
     try:
         response = client.put_item(
-          TableName=table,
-          Item={
-            "short_url": {"S": short_url},
-            "original_url": {"S": original_url},
-            "click_count": {"N": "0"},
-            "active": {"BOOL": True},
-            "created": {"S": str(datetime.datetime.utcnow())},
-            "ttl": {"N": str(expiry_date)},
-          },
-          ConditionExpression="attribute_not_exists(short_url)",
+            TableName=table,
+            Item={
+                "short_url": {"S": short_url},
+                "original_url": {"S": original_url},
+                "click_count": {"N": "0"},
+                "active": {"BOOL": True},
+                "created": {"S": str(datetime.datetime.utcnow())},
+                "ttl": {"N": str(expiry_date)},
+            },
+            ConditionExpression="attribute_not_exists(short_url)",
         )
         if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
             raise RuntimeError(response)

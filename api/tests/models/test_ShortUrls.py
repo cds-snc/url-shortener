@@ -15,29 +15,21 @@ class TestCreateShortUrl(unittest.TestCase):
         url_b = ShortUrls.create_short_url("https://www.canada.ca", "test1234")
         assert url_a == url_b
 
-    def test_get_short_url(self):
-        ShortUrls.create_short_url("https://www.canada.ca", "test1234")
-        short_url = ShortUrls.get_short_url("test1234")
-        assert short_url["original_url"]["S"] == "https://www.canada.ca"
-
     @patch("models.ShortUrls.client.put_item")
     def test_create_short_url_with_existing_url(mock_put_item):
         mock_put_item.return_value = {"ResponseMetadata": {"HTTPStatusCode": 400}}
         short_url = ShortUrls.create_short_url("https://www.canada.ca", "test")
         assert short_url is None
 
-
     def test_get_short_url():
         ShortUrls.create_short_url("https://www.canada.ca", "test")
         short_url = ShortUrls.get_short_url("test")
         assert short_url["original_url"]["S"] == "https://www.canada.ca"
 
-
-   def test_ttl_is_valid():
+    def test_ttl_is_valid():
         short_url = ShortUrls.get_short_url("test")
         epoch_time_now = int(time.time())
         assert int(short_url["ttl"]["N"]) > epoch_time_now
-
 
     def test_ttl_is_invalid():
         future_epoch_time = int(
@@ -47,7 +39,7 @@ class TestCreateShortUrl(unittest.TestCase):
         )
         short_url = ShortUrls.get_short_url("test")
         assert short_url["ttl"]["N"] < str(future_epoch_time)
-    
+
     def test_create_short_url_with_different_url_but_same_hash__raises_value_error_for_collision(
         self,
     ):
