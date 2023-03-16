@@ -4,7 +4,9 @@ data "aws_iam_policy_document" "cloudfront_policies" {
     effect = "Allow"
 
     principals {
-      identifiers = [ "logs.${var.region}.amazonaws.com" ]
+      identifiers = [
+        "logs.${var.region}.amazonaws.com",
+      ]
       type = "Service"
     }
 
@@ -13,11 +15,11 @@ data "aws_iam_policy_document" "cloudfront_policies" {
       "kms:Decrypt*",
       "kms:ReEncrypt*",
       "kms:GenerateDataKey*",
-      "kms:Describe*"
+      "kms:Describe*",
     ]
 
     resources = [
-      "arn:aws:kms:::key/*"
+      "arn:aws:kms:::key/*",
     ]
 
     condition {
