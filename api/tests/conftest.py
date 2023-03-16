@@ -2,8 +2,9 @@ import pytest
 import os
 import boto3
 from fastapi.testclient import TestClient
-
+from unittest import mock
 from main import app
+
 
 dynamodb_client = boto3.client(
     "dynamodb",
@@ -41,6 +42,18 @@ def setup_test_database():
     )
     yield table
     dynamodb_client.delete_table(TableName=table_name)
+
+
+@pytest.fixture(autouse=True)
+def mock_settings_env_vars():
+    with mock.patch.dict(
+        os.environ,
+        {
+            "PEPPERS": "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=,dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
+            "SHORTENER_PATH_LENGTH": "8",
+        },
+    ):
+        yield
 
 
 @pytest.fixture(scope="session")

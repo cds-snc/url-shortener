@@ -1,28 +1,58 @@
 import hashlib
-import base64
 import advocate
 import os
 import requests
 import validators
-from datetime import datetime, timezone
+import math
+import base64
 from urllib.parse import urlparse
 from models import ShortUrls
 from logger import log
 
 
-def generate_short_url(original_url: str, timestamp: float, shortened_length: int = 8):
-    """generate_short_url generates an shortened_length character string used to represent the original url. This shortened_length character
-    string will be used to "unshorten" to the original url submitted.
+def calculate_hash_bytes(length: int):
+    """
+    calculate_hash_bytes determines the number of bytes required for
+    shake256 hashing algo given a desired output length.
+
+    Base64 encodes three bytes to four characters. The calculation
+    does not consider trimmed padding, if any exists.
+
+    parameter length: desired output length
+    returns: bytes required for shake 256 hashing
+    """
+    return math.ceil(3 * (length / 4))
+
+
+def generate_short_url(
+    original_url: str, pepper: str, length: int = 8, hint=None, padding=False
+):
+    """
+    generate_short_url generates an length character hex digest used to
+    represent the original url.
+
     parameter original_url: the url that the user passes to the api
-    parameter timestamp: the current datatime timestamp
-    returns: an shortened_length character string representing the shortened url"""
-    if shortened_length < 4:
-        shortened_length = 4
-    to_encode_str = f"{original_url}{timestamp}"
-    b64_encoded_str = base64.urlsafe_b64encode(
-        hashlib.sha256(to_encode_str.encode()).digest()
-    ).decode()
-    return b64_encoded_str[:shortened_length]
+    parameter pepper: secret to add to hashing
+    parameter length: output length
+    parameter hint: overrides output with specified value
+
+    returns: base64 encoding, without padding, representing the shortened url
+    """
+    if hint:
+        return hint
+
+    length = max(length, 4)
+
+    # note that the normal convention is to add pepper as a suffix
+    data = original_url + pepper
+    digest = hashlib.shake_256()
+    digest.update(data.encode())
+
+    return (
+        base64.b64encode(digest.digest(calculate_hash_bytes(length)), altchars=b"AZ")
+        .decode()
+        .rstrip("=" if not padding else "")
+    )
 
 
 def is_domain_allowed(original_url):
@@ -48,6 +78,13 @@ def is_valid_url(original_url):
         return False
 
 
+def is_valid_scheme(original_url):
+    """is_valid_scheme determines if scheme is https
+    parameter original_url: the url that the user passes to the api
+    returns: True if scheme is https, False otherwise"""
+    return urlparse(original_url).scheme.casefold() == "https".casefold()
+
+
 def resolve_short_url(short_url):
     """resolve_short_url function resolves the short url to the original url
     parameter short_url: the shortened url
@@ -59,29 +96,43 @@ def resolve_short_url(short_url):
     return result
 
 
-def return_short_url(original_url):
+def return_short_url(original_url, peppers):
     """return_short_url function returns the shortened url
     parameter original_url: the url that the user passes to the api
-    returns: the shortened url or an error message if the shortened url cannot be generated"""
+    parameter peppers: peppers iterable used for hashing input
+    returns: the shortened url or an error message if the shortened url cannot be generated
+    """
     try:
-        timestamp = datetime.now().replace(tzinfo=timezone.utc).timestamp()
+        advocate.get(original_url)
+    except advocate.UnacceptableAddressException:
+        log.info(f"Unacceptable address: {original_url}")
+        return {"error": "That URL points to a forbidden resource"}
+    except requests.RequestException:
+        log.info(f"Failed to connect: {original_url}")
+        return {"error": "Failed to connect to the specified URL"}
+
+    peppers_iter = iter(peppers)
+    short_url = None
+
+    while short_url is None:
         try:
-            advocate.get(original_url)
-        except advocate.UnacceptableAddressException:
-            log.info(f"Unacceptable address: {original_url}")
-            return {"error": "That URL points to a forbidden resource"}
-        except requests.RequestException:
-            log.info(f"Failed to connect: {original_url}")
-            return {"error": "Failed to connect to the specified URL"}
-        short_url = generate_short_url(original_url, timestamp)
-        short_url_obj = ShortUrls.create_short_url(original_url, short_url)
-        if not short_url_obj:
-            log.info(f"Could not save URL: {original_url} | {short_url}")
-            return {"error": "Error in processing shortened url"}
-        return short_url
-    except Exception as err:
-        log.error(f"Error processing URL: {original_url} | {err}")
-        return {"error": "Error in processing shortened url"}
+            pepper = next(peppers_iter)
+            try:
+                candidate_url = generate_short_url(
+                    original_url, pepper, int(os.getenv("SHORTENER_PATH_LENGTH"))
+                )
+                short_url = ShortUrls.create_short_url(original_url, candidate_url)
+            except ValueError as err:
+                # collision
+                log.info(
+                    f"Retrying, collision detected for {candidate_url} "
+                    f"generated for {original_url}: {err}"
+                )
+        except StopIteration:
+            log.error("Could not generate URL, pepper(s) exhausted")
+            return {"error": "Internal error, could not generate url"}
+
+    return short_url
 
 
 def validate_and_shorten_url(original_url):
@@ -96,6 +147,13 @@ def validate_and_shorten_url(original_url):
                 "original_url": original_url,
                 "status": "ERROR",
             }
+        # Else if scheme is invalid (i.e. not https), display error
+        elif not is_valid_scheme(original_url):
+            data = {
+                "error": "Unable to shorten link. Invalid Scheme; only https is permitted",
+                "original_url": original_url,
+                "status": "ERROR",
+            }
         # Else if the domain is not allowed, display error and link to GC Forms page
         elif not is_domain_allowed(original_url):
             forms_url = os.getenv("FORMS_URL")
@@ -107,7 +165,7 @@ def validate_and_shorten_url(original_url):
             }
         # Else, we are all good to shorten!
         else:
-            short_url = return_short_url(original_url)
+            short_url = return_short_url(original_url, os.getenv("PEPPERS").split(","))
 
             if isinstance(short_url, dict):
                 return {

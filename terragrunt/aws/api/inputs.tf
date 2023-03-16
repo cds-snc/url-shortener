@@ -4,6 +4,12 @@ variable "api_auth_token" {
   sensitive   = true
 }
 
+variable "hashing_peppers" {
+  description = "csv of peppers used by hashing algorithm."
+  type        = string
+  sensitive   = true
+}
+
 variable "url_shortener_table_name" {
   description = "DynamoDB table name for the URL shortener"
   type        = string
