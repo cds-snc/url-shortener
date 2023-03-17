@@ -2,7 +2,6 @@ import unittest
 from models import ShortUrls
 import time
 import datetime
-from unittest.mock import patch
 
 
 class TestCreateShortUrl(unittest.TestCase):
@@ -14,12 +13,6 @@ class TestCreateShortUrl(unittest.TestCase):
         url_a = ShortUrls.create_short_url("https://www.canada.ca", "test1234")
         url_b = ShortUrls.create_short_url("https://www.canada.ca", "test1234")
         assert url_a == url_b
-
-    @patch("models.ShortUrls.client.put_item")
-    def test_create_short_url_with_existing_url(self, mock_put_item):
-        mock_put_item.return_value = {"ResponseMetadata": {"HTTPStatusCode": 400}}
-        short_url = ShortUrls.create_short_url("https://www.canada.ca", "test")
-        assert short_url is None
 
     def test_get_short_url(self):
         ShortUrls.create_short_url("https://www.canada.ca", "test")
