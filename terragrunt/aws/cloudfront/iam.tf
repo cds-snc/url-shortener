@@ -16,7 +16,7 @@ data "aws_iam_policy_document" "cloudfront_policies" {
     ]
 
     resources = [
-      "arn:aws:kms:::key/*",
+      "*",
     ]
   }
 
