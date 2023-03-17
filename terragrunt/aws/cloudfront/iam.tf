@@ -1,5 +1,25 @@
 data "aws_iam_policy_document" "cloudfront_policies" {
   statement {
+    sid    = "AllowKMSAllAccess"
+    effect = "Allow"
+
+    principals {
+      identifiers = [
+        "arn:aws:iam:::root",
+      ]
+      type = "AWS"
+    }
+
+    actions = [
+      "kms:*",
+    ]
+
+    resources = [
+      "arn:aws:kms:::key/*",
+    ]
+  }
+  
+  statement {
     sid    = "AllowKMSAccessToCloudWatchLogs"
     effect = "Allow"
 
