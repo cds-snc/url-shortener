@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "cloudfront_policies" {
       test     = "ArnEquals"
       variable = "kms:EncryptionContext:aws:logs:arn"
       values = [
-        "arn:aws:logs:${var.region}:${var.account_id}:log-group:aws-waf-logs-${var.product_name}/",
+        "arn:aws:logs:${var.region}:${var.account_id}:log-group:aws-waf-logs-${var.product_name}",
       ]
     }
   }
