@@ -6,7 +6,7 @@ data "aws_iam_policy_document" "cloudfront_policies" {
 
     principals {
       identifiers = [
-        "arn:aws:iam:::root",
+        "arn:aws:iam::${var.account_id}:root",
       ]
       type = "AWS"
     }
