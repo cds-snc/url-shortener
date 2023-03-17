@@ -8,6 +8,8 @@ skip-check:
   - CKV2_AWS_47 # Cloudfront: No Log4j dependency and false positive, AWSManagedRulesKnownBadInputsRuleSet is being applied
   - CKV_AWS_51  # ECR: `latest` tag is used for development 
   - CKV_AWS_86  # CloudFront: Access logging not required
+  - CKV_AWS_109 # KMS: `resources=["*"]` references the key the policy is attached to
+  - CKV_AWS_111 # MKS: `resources=["*"]` references the key the policy is attached to
   - CKV_AWS_119 # DynamoDB default service key encryption is acceptable
   - CKV_AWS_136 # ECR: Default encryption key is acceptable 
   - CKV_AWS_192 # CloudFront: False-positive, AWSManagedRulesKnownBadInputsRuleSet is being applied 
