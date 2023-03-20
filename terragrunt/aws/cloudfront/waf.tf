@@ -266,7 +266,6 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
 
 resource "aws_kms_key" "wafv2-log-group-kms-key" {
   provider                 = aws.us-east-1
-
   description              = "WAF Cloudwatch logs KMS key"
   key_usage                = "ENCRYPT_DECRYPT"
   customer_master_key_spec = "SYMMETRIC_DEFAULT"
@@ -281,8 +280,7 @@ resource "aws_kms_key" "wafv2-log-group-kms-key" {
 }
 
 resource "aws_cloudwatch_log_group" "wafv2-log-group" {
-  provider = aws.us-east-1
-
+  provider          = aws.us-east-1
   name              = "aws-waf-logs-${var.product_name}"
   retention_in_days = 90
   kms_key_id        = aws_kms_key.wafv2-log-group-kms-key.arn
@@ -294,16 +292,14 @@ resource "aws_cloudwatch_log_group" "wafv2-log-group" {
 }
 
 resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_configuration" {
-  provider = aws.us-east-1
-
+  provider                = aws.us-east-1
   log_destination_configs = [aws_cloudwatch_log_group.wafv2-log-group.arn]
   resource_arn            = aws_wafv2_web_acl.api_waf.arn
   depends_on              = [aws_cloudwatch_log_group.wafv2-log-group]
 }
 
 resource "aws_cloudwatch_log_metric_filter" "wafv2-log-metric-filter" {
-  provider = aws.us-east-1
-
+  provider       = aws.us-east-1
   name           = "aws-waf-logs-${var.product_name}-metric-filter"
   pattern        = "{ $.httpRequest.uri != \"/version\" }"
   log_group_name = aws_cloudwatch_log_group.wafv2-log-group.name
@@ -316,8 +312,7 @@ resource "aws_cloudwatch_log_metric_filter" "wafv2-log-metric-filter" {
 }
 
 resource "aws_cloudwatch_log_metric_filter" "wafv2-log-metric-filter-health-check" {
-  provider = aws.us-east-1
-
+  provider       = aws.us-east-1
   name           = "aws-waf-logs-${var.product_name}-metric-filter-health-check"
   pattern        = "{ $.httpRequest.uri = \"/version\" }"
   log_group_name = aws_cloudwatch_log_group.wafv2-log-group.name
