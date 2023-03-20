@@ -300,3 +300,31 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_configuration" {
   resource_arn            = aws_wafv2_web_acl.api_waf.arn
   depends_on              = [aws_cloudwatch_log_group.wafv2-log-group]
 }
+
+resource "aws_cloudwatch_log_metric_filter" "wafv2-log-metric-filter" {
+  provider = aws.us-east-1
+
+  name           = "aws-waf-logs-${var.product_name}-metric-filter"
+  pattern        = "{ $.httpRequest.uri != \"/version\" }"
+  log_group_name = aws_cloudwatch_log_group.wafv2-log-group.name
+
+  metric_transformation {
+    name      = "RequestCount"
+    namespace = "UserTraffic"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "wafv2-log-metric-filter-health-check" {
+  provider = aws.us-east-1
+
+  name           = "aws-waf-logs-${var.product_name}-metric-filter-health-check"
+  pattern        = "{ $.httpRequest.uri = \"/version\" }"
+  log_group_name = aws_cloudwatch_log_group.wafv2-log-group.name
+
+  metric_transformation {
+    name      = "RequestCount"
+    namespace = "HealthCheckTraffic"
+    value     = "1"
+  }
+}
