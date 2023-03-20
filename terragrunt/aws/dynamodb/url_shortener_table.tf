@@ -19,7 +19,7 @@ resource "aws_dynamodb_table" "url_shortener" {
 
   ttl {
     attribute_name = "ttl"
-    enabled        = true 
+    enabled        = true
   }
 
   tags = {
