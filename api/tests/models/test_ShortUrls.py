@@ -1,5 +1,7 @@
 import unittest
 from models import ShortUrls
+import time
+import datetime
 
 
 class TestCreateShortUrl(unittest.TestCase):
@@ -13,9 +15,25 @@ class TestCreateShortUrl(unittest.TestCase):
         assert url_a == url_b
 
     def test_get_short_url(self):
-        ShortUrls.create_short_url("https://www.canada.ca", "test1234")
-        short_url = ShortUrls.get_short_url("test1234")
+        ShortUrls.create_short_url("https://www.canada.ca", "test")
+        short_url = ShortUrls.get_short_url("test")
         assert short_url["original_url"]["S"] == "https://www.canada.ca"
+
+    def test_ttl_is_valid(self):
+        short_url = ShortUrls.get_short_url("test")
+        epoch_time_now = int(time.time())
+        assert int(short_url["ttl"]["N"]) > epoch_time_now
+
+    def test_ttl_is_invalid(self):
+        future_epoch_time = int(
+            time.mktime(
+                (
+                    datetime.datetime.today() + datetime.timedelta(days=(365 * 5))
+                ).timetuple()
+            )
+        )
+        short_url = ShortUrls.get_short_url("test")
+        assert short_url["ttl"]["N"] < str(future_epoch_time)
 
     def test_create_short_url_with_different_url_but_same_hash__raises_value_error_for_collision(
         self,
