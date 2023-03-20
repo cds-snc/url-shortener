@@ -9,6 +9,7 @@ data "aws_iam_policy_document" "api_policies" {
       "dynamodb:DeleteItem",
       "dynamodb:PutItem",
       "dynamodb:DescribeTable",
+      "dynamodb:Query",
     ]
 
     resources = [
