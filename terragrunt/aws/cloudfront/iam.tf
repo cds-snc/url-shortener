@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "cloudfront_policies" {
 
     principals {
       identifiers = [
-        "logs.${var.region}.amazonaws.com",
+        "logs.us-east-1.amazonaws.com",
       ]
       type = "Service"
     }
@@ -47,13 +47,5 @@ data "aws_iam_policy_document" "cloudfront_policies" {
     resources = [
       "*",
     ]
-
-    condition {
-      test     = "ArnEquals"
-      variable = "kms:EncryptionContext:aws:logs:arn"
-      values = [
-        "arn:aws:logs:${var.region}:${var.account_id}:log-group:aws-waf-logs-${var.product_name}",
-      ]
-    }
   }
 }
