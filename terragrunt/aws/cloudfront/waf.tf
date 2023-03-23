@@ -301,7 +301,7 @@ resource "aws_wafv2_ip_set" "aws-route53-healthchecks-all-regions" {
   description        = "AWS Route 53 Healthchecks all regions"
   scope              = "CLOUDFRONT"
   ip_address_version = "IPV4"
-  addresses          = [
+  addresses = [
     "15.177.0.0/18",
     "52.80.197.0/25",
     "52.80.197.128/25",
