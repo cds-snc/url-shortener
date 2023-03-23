@@ -15,8 +15,39 @@ resource "aws_wafv2_web_acl" "api_waf" {
   }
 
   rule {
+    name     = "AWSRoute53HealthchecksAllRegions"
+    priority = 3
+
+    action {
+      dynamic "allow" {
+        for_each = var.enable_waf == true ? [""] : []
+        content {
+        }
+      }
+
+      dynamic "count" {
+        for_each = var.enable_waf == false ? [""] : []
+        content {
+        }
+      }
+    }
+
+    statement {
+      ip_set_reference_statement {
+        arn = aws_wafv2_ip_set.aws-route53-healthchecks-all-regions.arn
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWSRoute53HealthchecksAllRegions"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
     name     = "APIInvalidPath"
-    priority = 1
+    priority = 5
 
     action {
       dynamic "block" {
@@ -257,6 +288,44 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
   regular_expression {
     regex_string = "^/static/*"
   }
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}
+
+resource "aws_wafv2_ip_set" "aws-route53-healthchecks-all-regions" {
+  provider           = aws.us-east-1
+  name               = "aws-route53-healthchecks-all-regions"
+  description        = "AWS Route 53 Healthchecks all regions"
+  scope              = "CLOUDFRONT"
+  ip_address_version = "IPV4"
+  addresses          = [
+    "15.177.0.0/18",
+    "52.80.197.0/25",
+    "52.80.197.128/25",
+    "52.80.198.0/25",
+    "52.83.34.128/25",
+    "52.83.35.0/25",
+    "52.83.35.128/25",
+    "54.248.220.0/26",
+    "54.250.253.192/26",
+    "54.251.31.128/26",
+    "54.255.254.192/26",
+    "54.252.254.192/26",
+    "54.252.79.128/26",
+    "176.34.159.192/26",
+    "54.228.16.0/26",
+    "177.71.207.128/26",
+    "54.232.40.64/26",
+    "107.23.255.0/26",
+    "54.243.31.192/26",
+    "54.183.255.128/26",
+    "54.241.32.64/26",
+    "54.244.52.192/26",
+    "54.245.168.0/26",
+  ]
 
   tags = {
     CostCentre = var.billing_code
