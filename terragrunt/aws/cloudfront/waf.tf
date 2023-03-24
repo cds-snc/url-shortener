@@ -14,6 +14,18 @@ resource "aws_wafv2_web_acl" "api_waf" {
     allow {}
   }
 
+  custom_response_body {
+    key          = "json_request_blocked_error_response"
+    content      = "{\"detail\":{\"error\":\"Request blocked.\",\"status\":\"ERROR\"}}"
+    content_type = "APPLICATION_JSON"
+  }
+
+  custom_response_body {
+    key          = "json_request_rate_limited_error_response"
+    content      = "{\"detail\":{\"error\":\"Too many requests.\",\"status\":\"ERROR\"}}"
+    content_type = "APPLICATION_JSON"
+  }
+
   rule {
     name     = "AWSRoute53HealthchecksAllRegions"
     priority = 3
@@ -53,6 +65,10 @@ resource "aws_wafv2_web_acl" "api_waf" {
       dynamic "block" {
         for_each = var.enable_waf == true ? [""] : []
         content {
+          custom_response {
+            custom_response_body_key = "json_request_blocked_error_response"
+            response_code            = "403"
+          }
         }
       }
 
@@ -131,6 +147,10 @@ resource "aws_wafv2_web_acl" "api_waf" {
       dynamic "block" {
         for_each = var.enable_waf == true ? [""] : []
         content {
+          custom_response {
+            custom_response_body_key = "json_request_rate_limited_error_response"
+            response_code            = "429"
+          }
         }
       }
 
