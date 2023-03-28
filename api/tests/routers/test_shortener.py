@@ -145,6 +145,6 @@ def test_known_shorturl_displays_original_url(client):
     )
     shorturl = response.json()["short_url"].split("/")[-1]
 
-    response = client.get(f"/{shorturl}")
+    response = client.get(f"/{shorturl}", follow_redirects=False)
     assert "https://www.canada.ca/en/services/jobs/opportunities.html" in response.text
     assert response.status_code == status.HTTP_200_OK
