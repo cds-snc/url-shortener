@@ -21,7 +21,7 @@ def create(session_id, data):
         Item={
             "key_id": {"S": f"{MODEL_PREFIX}/{session_id}"},
             "created_at": {"N": str(timestamp)},
-            "time_to_live": {"N": str(timestamp + (60 * 60 * 2))},  # 2 hours
+            "ttl": {"N": str(timestamp + (60 * 60 * 2))},  # 2 hours
             "session_data": {"S": data},
         },
     )

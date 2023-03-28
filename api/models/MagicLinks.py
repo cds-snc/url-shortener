@@ -23,7 +23,7 @@ def create(email):
             "key_id": {"S": f"{MODEL_PREFIX}/{guid}"},
             "email": {"S": f"{MODEL_PREFIX}/{email}"},
             "created_at": {"N": str(timestamp)},
-            "time_to_live": {"N": str(timestamp + (60 * 5))},  # 5 mins
+            "ttl": {"N": str(timestamp + (60 * 5))},  # 5 mins
         },
     )
     if response["ResponseMetadata"]["HTTPStatusCode"] == 200:

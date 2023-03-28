@@ -26,11 +26,6 @@ resource "aws_dynamodb_table" "url_shortener" {
     projection_type = "ALL"
   }
 
-  ttl {
-    attribute_name = "time_to_live"
-    enabled        = true
-  }
-
   point_in_time_recovery {
     enabled = true
   }
