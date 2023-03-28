@@ -10,16 +10,18 @@ client = boto3.client(
 
 table = os.environ.get("TABLE_NAME", "url_shortener")
 
+MODEL_PREFIX = "URL"
+
 
 def create_short_url(original_url, short_url):
     response = client.put_item(
         TableName=table,
         Item={
-            "short_url": {"S": short_url},
+            "key_id": {"S": f"{MODEL_PREFIX}/{short_url}"},
+            "created_at": {"N": str(int(datetime.datetime.utcnow().timestamp()))},
             "original_url": {"S": original_url},
             "click_count": {"N": "0"},
             "active": {"BOOL": True},
-            "created": {"S": str(datetime.datetime.utcnow())},
         },
     )
 
@@ -32,8 +34,8 @@ def create_short_url(original_url, short_url):
 def get_short_url(short_url):
     response = client.get_item(
         TableName=table,
-        Key={"short_url": {"S": short_url}},
-        ProjectionExpression="short_url, original_url, click_count, active, created",
+        Key={"key_id": {"S": f"{MODEL_PREFIX}/{short_url}"}},
+        ProjectionExpression="key_id, original_url, click_count, active, created_at",
     )
     if response["ResponseMetadata"]["HTTPStatusCode"] == 200 and "Item" in response:
         return response["Item"]

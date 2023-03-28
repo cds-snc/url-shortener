@@ -24,6 +24,7 @@ mangum==0.17.0
 MarkupSafe==2.1.2
 ndg-httpsclient==0.5.1
 netifaces==0.11.0
+notifications-python-client==8.0.0
 packaging==21.3
 pluggy==1.0.0
 py==1.11.0

@@ -24,14 +24,36 @@ def setup_test_database():
         TableName=table_name,
         KeySchema=[
             {
-                "AttributeName": "short_url",
+                "AttributeName": "key_id",
                 "KeyType": "HASH",
-            },
+            }
         ],
         AttributeDefinitions=[
             {
-                "AttributeName": "short_url",
+                "AttributeName": "key_id",
                 "AttributeType": "S",
+            },
+            {
+                "AttributeName": "email",
+                "AttributeType": "S",
+            },
+        ],
+        GlobalSecondaryIndexes=[
+            {
+                "IndexName": "emailIndex",
+                "KeySchema": [
+                    {
+                        "AttributeName": "email",
+                        "KeyType": "HASH",
+                    }
+                ],
+                "Projection": {
+                    "ProjectionType": "ALL",
+                },
+                "ProvisionedThroughput": {
+                    "ReadCapacityUnits": 1,
+                    "WriteCapacityUnits": 1,
+                },
             },
         ],
         ProvisionedThroughput={

@@ -18,4 +18,3 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
 
 
-

@@ -16,7 +16,7 @@ lint:
 	flake8 .
 
 test:
-	coverage run -m pytest -s -vv tests &&\
+	coverage run -m pytest -s -vv --last-failed --new-first tests &&\
 	coverage report -m
 
 lint-ci:

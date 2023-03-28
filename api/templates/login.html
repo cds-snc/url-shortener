@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% set active_page = "index" %}
+
+{% block title %}URL Shortener{% endblock %}
+
+<div class="container">
+    {% block header %}{% endblock %}
+</div>
+
+{% block page_content %}
+{% if data.success %}
+<div class="alert alert-success" role="alert">
+    {{ data.success }}
+</div>
+{% else %}
+<form action="/login" method="post">
+    <div class="form-group">
+        <label for="OriginalUrl">{{ data.label }}</label>
+        <h2>Email</h2>
+        <p>Please submit your email to access the system</p>
+        {% if data.error %}
+        <div class="alert alert-danger" role="alert">
+            {{ data.error }}
+        </div>
+        {% endif %}
+        <input class="form-control form-control-lg" type="email" id="email" name="email" value="{{ data.email }}"
+            placeholder="Your email">
+    </div>
+    <button type="submit" class="btn btn-dark">Login</button>
+</form>
+{% endif %}
+{% endblock %}

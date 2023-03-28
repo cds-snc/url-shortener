@@ -62,7 +62,8 @@ def resolve_short_url(short_url):
 def return_short_url(original_url):
     """return_short_url function returns the shortened url
     parameter original_url: the url that the user passes to the api
-    returns: the shortened url or an error message if the shortened url cannot be generated"""
+    returns: the shortened url or an error message if the shortened url cannot be generated
+    """
     try:
         timestamp = datetime.now().replace(tzinfo=timezone.utc).timestamp()
         try:
