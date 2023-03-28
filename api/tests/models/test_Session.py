@@ -34,7 +34,9 @@ def test_read_returns_none_if_get_item_fails(mock_get_item):
 
 @patch("models.Session.client.get_item")
 @patch("models.Session.delete")
-def test_read_returns_none_if_get_item_succeeds_but_ttl_has_passed(mock_delete, mock_get_item):
+def test_read_returns_none_if_get_item_succeeds_but_ttl_has_passed(
+    mock_delete, mock_get_item
+):
     mock_get_item.return_value = {
         "ResponseMetadata": {"HTTPStatusCode": 200},
         "Item": {
