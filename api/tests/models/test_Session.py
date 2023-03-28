@@ -32,16 +32,17 @@ def test_read_returns_none_if_get_item_fails(mock_get_item):
     assert Session.read("foo") is None
 
 
-@patch("models.Session.client.update_item")
-def test_update_returns_true_if_update_item_succeeds(mock_update_item):
-    mock_update_item.return_value = {"ResponseMetadata": {"HTTPStatusCode": 200}}
-    assert Session.update("foo", "bar") == "foo"
-
-
-@patch("models.Session.client.update_item")
-def test_update_returns_false_if_update_item_fails(mock_update_item):
-    mock_update_item.return_value = {"ResponseMetadata": {"HTTPStatusCode": 400}}
-    assert Session.update("foo", "bar") is None
+@patch("models.Session.client.get_item")
+@patch("models.Session.delete")
+def test_read_returns_none_if_get_item_succeeds_but_ttl_has_passed(mock_delete, mock_get_item):
+    mock_get_item.return_value = {
+        "ResponseMetadata": {"HTTPStatusCode": 200},
+        "Item": {
+            "foo": "bar",
+            "ttl": {"N": "0"},
+        },
+    }
+    assert Session.read("foo") is None
 
 
 @patch("models.Session.client.delete_item")

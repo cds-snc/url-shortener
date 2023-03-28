@@ -1,5 +1,6 @@
 import boto3
 import datetime
+import time
 import os
 import uuid
 
@@ -44,23 +45,36 @@ def delete(composite_key):
 
 
 def get(guid):
+    epoch_time_now = int(time.time())
     response = client.get_item(
         TableName=table,
         Key={"key_id": {"S": f"{MODEL_PREFIX}/{guid}"}},
         ProjectionExpression="email",
     )
     if response["ResponseMetadata"]["HTTPStatusCode"] == 200 and "Item" in response:
+        if (
+            "ttl" in response["Item"]
+            and int(response["Item"]["ttl"]["N"]) < epoch_time_now
+        ):
+            delete(guid)
+            return None
         return response["Item"]["email"]["S"].split("/").pop()
     else:
         return None
 
 
 def check_if_exists(email):
+    epoch_time_now = int(time.time())
     response = client.query(
         TableName=table,
         IndexName="emailIndex",
         KeyConditionExpression="email = :email",
-        ExpressionAttributeValues={":email": {"S": f"{MODEL_PREFIX}/{email}"}},
+        FilterExpression="#t > :ttl",
+        ExpressionAttributeNames={"#t": "ttl", "#email": "email"},
+        ExpressionAttributeValues={
+            ":email": {"S": f"{MODEL_PREFIX}/{email}"},
+            ":ttl": {"N": str(epoch_time_now)},
+        },
     )
     if (
         response["ResponseMetadata"]["HTTPStatusCode"] == 200

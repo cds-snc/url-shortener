@@ -67,7 +67,7 @@ def get_short_url(short_url):
     returns: response object containing original url.
     """
     # AWS does not delete expired items immediately (typically deletes within 48 hours) so we still need to sure we don't return any expired urls
-    epochTimeNow = int(time.time())
+    epoch_time_now = int(time.time())
     response = client.query(
         TableName=table,
         KeyConditionExpression="#key_id = :key_id",
@@ -75,7 +75,7 @@ def get_short_url(short_url):
         ExpressionAttributeNames={"#t": "ttl", "#key_id": "key_id"},
         ExpressionAttributeValues={
             ":ttl": {
-                "N": str(epochTimeNow),
+                "N": str(epoch_time_now),
             },
             ":key_id": {"S": f"{MODEL_PREFIX}/{short_url}"},
         },

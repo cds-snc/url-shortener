@@ -1,5 +1,6 @@
 import boto3
 import datetime
+import time
 import os
 
 client = boto3.client(
@@ -34,32 +35,20 @@ def create(session_id, data):
 
 def read(session_id):
     """Read session data."""
+    epoch_time_now = int(time.time())
     response = client.get_item(
         TableName=table,
         Key={"key_id": {"S": f"{MODEL_PREFIX}/{session_id}"}},
-        ProjectionExpression="key_id, created, time_to_live, session_data",
+        ProjectionExpression="key_id, created, ttl, session_data",
     )
     if response["ResponseMetadata"]["HTTPStatusCode"] == 200 and "Item" in response:
+        if (
+            "ttl" in response["Item"]
+            and int(response["Item"]["ttl"]["N"]) < epoch_time_now
+        ):
+            delete(session_id)
+            return None
         return response["Item"]
-    else:
-        return None
-
-
-def update(session_id, data):
-    """Update session data."""
-    timestamp = int(datetime.datetime.utcnow().timestamp())
-    response = client.update_item(
-        TableName=table,
-        Key={"key_id": {"S": f"{MODEL_PREFIX}/{session_id}"}},
-        UpdateExpression="SET session_data = :session_data, time_to_live = :time_to_live",
-        ExpressionAttributeValues={
-            ":session_data": {"S": data},
-            ":time_to_live": {"N": str(timestamp + (60 * 60 * 2))},
-        },
-    )
-
-    if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
-        return session_id
     else:
         return None
 

@@ -48,6 +48,20 @@ def test_get_returns_none_if_get_item_fails(mock_get_item):
     assert MagicLinks.get("guid") is None
 
 
+@patch("models.MagicLinks.client.get_item")
+@patch("models.MagicLinks.delete")
+def test_get_returns_none_if_get_item_succeeds_but_ttl_has_passed(mock_delete, mock_get_item):
+    mock_get_item.return_value = {
+        "ResponseMetadata": {"HTTPStatusCode": 200},
+        "Item": {
+            "email": {"S": "MODEL_PREFIX/foo@canada.ca"},
+            "ttl": {"N": "0"},
+        },
+    }
+    assert MagicLinks.get("guid") is None
+    mock_delete.assert_called_once()
+
+
 @patch("models.MagicLinks.client.query")
 def test_check_if_exists_returns_true_if_query_succeeds(mock_query):
     mock_query.return_value = {
