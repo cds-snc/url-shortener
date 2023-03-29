@@ -38,7 +38,7 @@ resource "aws_cloudfront_distribution" "url_shortener_api" {
     }
   }
 
-  # Prevent caching of healthcheck calls
+  # Prevent caching of healthcheck calls 
   ordered_cache_behavior {
     path_pattern    = "/healthcheck"
     allowed_methods = ["GET", "HEAD"]
