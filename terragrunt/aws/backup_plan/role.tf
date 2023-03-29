@@ -12,6 +12,11 @@ resource "aws_iam_role" "role_backup" {
     "arn:aws:iam::aws:policy/AWSBackupServiceRolePolicyForS3Backup",
     "arn:aws:iam::aws:policy/AWSBackupServiceRolePolicyForS3Restore"
   ]
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
 }
 
 # IAM policy

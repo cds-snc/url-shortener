@@ -17,4 +17,9 @@ resource "aws_backup_plan" "backup_plan_default" {
       delete_after       = local.delete_after_default
     }
   }
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
 }

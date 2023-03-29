@@ -1,5 +1,10 @@
 resource "aws_backup_vault" "vault" {
   name = "vault"
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
 }
 
 
