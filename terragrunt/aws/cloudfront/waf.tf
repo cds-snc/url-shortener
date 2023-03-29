@@ -311,7 +311,7 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
 
   # allow magic_link related pages
   regular_expression {
-    regex_string = "^/(login|logout|magic_link?guid=.*)$"
+    regex_string = "^/(login|logout|magic_link*)$"
   }
 
   tags = {
