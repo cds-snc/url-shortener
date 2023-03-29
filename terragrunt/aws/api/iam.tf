@@ -13,7 +13,8 @@ data "aws_iam_policy_document" "api_policies" {
     ]
 
     resources = [
-      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.url_shortener_table_name}"
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.url_shortener_table_name}",
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.url_shortener_table_name}/index/emailIndex",
     ]
   }
 
