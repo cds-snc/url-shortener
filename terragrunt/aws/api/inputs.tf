@@ -39,3 +39,8 @@ variable "ecr_tag" {
   description = "The tag used for the ECR to specifiy either a specific version or latest"
   type        = string
 }
+
+variable "notify_api_key" {
+  description = "The API key used to send emails via Notify"
+  type        = string
+}

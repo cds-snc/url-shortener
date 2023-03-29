@@ -61,6 +61,13 @@ else
             --names hashing_peppers \
             --query 'Parameters[*].Value' \
             --output text >> "$TMP_ENV_FILE"
+
+        aws ssm get-parameters \
+            --region ca-central-1 \
+            --with-decryption \
+            --names notify_api_key \
+            --query 'Parameters[*].Value' \
+            --output text >> "$TMP_ENV_FILE"
     fi
     load_non_existing_envs
 
