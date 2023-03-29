@@ -21,8 +21,6 @@ resource "aws_dynamodb_table" "url_shortener" {
   global_secondary_index {
     name            = "emailIndex"
     hash_key        = "email"
-    write_capacity  = 1
-    read_capacity   = 1
     projection_type = "ALL"
   }
 
