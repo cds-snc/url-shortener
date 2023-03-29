@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from unittest.mock import patch
 import main
 
+import routers.ops as ops
 
 client = TestClient(main.app)
 
@@ -43,3 +44,15 @@ def test_healthcheck_success(db_mock):
     assert response.status_code == 200
     expected_val = {"status": "OK", "message": "Able to connect to the database"}
     assert response.json() == expected_val
+
+
+@patch("routers.ops.boto3")
+def test_is_db_up_returns_true_if_can_connect(mock_boto3):
+    mock_boto3.client.return_value.describe_table.return_value = {}
+    assert ops.is_db_up() is True
+
+
+@patch("routers.ops.boto3")
+def test_is_db_up_returns_false_if_cannot_connect(mock_boto3):
+    mock_boto3.client.side_effect = Exception("foo")
+    assert ops.is_db_up() is False

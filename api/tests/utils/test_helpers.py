@@ -49,6 +49,13 @@ def test_generate_short_url__min_length_equals_4_digits():
     assert len(short_url) == 4
 
 
+def test_generate_short_url__hint_passed():
+    original_url = "https://example.com"
+    pepper = "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8="
+    short_url = helpers.generate_short_url(original_url, pepper, hint="FizzBuzz")
+    assert short_url == "FizzBuzz"
+
+
 @patch("utils.helpers.ShortUrls")
 @patch("utils.helpers.generate_short_url")
 @patch("utils.helpers.advocate")
