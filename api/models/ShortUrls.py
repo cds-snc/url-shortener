@@ -12,6 +12,8 @@ client = boto3.client(
 
 table = os.environ.get("TABLE_NAME", "url_shortener")
 
+MODEL_PREFIX = "URL"
+
 
 def create_short_url(original_url, short_url):
     """
@@ -33,14 +35,14 @@ def create_short_url(original_url, short_url):
         response = client.put_item(
             TableName=table,
             Item={
-                "short_url": {"S": short_url},
+                "key_id": {"S": f"{MODEL_PREFIX}/{short_url}"},
                 "original_url": {"S": original_url},
                 "click_count": {"N": "0"},
                 "active": {"BOOL": True},
-                "created": {"S": str(datetime.datetime.utcnow())},
+                "created_at": {"N": str(int(datetime.datetime.utcnow().timestamp()))},
                 "ttl": {"N": str(expiry_date)},
             },
-            ConditionExpression="attribute_not_exists(short_url)",
+            ConditionExpression="attribute_not_exists(key_id)",
         )
         if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
             raise RuntimeError(response)
@@ -65,17 +67,17 @@ def get_short_url(short_url):
     returns: response object containing original url.
     """
     # AWS does not delete expired items immediately (typically deletes within 48 hours) so we still need to sure we don't return any expired urls
-    epochTimeNow = int(time.time())
+    epoch_time_now = int(time.time())
     response = client.query(
         TableName=table,
-        KeyConditionExpression="#short_url = :short_url",
+        KeyConditionExpression="#key_id = :key_id",
         FilterExpression="#t > :ttl",
-        ExpressionAttributeNames={"#t": "ttl", "#short_url": "short_url"},
+        ExpressionAttributeNames={"#t": "ttl", "#key_id": "key_id"},
         ExpressionAttributeValues={
             ":ttl": {
-                "N": str(epochTimeNow),
+                "N": str(epoch_time_now),
             },
-            ":short_url": {"S": short_url},
+            ":key_id": {"S": f"{MODEL_PREFIX}/{short_url}"},
         },
     )
     if (

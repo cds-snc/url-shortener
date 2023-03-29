@@ -16,8 +16,8 @@
     href="https://fonts.googleapis.com/css?family=Lato:400,700%7CNoto+Sans:400,700&amp;display=fallback" />
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css?family=Lato:400,700%7CNoto+Sans:400,700&amp;display=fallback" />
-  <link rel="stylesheet" href="/static/css/styles.css"/>
-  <link rel="stylesheet" href="/static/css/normalize.css"/>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+  <link rel="stylesheet" href="/static/css/normalize.css" />
 
   <link rel="icon"
     href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Ctext%20x='0'%20y='14'%3E🍁%3C/text%3E%3C/svg%3E"
@@ -32,8 +32,7 @@
       <div class="page--container">
         <div class="fip-container">
           <div class="canada-flag">
-            <img type="image/svg+xml" src="/static/img/sig-blk-en.svg"
-              alt="Government of Canada" />
+            <img type="image/svg+xml" src="/static/img/sig-blk-en.svg" alt="Government of Canada" />
           </div>
 
           <nav class="nav--header" aria-label="Language and account navigation">
@@ -42,7 +41,14 @@
                 <h2 class="visually-hidden">Language selection</h2>
                 <a href="./fr.htm">Français</a>
               </li>
+              {%if data and data.logged_in %}
+              <li>
+                <h2 class="visually-hidden">Logout</h2>
+                <a href="/logout">Logout</a>
+              </li>
+              {% endif %}
             </ul>
+
           </nav>
         </div>
       </div>

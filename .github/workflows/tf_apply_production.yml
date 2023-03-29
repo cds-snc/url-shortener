@@ -14,7 +14,7 @@ env:
   TF_VAR_api_auth_token: ${{ secrets.PROD_API_AUTH_TOKEN }}
   TF_VAR_slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL_PROD }}
   TF_VAR_hashing_peppers: ${{ secrets.PROD_HASHING_PEPPERS }}
-
+  TF_VAR_notify_api_key: ${{ secrets.PROD_NOTIFY_API_KEY }}
 
 permissions:
   id-token: write
@@ -45,7 +45,7 @@ jobs:
       - name: Configure aws credentials using OIDC
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # tag=v1.7.0
         with:
-          role-to-assume: arn:aws:iam::806721586252:role/url-shortener-apply 
+          role-to-assume: arn:aws:iam::806721586252:role/url-shortener-apply
           role-session-name: TFApply
           aws-region: ${{ env.AWS_REGION }}
 
@@ -57,11 +57,11 @@ jobs:
         working-directory: terragrunt/env/production/network
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
 
-      - name: Apply ecr 
+      - name: Apply ecr
         working-directory: terragrunt/env/production/ecr
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
 
-      - name: Apply dynamodb 
+      - name: Apply dynamodb
         working-directory: terragrunt/env/production/dynamodb
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
 
@@ -69,11 +69,11 @@ jobs:
         working-directory: terragrunt/env/production/api
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
 
-      - name: Apply cloudfront 
+      - name: Apply cloudfront
         working-directory: terragrunt/env/production/cloudfront
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
 
-      - name: Apply alarms 
+      - name: Apply alarms
         working-directory: terragrunt/env/production/alarms
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
 

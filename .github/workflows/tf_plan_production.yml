@@ -13,6 +13,7 @@ env:
   TF_VAR_api_auth_token: ${{ secrets.PROD_API_AUTH_TOKEN }}
   TF_VAR_slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL_PROD }}
   TF_VAR_hashing_peppers: ${{ secrets.PROD_HASHING_PEPPERS }}
+  TF_VAR_notify_api_key: ${{ secrets.PROD_NOTIFY_API_KEY }}
 
 permissions:
   id-token: write
@@ -31,7 +32,7 @@ jobs:
           - module: hosted_zone
           - module: network
           - module: ecr
-          - module: dynamodb 
+          - module: dynamodb
           - module: api
           - module: cloudfront 
           - module: alarms 
@@ -56,7 +57,7 @@ jobs:
       - name: Configure aws credentials using OIDC
         uses: aws-actions/configure-aws-credentials@67fbcbb121271f7775d2e7715933280b06314838 # tag=v1.7.0
         with:
-          role-to-assume: arn:aws:iam::806721586252:role/url-shortener-plan 
+          role-to-assume: arn:aws:iam::806721586252:role/url-shortener-plan
           role-session-name: TFPlan
           aws-region: ${{ env.AWS_REGION }}
 

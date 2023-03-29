@@ -9,10 +9,12 @@ data "aws_iam_policy_document" "api_policies" {
       "dynamodb:DeleteItem",
       "dynamodb:PutItem",
       "dynamodb:DescribeTable",
+      "dynamodb:Query",
     ]
 
     resources = [
-      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.url_shortener_table_name}"
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.url_shortener_table_name}",
+      "arn:aws:dynamodb:${var.region}:${var.account_id}:table/${var.url_shortener_table_name}/index/emailIndex",
     ]
   }
 
@@ -23,7 +25,8 @@ data "aws_iam_policy_document" "api_policies" {
     ]
     resources = [
       aws_ssm_parameter.api_auth_token.arn,
-      aws_ssm_parameter.hashing_peppers.arn
+      aws_ssm_parameter.hashing_peppers.arn,
+      aws_ssm_parameter.notify_api_key.arn
     ]
   }
 }

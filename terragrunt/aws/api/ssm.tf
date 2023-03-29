@@ -19,3 +19,15 @@ resource "aws_ssm_parameter" "hashing_peppers" {
     Terraform  = true
   }
 }
+
+
+resource "aws_ssm_parameter" "notify_api_key" {
+  name  = "notify_api_key"
+  type  = "SecureString"
+  value = "NOTIFY_API_KEY=${var.notify_api_key}"
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}

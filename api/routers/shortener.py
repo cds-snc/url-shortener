@@ -6,10 +6,12 @@ from fastapi import (
     Request,
     Form,
 )
-from fastapi.responses import HTMLResponse
-
+from fastapi.responses import HTMLResponse, RedirectResponse
+import os
 from pydantic import HttpUrl
 from utils.helpers import resolve_short_url, validate_and_shorten_url
+from utils.magic_link import create_magic_link, validate_magic_link
+from utils.session import delete_cookie, set_cookie, validate_cookie
 from fastapi.templating import Jinja2Templates
 
 
@@ -19,9 +21,14 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    data = {"page": "Home Page", "button": "Shorten", "url": ""}
-    return templates.TemplateResponse("index.html", {"request": request, "data": data})
+def home(request: Request):
+    if validate_cookie(request):
+        data = {"page": "Home Page", "button": "Shorten", "url": "", "logged_in": True}
+        return templates.TemplateResponse(
+            "index.html", {"request": request, "data": data}
+        )
+    else:
+        return RedirectResponse(url="/login")
 
 
 @router.post("/", response_class=HTMLResponse)
@@ -29,10 +36,62 @@ def create_shortened_url(
     request: Request,
     original_url: str = Form(),
 ):
-    data = validate_and_shorten_url(original_url)
-    return templates.TemplateResponse(
-        "index.html", context={"request": request, "data": data}
-    )
+    if validate_cookie(request):
+        data = validate_and_shorten_url(original_url)
+        return templates.TemplateResponse(
+            "index.html", context={"request": request, "data": data}
+        )
+    else:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+
+
+@router.get("/login", response_class=HTMLResponse)
+def login(request: Request):
+    data = {"page": "Login Page", "button": "Login", "url": ""}
+    return templates.TemplateResponse("login.html", {"request": request, "data": data})
+
+
+@router.post("/login", response_class=HTMLResponse)
+def login_post(request: Request, email: str = Form(...)):
+    domain = email.split("@").pop()
+    result = {}
+    if domain in os.getenv("ALLOWED_DOMAINS").split(","):
+        result = create_magic_link(email)
+    else:
+        result["error"] = "Not a valid email address"
+    data = {
+        "page": "Login Page",
+        "button": "Login",
+        "error": result.get("error", None),
+        "success": result.get("success", None),
+    }
+    return templates.TemplateResponse("login.html", {"request": request, "data": data})
+
+
+@router.get("/logout", response_class=HTMLResponse)
+def logout(request: Request):
+    response = RedirectResponse(url="/login")
+    delete_cookie(request, response)
+    return response
+
+
+@router.get("/magic_link", response_class=HTMLResponse)
+def magic_link(request: Request, guid: str, email: str):
+    result = validate_magic_link(guid, email)
+    if "success" in result:
+        response = RedirectResponse(url="/")
+        set_cookie(response, email)
+        return response
+    else:
+        data = {
+            "page": "Magic Link Page",
+            "button": "Magic Link",
+            "url": "",
+            "error": result.get("error", None),
+        }
+        return templates.TemplateResponse(
+            "login.html", {"request": request, "data": data}
+        )
 
 
 @router.post("/v1", status_code=status.HTTP_201_CREATED)

@@ -2,15 +2,26 @@ resource "aws_dynamodb_table" "url_shortener" {
 
   name         = "url_shortener"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "short_url"
+  hash_key     = "key_id"
 
   server_side_encryption {
     enabled = true
   }
 
   attribute {
-    name = "short_url"
+    name = "key_id"
     type = "S"
+  }
+
+  attribute {
+    name = "email"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "emailIndex"
+    hash_key        = "email"
+    projection_type = "ALL"
   }
 
   point_in_time_recovery {
