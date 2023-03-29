@@ -4,7 +4,7 @@
 
 # IAM role
 resource "aws_iam_role" "role_backup" {
-  name               = "aws-backup-service-role-${local.region}"
+  name               = "aws-backup-service-role-${var.region}"
   assume_role_policy = join("", data.aws_iam_policy_document.assume_role.*.json)
   managed_policy_arns = [
     "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup",
