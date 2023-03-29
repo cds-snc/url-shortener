@@ -70,7 +70,7 @@ def check_if_exists(email):
         IndexName="emailIndex",
         KeyConditionExpression="email = :email",
         FilterExpression="#t > :ttl",
-        ExpressionAttributeNames={"#t": "ttl", "#email": "email"},
+        ExpressionAttributeNames={"#t": "ttl"},
         ExpressionAttributeValues={
             ":email": {"S": f"{MODEL_PREFIX}/{email}"},
             ":ttl": {"N": str(epoch_time_now)},

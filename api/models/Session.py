@@ -39,7 +39,6 @@ def read(session_id):
     response = client.get_item(
         TableName=table,
         Key={"key_id": {"S": f"{MODEL_PREFIX}/{session_id}"}},
-        ProjectionExpression="key_id, created, ttl, session_data",
     )
     if response["ResponseMetadata"]["HTTPStatusCode"] == 200 and "Item" in response:
         if (
