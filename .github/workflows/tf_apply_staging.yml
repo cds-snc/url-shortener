@@ -70,3 +70,7 @@ jobs:
       - name: Apply alarms 
         working-directory: terragrunt/env/staging/alarms
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
+      
+      - name: Apply backup_plan 
+        working-directory: terragrunt/env/staging/backup_plan
+        run: terragrunt apply --terragrunt-non-interactive -auto-approve
