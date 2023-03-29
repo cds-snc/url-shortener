@@ -16,6 +16,7 @@ resource "aws_cloudfront_distribution" "url_shortener_api" {
       origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
+
   default_cache_behavior {
     allowed_methods = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods  = ["GET", "HEAD"]
@@ -24,21 +25,13 @@ resource "aws_cloudfront_distribution" "url_shortener_api" {
     viewer_protocol_policy     = "redirect-to-https"
     response_headers_policy_id = aws_cloudfront_response_headers_policy.security_headers_api.id
 
-    min_ttl     = 1
-    default_ttl = 86400    # 24 hours
-    max_ttl     = 31536000 # 365 days
-    compress    = true
+    compress = true
 
-    forwarded_values {
-      query_string = true
-      headers      = ["Authorization"]
-      cookies {
-        forward = "none"
-      }
-    }
+    cache_policy_id          = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" # CachingDisabled https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
+    origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac" # AllViewerExceptHostHeader https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html
   }
 
-  # Prevent caching of healthcheck calls 
+  # Prevent caching of healthcheck calls
   ordered_cache_behavior {
     path_pattern    = "/healthcheck"
     allowed_methods = ["GET", "HEAD"]
