@@ -23,7 +23,7 @@ def set_cookie(response, session_data):
             httponly=True,
             max_age=60 * 60 * 2,  # 2 hours
             expires=60 * 60 * 2,  # 2 hours
-            samesite="Lax",
+            samesite="lax",
         )
         return response
     else:
