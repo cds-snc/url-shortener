@@ -309,6 +309,11 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
     regex_string = "^/static/*"
   }
 
+  # allow magic_link related pages
+  regular_expression {
+    regex_string = "^/(login|logout|magic_link?guid=.*)$"
+  }
+
   tags = {
     CostCentre = var.billing_code
     Terraform  = true
