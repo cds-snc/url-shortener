@@ -14,7 +14,7 @@ services:
       - db
 
   db:
-    image: postgres:12.14@sha256:38dd973e62efcf05026918c597ff337c6afda6f4b63f2d9e642df4189a5db78c
+    image: postgres:12.14@sha256:f3be6b89bda5c8076bda0de282a417f7682b1fd4c166b002ae050b27b7b1494c
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
