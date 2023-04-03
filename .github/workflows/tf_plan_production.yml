@@ -40,13 +40,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
 
       - name: Get infrastructure version
         run: echo "INFRASTRUCTURE_VERSION=$(cat .github/manifests/infrastructure_version)" >> $GITHUB_ENV
 
       - name: Checkout infrastructure version tag
-        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
         with:
           ref: ${{ env.INFRASTRUCTURE_VERSION }}
 
@@ -61,7 +61,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Terraform plan
-        uses: cds-snc/terraform-plan@478000c57b4effd0bc6e1194a2c180a2915c65f2 # v3.0.1
+        uses: cds-snc/terraform-plan@26fbdfea02203e8753541f3ca1378f392801d5d5 # v3.0.3
         with:
           comment-delete: true
           comment-title: "Production: ${{ matrix.module }}"
