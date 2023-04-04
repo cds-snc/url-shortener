@@ -23,7 +23,7 @@ templates = Jinja2Templates(directory="templates")
 @router.get("/", response_class=HTMLResponse)
 def home(request: Request):
     if validate_cookie(request):
-        data = {"page": "Home Page", "button": "Shorten", "url": "", "logged_in": True}
+        data = {"logged_in": True}
         return templates.TemplateResponse(
             "index.html", {"request": request, "data": data}
         )
@@ -38,6 +38,7 @@ def create_shortened_url(
 ):
     if validate_cookie(request):
         data = validate_and_shorten_url(original_url)
+        data["logged_in"] = True
         return templates.TemplateResponse(
             "index.html", context={"request": request, "data": data}
         )
@@ -47,8 +48,7 @@ def create_shortened_url(
 
 @router.get("/login", response_class=HTMLResponse)
 def login(request: Request):
-    data = {"page": "Login Page", "button": "Login", "url": ""}
-    return templates.TemplateResponse("login.html", {"request": request, "data": data})
+    return templates.TemplateResponse("login.html", {"request": request, "data": {}})
 
 
 @router.post("/login", response_class=HTMLResponse)
@@ -60,8 +60,6 @@ def login_post(request: Request, email: str = Form(...)):
     else:
         result["error"] = "Not a valid email address"
     data = {
-        "page": "Login Page",
-        "button": "Login",
         "error": result.get("error", None),
         "success": result.get("success", None),
     }
@@ -84,9 +82,6 @@ def magic_link(request: Request, guid: str, email: str):
         return response
     else:
         data = {
-            "page": "Magic Link Page",
-            "button": "Magic Link",
-            "url": "",
             "error": result.get("error", None),
         }
         return templates.TemplateResponse(
