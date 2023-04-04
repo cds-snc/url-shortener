@@ -1,6 +1,8 @@
+from typing import Annotated
 from fastapi import (
     APIRouter,
     Body,
+    Depends,
     HTTPException,
     status,
     Request,
@@ -9,6 +11,7 @@ from fastapi import (
 from fastapi.responses import HTMLResponse, RedirectResponse
 import os
 from pydantic import HttpUrl
+from utils.auth_token import validate_auth_token
 from utils.helpers import resolve_short_url, validate_and_shorten_url
 from utils.magic_link import create_magic_link, validate_magic_link
 from utils.session import delete_cookie, set_cookie, validate_cookie
@@ -96,6 +99,7 @@ def magic_link(request: Request, guid: str, email: str):
 
 @router.post("/v1", status_code=status.HTTP_201_CREATED)
 def create_shortened_url_api(
+    authenticated: Annotated[bool, Depends(validate_auth_token)],
     original_url: HttpUrl = Body(..., embed=True),
 ):
     resp = validate_and_shorten_url(original_url)
