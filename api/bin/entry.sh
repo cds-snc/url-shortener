@@ -51,10 +51,17 @@ else
         aws ssm get-parameters \
             --region ca-central-1 \
             --with-decryption \
-            --names api_auth_token \
+            --names auth_token_app \
             --query 'Parameters[*].Value' \
             --output text > "$TMP_ENV_FILE"
-        
+
+        aws ssm get-parameters \
+            --region ca-central-1 \
+            --with-decryption \
+            --names auth_token_notify \
+            --query 'Parameters[*].Value' \
+            --output text >> "$TMP_ENV_FILE"
+
         aws ssm get-parameters \
             --region ca-central-1 \
             --with-decryption \
