@@ -1,42 +1,26 @@
 {% extends "base.html" %}
-{% set active_page = "index" %}
-
-{% block title %}URL Shortener {% endblock %}
-
-<div class="container">
-  {% block header %}{% endblock %}
-</div>
-
 {% block page_content %}
-<form action="/" method="post">
-  <div class="form-group">
-    <label for="OriginalUrl">{{ data.label }}</label>
-    <h1>GC Link Shortener</h1>
-    <h2>Short and shareable links</h2>
-    <p>This service will shorten URLs from official government of Canada domains.
-      Save valuable space in your status updates while using a trusted GC domain. If your domain is not registered in
-      our system, <a href="{{ data.form_url }}">request to have your domain added.</a></p>
+<form action="/" method="post" class="mb-500">
+  <h2 class="mb-400">Short and shareable links</h2>
+  <p class="mb-400">This service will shorten URLs from official government of Canada domains.
+    Save valuable space in your status updates while using a trusted GC domain. If your domain is not registered in
+    our system, <a href="{{ data.form_url }}">request to have your domain added.</a></p>
 
-    <h2>GC URL</h2>
-    <p>Paste your link</p>
-    {% if data.error %}
-    <div class="alert alert-danger" role="alert">
-      {{ data.error }}
-      {% if data.form_url %}
-      <a href="{{ data.form_url }}">Request to have this domain added.</a>
-      {% endif %}
-    </div>
-    {% endif %}
-    <input class="form-control form-control-lg" type="url" id="original_url" name="original_url"
-      value="{{ data.short_url }}" placeholder="Shorten your link">
-  </div>
+  <h2 class="mb-400">GC URL</h2>
+  {% if data.error %}
+  <gcds-error-message message="{{ data.error }}" class="mb-300"></gcds-error-message>
+  {% endif %}
   {% if data.short_url %}
-  <img type="image/svg+xml" src="/static/img/LinkShortened.svg"
-    alt="Success - your link is shortened" /><br><br>
-  <button type="button" onclick="parent.location=''" class="btn btn-dark">Shorten another link</button>
-  <button class="btn btn-large btn-primary" type="button" onclick="copyURL('original_url')">Copy URL</button>
+  <p class="success-message" role="alert">Success - your link is shortened</p>
+  {% endif %}
+  <gcds-input label="Paste your link" hint="The link you would like to shorten." type="url" input-id="original_url"
+    value="{{ data.short_url }}" /></gcds-input>
+  {% if data.short_url %}
+  <gcds-button type="button" button-role="secondary" onclick="parent.location=''">Shorten another
+    link</gcds-button>
+  <gcds-button type="button" onclick="copyURL('original_url')" class="ml-100">Copy URL</gcds-button>
   {% else %}
-  <button type="submit" class="btn btn-dark">Shorten</button>
+  <gcds-button type="submit">Shorten</gcds-button>
   {% endif %}
 </form>
 {% endblock %}
