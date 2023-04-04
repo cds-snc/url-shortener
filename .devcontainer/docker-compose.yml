@@ -17,7 +17,8 @@ services:
       args:
         VARIANT: "3.11"
         NODE_VERSION: "none"
-
+    env_file:
+      - ../api/.env
     environment:
       ALLOWED_DOMAINS: 'canada.ca,gc.ca,cds-snc.ca'
       AWS_ACCESS_KEY_ID: 'AWS_ACCESS_KEY_ID'
