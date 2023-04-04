@@ -118,22 +118,60 @@ def test_GET_magic_link_returns_200_if_invalid_and_does_not_set_cookie(
 
 
 def test_creating_a_valid_shortlink(client):
-    response = client.post("/v1", json={"original_url": "https://www.canada.ca"})
+    response = client.post(
+        "/v1",
+        json={"original_url": "https://www.canada.ca"},
+        headers={"Authorization": "Bearer auth_token_app"},
+    )
     assert response.status_code == status.HTTP_201_CREATED
     assert response.json()["status"] == "OK"
 
 
 def test_creating_a_blocked_shortlink(client):
-    response = client.post("/v1", json={"original_url": "https://www.example.ca"})
+    response = client.post(
+        "/v1",
+        json={"original_url": "https://www.example.ca"},
+        headers={"Authorization": "Bearer auth_token_app"},
+    )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 
 def test_creating_a_blocked_shortlink_with_ending_match(client):
-    response = client.post("/v1", json={"original_url": "https://www.examplegc.ca"})
+    response = client.post(
+        "/v1",
+        json={"original_url": "https://www.examplegc.ca"},
+        headers={"Authorization": "Bearer auth_token_app"},
+    )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    response = client.post("/v1", json={"original_url": "https://www.examplecanada.ca"})
+    response = client.post(
+        "/v1",
+        json={"original_url": "https://www.examplecanada.ca"},
+        headers={"Authorization": "Bearer auth_token_app"},
+    )
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+
+def test_creating_url_authorization_missing(client):
+    response = client.post(
+        "/v1",
+        json={"original_url": "https://www.canada.ca"},
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+    assert response.headers["WWW-Authenticate"] == 'Bearer realm="UrlShortener"'
+
+
+def test_creating_url_authorization_bad_token(client):
+    response = client.post(
+        "/v1",
+        json={"original_url": "https://www.canada.ca"},
+        headers={"Authorization": "Bearer naughty_token"},
+    )
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+    assert (
+        response.headers["WWW-Authenticate"]
+        == 'Bearer realm="UrlShortener", error="invalid_token", error_description="The api key is invalid"'
+    )
 
 
 def test_known_shorturl_displays_original_url(client):
@@ -142,6 +180,7 @@ def test_known_shorturl_displays_original_url(client):
         json={
             "original_url": "https://www.canada.ca/en/services/jobs/opportunities.html"
         },
+        headers={"Authorization": "Bearer auth_token_app"},
     )
     shorturl = response.json()["short_url"].split("/")[-1]
 
