@@ -32,7 +32,7 @@ def validate_auth_token(
     is_valid = isinstance(token, str) and token.strip() and token in VALID_AUTH_TOKENS
     if not is_valid:
         authorization = request.headers.get("Authorization")
-        invalid_attributes = (
+        error_attributes = (
             ', error="invalid_token", error_description="The api key is invalid"'
             if authorization
             else ""
@@ -40,7 +40,7 @@ def validate_auth_token(
         raise HTTPException(
             status_code=HTTP_401_UNAUTHORIZED,
             headers={
-                "WWW-Authenticate": 'Bearer realm="UrlShortener"' + invalid_attributes,
+                "WWW-Authenticate": 'Bearer realm="UrlShortener"' + error_attributes,
             },
         )
     return is_valid
