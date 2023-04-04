@@ -25,11 +25,11 @@ See also:
 
 ### Clone the repo:
 Clone the repo by typing
-```
+```bash
 git clone https://github.com/cds-snc/url-shortener.git
 ```
 And now change into the project directory
-```
+```bash
 cd url-shortener
 ```
 ## Running the project
@@ -45,7 +45,7 @@ Since we are using codespaces as a dev environment, we won't actually be using d
 Otherwise, you will run into issues with container within a container.
 
 Spin up the app: 
-```
+```bash
 cd api
 make install-dev
 make dev
@@ -59,19 +59,19 @@ You can use Docker Compose to build an application container along with a Postgr
 The app runs on port 8000, the database at port 5432 (u: user, p: password) and will be served at http://localhost:8000 or http://0.0.0.0:8000.
 
 Spin up the app: 
-```
+```bash
 docker-compose up -d --build
 ```
 Initialize database and run migrations: 
-```
+```bash
 docker-compose exec api alembic upgrade head
 ```
 Get logs: 
-```
+```bash
 docker-compose logs
 ```
 Connect to the psql database: 
-```
+```bash
 docker-compose exec db psql --username=dev --dbname=dev
 ```
 
@@ -84,24 +84,25 @@ To use the API, you can use [httpie](https://httpie.io/), [postman](https://www.
 #### Postman
 Execute a POST request with 
 
-```
+```bash
 http://localhost:8000/v1 
 ```
 In the body pass the following:
-```{
+```json
+{
     "original_url": "http://blah_blah.com"
 }
 ```
 
 #### curl
-```
+```bash
 curl -X POST -d '{"original_url": "https://google.com"}' -H "Content-Type: application/json" http://localhost:8000/v1
 
 {"status":"OK","short_url":"xM_ElQWt"}
 ```
 
 #### httpie
-```
+```bash
 http POST localhost:8000/v1 original_url=http://www.google.com
 
 HTTP/1.1 200 OK
