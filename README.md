@@ -84,24 +84,25 @@ To use the API, you can use [httpie](https://httpie.io/), [postman](https://www.
 #### Postman
 Execute a POST request with 
 
-```
+```bash
 http://localhost:8000/v1 
 ```
 In the body pass the following:
-```{
+```json
+{
     "original_url": "http://blah_blah.com"
 }
 ```
 
 #### curl
-```
+```bash
 curl -X POST -d '{"original_url": "https://google.com"}' -H "Content-Type: application/json" http://localhost:8000/v1
 
 {"status":"OK","short_url":"xM_ElQWt"}
 ```
 
 #### httpie
-```
+```bash
 http POST localhost:8000/v1 original_url=http://www.google.com
 
 HTTP/1.1 200 OK
