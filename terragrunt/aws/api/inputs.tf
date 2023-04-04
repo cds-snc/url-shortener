@@ -1,5 +1,11 @@
-variable "api_auth_token" {
-  description = "The API token needed for all requests to the API."
+variable "auth_token_app" {
+  description = "The authorization bearer token needed for requests to the API from the app itself."
+  type        = string
+  sensitive   = true
+}
+
+variable "auth_token_notify" {
+  description = "The authorization bearer token needed for requests to the API from Notify."
   type        = string
   sensitive   = true
 }

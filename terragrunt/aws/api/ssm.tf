@@ -1,7 +1,18 @@
-resource "aws_ssm_parameter" "api_auth_token" {
-  name  = "api_auth_token"
+resource "aws_ssm_parameter" "auth_token_app" {
+  name  = "auth_token_app"
   type  = "SecureString"
-  value = "API_AUTH_TOKEN=${var.api_auth_token}"
+  value = "AUTH_TOKEN_APP=${var.auth_token_app}"
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}
+
+resource "aws_ssm_parameter" "auth_token_notify" {
+  name  = "auth_token_notify"
+  type  = "SecureString"
+  value = "AUTH_TOKEN_NOTIFY=${var.auth_token_notify}"
 
   tags = {
     CostCentre = var.billing_code
