@@ -91,6 +91,7 @@ body {
 
 .link_container {
   background-color: rgb(245, 241, 241);
-  border-color: grey 2px solid;
+  border: rgb(183, 183, 183) 2px solid;
   padding: 15px;
+  word-break: break-all;
 }
