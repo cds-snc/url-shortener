@@ -1,6 +1,7 @@
 .PHONY: dev fmt install lint test fmt-ci lint-ci install-dev
 
 dev:
+	@export $$(xargs < .env) > /dev/null &&\
 	uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
 fmt:

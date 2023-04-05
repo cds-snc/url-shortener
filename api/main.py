@@ -6,10 +6,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import PlainTextResponse
 from mangum import Mangum
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 
 class Settings(BaseSettings):
     openapi_url: str = environ.get("OPENAPI_URL", "")
@@ -19,13 +15,14 @@ description = """
 API to shorten a url
 """
 
-allowed_domains = environ.get("ALLOWED_DOMAINS", "").split(",")
-shortener_domain = environ.get("SHORTENER_DOMAIN", "")
+ALLOWED_DOMAINS = environ.get("ALLOWED_DOMAINS", "").split(",")
+SHORTENER_DOMAIN = environ.get("SHORTENER_DOMAIN", "")
+DOCS_URL = environ.get("DOCS_URL", None)
 
-if len(allowed_domains) == 0:
+if len(ALLOWED_DOMAINS) == 0:
     raise ValueError("ALLOWED_DOMAINS environment variable is empty")
 
-if shortener_domain.strip() == "":
+if len(SHORTENER_DOMAIN.strip()) == 0:
     raise ValueError("SHORTENER_DOMAIN environment variable is empty")
 
 # initialize the app with title, version and url
@@ -33,6 +30,8 @@ app = FastAPI(
     title="API shortener",
     description=description,
     version="0.0.1",
+    docs_url=DOCS_URL,
+    redoc_url=None,
 )
 
 # include other routes
