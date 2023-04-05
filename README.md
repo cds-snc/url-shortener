@@ -20,7 +20,7 @@ SHAKE is an extendable-output functions (XOFs), i.e. it can produce a variable l
 The default output character set is hex digits: `a-z0-9`
 
 See also:
-- https://github.com/cds-snc/URL-shortener/issues/87
+- https://github.com/cds-snc/url-shortener/issues/87
 - https://medium.com/asecuritysite-when-bob-met-alice/shake-stirs-up-crypto-7d87f3cf39f4
 
 ### Clone the repo:
@@ -63,7 +63,7 @@ make dev
 
 To get the webpage, you can simply run the project at http://localhost:8000 
 
-To test the API, you can use [cURL](https://cURL.se/) or any other HTTP client.  You will need to provide a valid `Authorization` header with a `Bearer` token:
+To test the API, you can use [curl](https://curl.se/) or any other HTTP client.  You will need to provide a valid `Authorization` header with a `Bearer` token:
 
 #### cURL
 ```bash
