@@ -21,11 +21,8 @@ RUN apk add --no-cache \
 
 RUN wget https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/download/${RIE_VERSION}/aws-lambda-rie
 
-RUN mkdir -p /pymodules \
-    && pip3 install awslambdaric --target /pymodules
-
 COPY ./requirements.txt /
-RUN pip3 install -r /requirements.txt --target /pymodules
+RUN pip install -r /requirements.txt --target /pymodules
 
 # Lambda API image
 FROM ${BASE_IMAGE} as lambda
@@ -38,10 +35,10 @@ ARG FUNCTION_DIR="/function"
 ARG GIT_SHA
 ENV GIT_SHA=$GIT_SHA
 ENV PYTHONPATH="/pymodules"
+ENV PATH="${PYTHONPATH}/bin:${PATH}"
 
 RUN apk upgrade --no-cache \
     && apk add --no-cache \
-    aws-cli \
     binutils \
     libstdc++
 
