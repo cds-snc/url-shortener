@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 from fastapi import (
     APIRouter,
     Body,
@@ -37,7 +37,7 @@ def home(request: Request):
 @router.post("/", response_class=HTMLResponse)
 def create_shortened_url(
     request: Request,
-    original_url: str = Form(),
+    original_url: Optional[str] = Form(""),
 ):
     if validate_cookie(request):
         data = validate_and_shorten_url(original_url)
@@ -55,7 +55,7 @@ def login(request: Request):
 
 
 @router.post("/login", response_class=HTMLResponse)
-def login_post(request: Request, email: str = Form(...)):
+def login_post(request: Request, email: Optional[str] = Form("")):
     domain = email.split("@").pop()
     result = {}
     if domain in os.getenv("ALLOWED_DOMAINS").split(","):
