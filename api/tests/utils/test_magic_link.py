@@ -40,6 +40,21 @@ def test_create_magic_link_returns_success_if_magic_link_created(
     mock_notification_client.return_value.send_email_notification.assert_called_once()
 
 
+@patch("utils.magic_link.check_if_exists")
+@patch("utils.magic_link.create")
+@patch("utils.magic_link.notification_client")
+def test_create_magic_link_returns_error_if_notify_throws_an_error(
+    mock_notification_client, mock_create, mock_check_if_exists
+):
+    mock_check_if_exists.return_value = False
+    mock_create.return_value = ["guid", EMAIL]
+    mock_notification_client.return_value.send_email_notification.side_effect = (
+        Exception("Error")
+    )
+    result = magic_link.create_magic_link(EMAIL)
+    assert result == {"error": "Could not send magic link to email."}
+
+
 @patch("utils.magic_link.get")
 def test_validate_magic_link_returns_error_if_magic_link_is_not_valid(mock_get):
     mock_get.return_value = None
