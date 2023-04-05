@@ -17,7 +17,6 @@ env:
   TF_VAR_notify_api_key: ${{ secrets.PROD_NOTIFY_API_KEY }}
   TF_VAR_shortener_path_length: ${{ secrets.SHORTENER_PATH_LENGTH }}
 
-
 permissions:
   id-token: write
   contents: read
