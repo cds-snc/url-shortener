@@ -1,8 +1,8 @@
-# URL Shortener 
+# URL Shortener :scissors:
 
-Url shortener is an API written in Python using the FastAPI framework that can shorten a particular url
-You execute a POST request to the API or you can use the home page to generate an 8 character shortened url from long url that you enter
-The returned shortened url will redirect the user to the original long url when the shortened url is used in a browser or in some other redirection mechanism.
+URL Shortener is an API written in Python using the FastAPI framework that can shorten a particular URL.
+You execute a `POST` request to the API or you can use the home page to generate an 8 character shortened URL from the URL that you enter.
+The returned shortened URL will redirect the user to the original long URL when the shortened URL is used in a browser or in some other redirection mechanism.
 
 ## Shortening Algorithm
 
@@ -20,7 +20,7 @@ SHAKE is an extendable-output functions (XOFs), i.e. it can produce a variable l
 The default output character set is hex digits: `a-z0-9`
 
 See also:
-- https://github.com/cds-snc/url-shortener/issues/87
+- https://github.com/cds-snc/URL-shortener/issues/87
 - https://medium.com/asecuritysite-when-bob-met-alice/shake-stirs-up-crypto-7d87f3cf39f4
 
 ### Clone the repo:
@@ -34,85 +34,43 @@ cd url-shortener
 ```
 ## Running the project
 
-The url shortener is an application that uses FastAPI and it is written in python.
+The URL shortener is an application that uses FastAPI and it is written in python.
 
-There are two ways to run the app:
-- Codespaces
-- Docker Compose
+There are a few ways to run the app:
+- GitHub Codespaces
+- VSCode and Devcontainers
 
-### Running using Codespaces
-Since we are using codespaces as a dev environment, we won't actually be using docker-compose to spin up the app.
-Otherwise, you will run into issues with container within a container.
-
-Spin up the app: 
+### Running using GitHub Codespaces
+Once the Codespace is finished building, spin up the app: 
 ```bash
 cd api
-make install-dev
 make dev
 ```
 Logs go to stdout.
 
-### Running using Docker Compose
-Compose is a tool for defining and running multi-container Docker applications. With Compose, you use a YAML file to configure your application’s services. Then, with a single command, you create and start all the services from your configuration.
-
-You can use Docker Compose to build an application container along with a Postgres database. It will map your local files into a Docker container and spin up a PostgreSQL database.
-The app runs on port 8000, the database at port 5432 (u: user, p: password) and will be served at http://localhost:8000 or http://0.0.0.0:8000.
-
-Spin up the app: 
+### Running using VSCode and Devcontainers
+Once you have the [Devcontainers prerequisites installed](https://code.visualstudio.com/docs/devcontainers/tutorial), open the project in the provided devcontainer. When it is finished building, you will need to create a `api/.env` file:
 ```bash
-docker-compose up -d --build
+cp api/.env.example api/.env
 ```
-Initialize database and run migrations: 
+Next, provide values for the environment variables in the `api/.env` file and then start the app:
 ```bash
-docker-compose exec api alembic upgrade head
-```
-Get logs: 
-```bash
-docker-compose logs
-```
-Connect to the psql database: 
-```bash
-docker-compose exec db psql --username=dev --dbname=dev
+cd api
+make dev
 ```
 
 ### How to use the API
 
 To get the webpage, you can simply run the project at http://localhost:8000 
 
-To use the API, you can use [httpie](https://httpie.io/), [postman](https://www.postman.com/) or [curl](https://curl.se/)
+To test the API, you can use [cURL](https://cURL.se/) or any other HTTP client.  You will need to provide a valid `Authorization` header with a `Bearer` token:
 
-#### Postman
-Execute a POST request with 
-
+#### cURL
 ```bash
-http://localhost:8000/v1 
-```
-In the body pass the following:
-```json
-{
-    "original_url": "http://blah_blah.com"
-}
-```
+curl -X POST http://localhost:8000/v1 \
+-H "Authorization: Bearer auth_token_app" \
+-H "Content-Type: application/json" \
+-d '{"original_url": "https://digital.canada.ca"}'
 
-#### curl
-```bash
-curl -X POST -d '{"original_url": "https://google.com"}' -H "Content-Type: application/json" http://localhost:8000/v1
-
-{"status":"OK","short_url":"xM_ElQWt"}
-```
-
-#### httpie
-```bash
-http POST localhost:8000/v1 original_url=http://www.google.com
-
-HTTP/1.1 200 OK
-content-length: 38
-content-type: application/json
-date: Thu, 27 Jan 2022 23:44:15 GMT
-server: uvicorn
-
-{
-    "short_url": "lo0KxaCb",
-    "status": "OK"
-}
+{"short_url":"http://127.0.0.1:8000/IcWuXU64","original_url":"https://digital.canada.ca","status":"OK"}
 ```
