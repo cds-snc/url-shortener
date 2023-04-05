@@ -53,6 +53,6 @@ variable "notify_api_key" {
 
 variable "shortener_path_length" {
   description = "A variable to set the length of the shortened url"
-  type = string
-  default = "8"
+  type        = string
+  default     = "8"
 }
