@@ -134,9 +134,12 @@ def create_shortened_url_api(
 
 @router.get("/{short_url}", response_class=HTMLResponse)
 def redirect_to_site(short_url: str, request: Request):
+    language = get_language(DEFAULT_LOCALE)
     short_url_obj = resolve_short_url(short_url)
     if not short_url_obj:
-        resp = templates.TemplateResponse("404.html", context={"request": request})
+        resp = templates.TemplateResponse(
+            "404.html", context={"request": request, "i18n": language}
+        )
         resp.status_code = status.HTTP_404_NOT_FOUND
         return resp
     resp = templates.TemplateResponse(
@@ -144,6 +147,7 @@ def redirect_to_site(short_url: str, request: Request):
         context={
             "request": request,
             "data": {"url": short_url_obj["original_url"]["S"]},
+            "i18n": language,
         },
     )
     resp.status_code = status.HTTP_200_OK

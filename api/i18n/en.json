@@ -1,7 +1,17 @@
 {
     "email": "Email",
     "enter_your_email_address": "Please enter your official Government of Canada email address to login.",
+    "error_create_magic_link": "Could not create magic link.",
+    "error_email_has_magic_link": "Email already has a magic link. 5 minutes requesting new.",
+    "error_email_not_valid": "Magic link is not valid.",
+    "error_forbidden_resource": "That URL points to a forbidden resource",
+    "error_filed_to_connect_url": "Failed to connect to the specified URL",
     "error_invalid_email_address": "Not a valid email address",
+    "error_send_magic_link_email": "Could not send magic link to email.",
+    "error_url_shorten_failed": "Internal error, could not generate url",
+    "error_url_shorten_invalid": "Unable to shorten link. Invalid URL.",
+    "error_url_shorten_invalid_host": "URL is not registered in our system as an Official GC Domain.",
+    "error_url_shorten_invalid_scheme": "Unable to shorten link. Invalid Scheme; only https is permitted.",
     "gc_link_shortener": "GC Link Shortener",
     "home": "Home",
     "lang": "en",
@@ -9,5 +19,7 @@
     "login": "Login",
     "login_path": "login",
     "logout": "Logout",
-    "logout_path": "logout"
+    "logout_path": "logout",
+    "success_email_valid": "Magic link is valid.",
+    "success_magic_link_sent_email": "Magic link sent to email."
 }

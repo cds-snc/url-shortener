@@ -1,7 +1,17 @@
 {
     "email": "Courriel",
     "enter_your_email_address": "Veuillez entrer votre adresse de courriel officielle du gouvernement du Canada pour vous connecter.",
-    "error_invalid_email_address": "L'adresse électronique n'est pas valide",
+    "error_create_magic_link": "Impossible de créer un lien magique",
+    "error_email_has_magic_link": "Le courriel contient déjà un lien magique. Attendez 5 minutes pour en demander un nouveau.",
+    "error_email_not_valid": "Le lien magique n'est pas valide",
+    "error_forbidden_resource": "Cette URL pointe vers une ressource interdite",
+    "error_filed_to_connect_url": "Échec de la connexion à l'URL spécifiée",
+    "error_invalid_email_address": "Le courriel n'est pas valide",
+    "error_send_magic_link_email": "Impossible d'envoyer le lien magique à le courriel",
+    "error_url_shorten_failed": "Erreur interne : impossibilité de générer l'URL",
+    "error_url_shorten_invalid": "Impossible de raccourcir le lien. URL non valide",
+    "error_url_shorten_invalid_host": "L'URL n'est pas enregistrée dans notre système en tant que domaine officiel du gouvernement du Canada.",
+    "error_url_shorten_invalid_scheme": "Impossible de raccourcir le lien. Schéma non valide ; seul https est autorisé.",
     "gc_link_shortener": "Raccourcisseur de liens du GC",
     "home": "Accueil",
     "lang": "fr",
@@ -9,5 +19,7 @@
     "login": "Connexion",
     "login_path": "connexion",
     "logout": "Déconnexion",
-    "logout_path": "deconnexion"
+    "logout_path": "deconnexion",
+    "success_email_valid": "Le lien magique est valide",
+    "success_magic_link_sent_email": "Lien magique envoyé à l'e-mail"
 }
