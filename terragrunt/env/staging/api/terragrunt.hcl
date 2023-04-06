@@ -45,6 +45,7 @@ inputs = {
   ecr_repository_url	   = dependency.ecr.outputs.ecr_repository_url
   ecr_tag		   = "latest"
   url_shortener_table_name = dependency.dynamodb.outputs.url_shortener_table_name 
+  shortener_path_length	   = 8
   }  
 
 include {
