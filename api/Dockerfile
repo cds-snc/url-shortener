@@ -21,6 +21,9 @@ RUN apk add --no-cache \
 
 RUN wget https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/download/${RIE_VERSION}/aws-lambda-rie
 
+RUN mkdir -p /pymodules \
+    && pip install awscli awslambdaric --target /pymodules
+
 COPY ./requirements.txt /
 RUN pip install -r /requirements.txt --target /pymodules
 
