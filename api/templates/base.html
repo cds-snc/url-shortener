@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ i18n.lang }}">
 
 <head>
   <meta charset="utf-8">
@@ -21,18 +21,18 @@
     href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2016%2016'%3E%3Ctext%20x='0'%20y='14'%3E🍁%3C/text%3E%3C/svg%3E"
     type="image/svg+xml" />
 
-  <title>GC Link Shortener</title>
+  <title>{{ i18n.gc_link_shortener }}</title>
 </head>
 
 <body>
-  <gcds-header lang-href="#" skip-to-href="#" lang="en">
+  <gcds-header lang-href="/lang/{{ i18n.lang_swap }}" skip-to-href="#" lang="{{ i18n.lang }}">
     <div slot="menu">
       <gcds-site-menu alignment="right" class="header__nav">
-        <span class="home-link" slot="left">GC Link Shortener</span>
+        <span class="home-link" slot="left">{{ i18n.gc_link_shortener }}</span>
         <ul>
-          <li><a href="/">Home</a></li>
+          <li><a href="/{{ i18n.lang }}">{{ i18n.home }}</a></li>
           {% if data and data.logged_in %}
-          <li><a href="/logout">Logout</a></li>
+          <li><a href="/{{ i18n.lang }}/{{ i18n.logout_path }}">{{ i18n.logout }}</a></li>
           {% endif %}
         </ul>
       </gcds-site-menu>

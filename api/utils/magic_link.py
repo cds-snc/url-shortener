@@ -16,11 +16,13 @@ def create_magic_link(email):
         if guid:
             try:
                 client = notification_client()
-                magic_link = f"{SHORTENER_DOMAIN}magic_link?guid={guid}&email={email}"
                 client.send_email_notification(
                     email_address=email,
                     template_id=NOTIFY_MAGIC_LINK_TEMPLATE,
-                    personalisation={"magic_link": magic_link},
+                    personalisation={
+                        "magic_link_en": f"{SHORTENER_DOMAIN}en/magic-link?guid={guid}&email={email}",
+                        "magic_link_fr": f"{SHORTENER_DOMAIN}fr/lien-magique?guid={guid}&email={email}",
+                    },
                 )
             except Exception as e:
                 log.error(e)

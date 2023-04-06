@@ -1,0 +1,13 @@
+{
+    "email": "Courriel",
+    "enter_your_email_address": "Veuillez entrer votre adresse de courriel officielle du gouvernement du Canada pour vous connecter.",
+    "error_invalid_email_address": "L'adresse électronique n'est pas valide",
+    "gc_link_shortener": "Raccourcisseur de liens du GC",
+    "home": "Accueil",
+    "lang": "fr",
+    "lang_swap": "en",
+    "login": "Connexion",
+    "login_path": "connexion",
+    "logout": "Déconnexion",
+    "logout_path": "deconnexion"
+}

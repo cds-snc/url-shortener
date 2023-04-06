@@ -1,0 +1,13 @@
+{
+    "email": "Email",
+    "enter_your_email_address": "Please enter your official Government of Canada email address to login.",
+    "error_invalid_email_address": "Not a valid email address",
+    "gc_link_shortener": "GC Link Shortener",
+    "home": "Home",
+    "lang": "en",
+    "lang_swap": "fr",
+    "login": "Login",
+    "login_path": "login",
+    "logout": "Logout",
+    "logout_path": "logout"
+}

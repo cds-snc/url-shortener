@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% block page_content %}
-<h1 class="mb-400">Login</h1>
+<h1 class="mb-400">{{ i18n.login }}</h1>
 {% if data.success %}
-<p class="success-message mb-400" role="alert">{{ data.success }}</p>
+<p class="success-message mb-400" role="alert">{{ i18n[data.success] }}</p>
 {% else %}
-<p class="mb-400">Please enter your email address to gain access to the system.</p>
-<form action="/login" method="post" class="mb-400">
+<p class="mb-400">{{ i18n.enter_your_email_address }}</p>
+<form action="/{{ i18n.lang }}/{{ i18n.login_path }}" method="post" class="mb-400">
     {% if data.error %}
-    <gcds-error-message message="{{ data.error }}" class="mb-400"></gcds-error-message>
+    <gcds-error-message message="{{ i18n[data.error] }}" class="mb-400"></gcds-error-message>
     {% endif %}
-    <gcds-input label="Email" hint="Please enter your official Government of Canada email address." type="email"
+    <gcds-input label="{{ i18n.email }}" type="email"
         input-id="email" value="{{ data.email }}" /></gcds-input>
-    <gcds-button type="submit">Login</gcds-button>
+    <gcds-button type="submit">{{ i18n.login }}</gcds-button>
 </form>
 {% endif %}
 {% endblock %}
