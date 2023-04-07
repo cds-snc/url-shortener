@@ -1,14 +1,17 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 from utils import i18n
+
 
 @patch("utils.i18n.LANGUAGES", {"fr": {"language": "Francais", "locale": "fr"}})
 def test_get_language_exists():
     assert i18n.get_language("fr") == {"language": "Francais", "locale": "fr"}
 
+
 @patch("utils.i18n.DEFAULT_LOCALE", "en")
 @patch("utils.i18n.LANGUAGES", {"en": {"language": "English", "locale": "en"}})
 def test_get_language_does_not_exist():
     assert i18n.get_language("es") == {"language": "English", "locale": "en"}
+
 
 @patch("utils.i18n.DEFAULT_LOCALE", "en")
 def test_get_locale_from_path():

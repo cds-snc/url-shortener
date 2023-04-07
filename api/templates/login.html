@@ -7,7 +7,7 @@
 <p class="mb-400">{{ i18n.enter_your_email_address }}</p>
 <form action="/{{ i18n.lang }}/{{ i18n.login_path }}" method="post" class="mb-400">
     <gcds-input label="{{ i18n.email }}" type="email" input-id="email" value="{{ data.email }}"
-        error-message="{{ i18n[data.error] }}" /></gcds-input>
+        error-message="{{ i18n[data.error] }}" required /></gcds-input>
     <gcds-button type="submit">{{ i18n.login }}</gcds-button>
 </form>
 {% endif %}

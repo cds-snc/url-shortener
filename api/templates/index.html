@@ -10,7 +10,7 @@
   <p class="success-message" role="alert">{{ i18n.success_link_shortened }}</p>
   {% endif %}
   <gcds-input label="{{ i18n.enter_original_link }}" type="url" input-id="original_url" value="{{ data.short_url }}"
-    error-message="{{ i18n[data.error] }}" /></gcds-input>
+    error-message="{{ i18n[data.error] }}" required /></gcds-input>
   {% if data.short_url %}
   <gcds-button type="button" button-role="secondary" onclick="parent.location=''">{{ i18n.shorten_another_link
     }}</gcds-button>
