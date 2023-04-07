@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block page_content %}
-<h1 class="mb-400">{{ i18n.login }}</h1>
+<h2 class="mt-400 mb-400">{{ i18n.login }}</h2>
 {% if data.success %}
-<p class="success-message mb-400" role="alert">{{ i18n[data.success] }}</p>
+<div class="mb-500">
+    <p class="success-message" role="alert">{{ i18n[data.success] }}</p>
+</div>
 {% else %}
 <p class="mb-400">{{ i18n.enter_your_email_address }}</p>
-<form action="/{{ i18n.lang }}/{{ i18n.login_path }}" method="post" class="mb-400">
+<form action="/{{ i18n.lang }}/{{ i18n.login_path }}" method="post" class="mb-500">
     <gcds-input label="{{ i18n.email }}" type="email" input-id="email" value="{{ data.email }}"
         error-message="{{ i18n[data.error] }}" required /></gcds-input>
     <gcds-button type="submit">{{ i18n.login }}</gcds-button>

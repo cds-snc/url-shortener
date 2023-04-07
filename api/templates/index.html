@@ -1,20 +1,27 @@
 {% extends "base.html" %}
 {% block page_content %}
-<h2 class="mb-400">{{ i18n.short_shareable_links }}</h2>
+<h2 class="mt-400 mb-400">{{ i18n.short_shareable_links }}</h2>
 <p class="mb-500">
   {{ i18n.short_service_desc }}
   <a href="{{ data.form_url }}">{{ i18n.short_service_desc_add_domain }}</a>
 </p>
 <form action="/{{ i18n.lang }}" method="post" class="mb-500">
+  {% set field_label = "enter_original_link" %}
+  {% set field_required = "required" %}
   {% if data.short_url %}
-  <p class="success-message" role="alert">{{ i18n.success_link_shortened }}</p>
+  {% set field_label = "short_link" %}
+  {% set field_required = "" %}
+  <div class="mb-500">
+    <p class="success-message" role="alert">{{ i18n.success_link_shortened }}</p>
+  </div>
   {% endif %}
-  <gcds-input label="{{ i18n.enter_original_link }}" type="url" input-id="original_url" value="{{ data.short_url }}"
-    error-message="{{ i18n[data.error] }}" required /></gcds-input>
+
+  <gcds-input label="{{ i18n[field_label] }}" type="url" input-id="original_url" value="{{ data.short_url }}"
+    error-message="{{ i18n[data.error] }}" {{ field_required }} /></gcds-input>
+
   {% if data.short_url %}
-  <gcds-button type="button" button-role="secondary" onclick="parent.location=''">{{ i18n.shorten_another_link
-    }}</gcds-button>
   <gcds-button type="button" onclick="copyURL('original_url')" class="ml-100">{{ i18n.copy_link }}</gcds-button>
+  <gcds-button type="button" button-role="secondary" onclick="parent.location=''">{{ i18n.shorten_another_link }}</gcds-button>
   {% else %}
   <gcds-button type="submit">{{ i18n.shorten }}</gcds-button>
   {% endif %}
