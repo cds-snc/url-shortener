@@ -14,6 +14,20 @@ def test_get_language_does_not_exist():
 
 
 @patch("utils.i18n.DEFAULT_LOCALE", "en")
+def test_get_locale_from_header():
+    assert (
+        i18n.get_locale_from_header("es; fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5")
+        == "fr"
+    )
+    assert i18n.get_locale_from_header("fr-CA") == "fr"
+    assert i18n.get_locale_from_header("es, *, en") == "en"
+    assert i18n.get_locale_from_header("en-CA") == "en"
+    assert i18n.get_locale_from_header("en") == "en"
+    assert i18n.get_locale_from_header("es") == "en"
+    assert i18n.get_locale_from_header(None) == "en"
+
+
+@patch("utils.i18n.DEFAULT_LOCALE", "en")
 def test_get_locale_from_path():
     assert i18n.get_locale_from_path("/fr/path") == "fr"
     assert i18n.get_locale_from_path("/en/path") == "en"

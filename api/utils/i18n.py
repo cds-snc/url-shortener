@@ -25,6 +25,18 @@ def get_language(locale):
     return LANGUAGES[locale] if locale in LANGUAGES else LANGUAGES[DEFAULT_LOCALE]
 
 
+def get_locale_from_header(accept_language):
+    """Gets the locale from the Accept-Language header.  If no locale is found, the default locale is returned."""
+    if isinstance(accept_language, str):
+        accept_language = accept_language.replace(" ", "")
+        parts = accept_language.split(",")
+        for part in parts:
+            lang_code = part[:2] if len(part) > 1 else ""
+            if any(locale.value == lang_code for locale in Locale):
+                return Locale(lang_code)
+    return DEFAULT_LOCALE
+
+
 def get_locale_from_path(path):
     """Gets the locale from the path.  If no locale is found, the default locale is returned."""
     path_parts = path.split("/") if isinstance(path, str) else []
