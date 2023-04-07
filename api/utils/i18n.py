@@ -27,8 +27,10 @@ def get_language(locale):
 
 def get_locale_from_path(path):
     """Gets the locale from the path.  If no locale is found, the default locale is returned."""
-    locale = path.split("/")[1]
-    return locale if locale in LANGUAGES else DEFAULT_LOCALE
+    path_parts = path.split("/") if isinstance(path, str) else []
+    if len(path_parts) > 1 and any(l.value == path_parts[1] for l in Locale):
+        return Locale(path_parts[1])
+    return DEFAULT_LOCALE
 
 
 def generate_languages(locale_files):
