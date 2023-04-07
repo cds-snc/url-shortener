@@ -16,31 +16,31 @@ def create_magic_link(email):
         if guid:
             try:
                 client = notification_client()
-                magic_link = f"{SHORTENER_DOMAIN}magic_link?guid={guid}&email={email}"
                 client.send_email_notification(
                     email_address=email,
                     template_id=NOTIFY_MAGIC_LINK_TEMPLATE,
-                    personalisation={"magic_link": magic_link},
+                    personalisation={
+                        "magic_link_en": f"{SHORTENER_DOMAIN}en/magic-link?guid={guid}&email={email}",
+                        "magic_link_fr": f"{SHORTENER_DOMAIN}fr/lien-magique?guid={guid}&email={email}",
+                    },
                 )
-            except Exception as e:
-                log.error(e)
-                return {"error": "Could not send magic link to email."}
-            return {"success": "Magic link sent to email."}
+            except Exception as error:
+                log.error(error)
+                return {"error": "error_send_magic_link_email"}
+            return {"success": "success_magic_link_sent_email"}
         else:
-            return {"error": "Could not create magic link."}
+            return {"error": "error_create_magic_link"}
     else:
-        return {
-            "error": "Email already has a magic link. Please wait 5 minutes before requesting a new one."
-        }
+        return {"error": "error_email_has_magic_link"}
 
 
 def validate_magic_link(guid, email):
     link_email = get(guid)
     if email == link_email:
         delete(guid)
-        return {"success": "Magic link is valid."}
+        return {"success": "success_email_valid"}
     else:
-        return {"error": "Magic link is not valid."}
+        return {"error": "error_email_not_valid"}
 
 
 def notification_client():

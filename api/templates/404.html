@@ -1,6 +1,22 @@
+{% set lang_href = "" %}
 {% extends "base.html" %}
 {% block page_content %}
-<h1 class="mb-400">404 Not found / 404 Non trouvé</h1>
-<p class="mb-400">The requested link could not be found.</p>
-<p class="mb-400">Le lien demandé n'a pas pu être trouvé.</p>
+<section class="mt-500">
+    <gcds-grid tag="ul" columns="1fr" columns-tablet="1fr 1fr" gap="500">
+        <li class="list-none">
+            <h2 class="mb-400">
+                <gcds-icon name="triangle-exclamation" size="h1"></gcds-icon>
+                {{ i18n_all['en']['404_not_found'] }}
+            </h2>
+            <p>{{ i18n_all['en']['404_link_not_found'] }}</p>
+        </li>
+        <li class="list-none" lang="fr">
+            <h2 class="mb-400">
+                <gcds-icon name="triangle-exclamation" size="h1"></gcds-icon>
+                {{ i18n_all['fr']['404_not_found'] }}
+            </h2>
+            <p>{{ i18n_all['fr']['404_link_not_found'] }}</p>
+        </li>
+    </gcds-grid>
+</section>
 {% endblock %}

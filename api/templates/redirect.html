@@ -1,14 +1,32 @@
+{% set lang_href = "" %}
 {% extends "base.html" %}
 {% block page_content %}
-<h1 class="mb-400">Redirect Notice / Avis de redirection</h1>
-<p class="mb-400">The previous page is sending you to / La page précédente vous envoie à:</p>
-<p class="mb-400 link_container"><a class="redirect_link target_link" href="{{ data.url }}">{{ data.url }}</a></p>
-<p class="mb-400">If you want to continue, please click the link above. / Si vous voulez continuer, cliquez sur le lien
-        ci-dessus.</p>
-<p class="mb-400">If the link does not load please contact the owner of the page you are trying to visit.</p>
-<p class="mb-400">Si en cliquant sur le lien, la page ne s’affiche pas, communiquez avec le responsable de la page que
-        vous tentez de consulter.</p>
-<p class="mb-400">If you do not want to visit that page, you can <a class="redirect_link" href="#"
-                onclick="history.back()">return to the previous page</a>. / Si vous ne voulez pas visiter cette page,
-        vous pouvez <a class="redirect_link" href="#" onclick="history.back()">retourner à la page précédente</a>.</p>
+<section class="mt-500">
+        <gcds-grid tag="ul" columns="1fr" columns-tablet="1fr 1fr" gap="500">
+                <li class="list-none">
+                        <h2 class="mb-500">
+                                <gcds-icon name="diamond-turn-right" size="h1"></gcds-icon>
+                                {{ i18n_all['en']['redirect_notice'] }}
+                        </h2>
+                        <p class="mb-500">
+                                {{ i18n_all['en']['redirect_redirected_to'] }}<br>
+                                <a href="{{ data.url }}" class="link_container">{{ data.url }}</a>
+                        </p>
+                        <p class="mb-500">{{ i18n_all['en']['redirect_continue'] }}</p>
+                        <p class="mb-500">{{ i18n_all['en']['redirect_link_not_load'] }}</p>
+                </li>
+                <li class="list-none" lang="fr">
+                        <h2 class="mb-500">
+                                <gcds-icon name="diamond-turn-right" size="h1"></gcds-icon>
+                                {{ i18n_all['fr']['redirect_notice'] }}
+                        </h2>
+                        <p class="mb-500">
+                                {{ i18n_all['fr']['redirect_redirected_to'] }}<br>
+                                <a href="{{ data.url }}" class="link_container">{{ data.url }}</a>
+                        </p>
+                        <p class="mb-500">{{ i18n_all['fr']['redirect_continue'] }}</p>
+                        <p class="mb-500">{{ i18n_all['fr']['redirect_link_not_load'] }}</p>
+                </li>
+        </gcds-grid>
+</section>
 {% endblock %}

@@ -81,3 +81,23 @@ def mock_settings_env_vars():
 @pytest.fixture(scope="session")
 def client() -> TestClient:
     yield TestClient(app)
+
+
+@pytest.fixture(params=["en", "fr"])
+def locale(request):
+    return request.param
+
+
+@pytest.fixture(params=["/en/login", "/fr/connexion"])
+def login_path(request):
+    return request.param
+
+
+@pytest.fixture(params=["/en/logout", "/fr/deconnexion"])
+def logout_path(request):
+    return request.param
+
+
+@pytest.fixture(params=["/en/magic-link", "/fr/lien-magique"])
+def magic_link_path(request):
+    return request.param

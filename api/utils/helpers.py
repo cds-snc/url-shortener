@@ -106,10 +106,10 @@ def return_short_url(original_url, peppers):
         advocate.get(original_url)
     except advocate.UnacceptableAddressException:
         log.info(f"Unacceptable address: {original_url}")
-        return {"error": "That URL points to a forbidden resource"}
+        return {"error": "error_forbidden_resource"}
     except requests.RequestException:
         log.info(f"Failed to connect: {original_url}")
-        return {"error": "Failed to connect to the specified URL"}
+        return {"error": "error_filed_to_connect_url"}
 
     peppers_iter = iter(peppers)
     short_url = None
@@ -130,7 +130,7 @@ def return_short_url(original_url, peppers):
                 )
         except StopIteration:
             log.error("Could not generate URL, pepper(s) exhausted")
-            return {"error": "Internal error, could not generate url"}
+            return {"error": "error_url_shorten_failed"}
 
     return short_url
 
@@ -150,7 +150,7 @@ def validate_and_shorten_url(original_url):
         # Else if scheme is invalid (i.e. not https), display error
         elif not is_valid_scheme(original_url):
             data = {
-                "error": "Unable to shorten link. Invalid Scheme; only https is permitted",
+                "error": "error_url_shorten_invalid_scheme",
                 "original_url": original_url,
                 "status": "ERROR",
             }
@@ -158,7 +158,7 @@ def validate_and_shorten_url(original_url):
         elif not is_domain_allowed(original_url):
             forms_url = os.getenv("FORMS_URL")
             data = {
-                "error": "URL is not registered in our system as an Official GC Domain.",
+                "error": "error_url_shorten_invalid_host",
                 "form_url": forms_url,
                 "original_url": original_url,
                 "status": "ERROR",

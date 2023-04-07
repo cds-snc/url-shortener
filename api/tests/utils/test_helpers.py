@@ -89,7 +89,7 @@ def test_return_short_url_succeeds_if_advocate_passes_but_save_fails(
         "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
     ]
     result = helpers.return_short_url(original_url, peppers)
-    assert result == {"error": "Internal error, could not generate url"}
+    assert result == {"error": "error_url_shorten_failed"}
 
 
 def test_return_short_url_unacceptable_address_exception():
@@ -100,7 +100,7 @@ def test_return_short_url_unacceptable_address_exception():
         "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
     ]
     result = helpers.return_short_url(original_url, peppers)
-    assert result == {"error": "That URL points to a forbidden resource"}
+    assert result == {"error": "error_forbidden_resource"}
 
 
 def test_return_short_url_request_exception():
@@ -111,7 +111,7 @@ def test_return_short_url_request_exception():
         "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
     ]
     result = helpers.return_short_url(original_url, peppers)
-    assert result == {"error": "Failed to connect to the specified URL"}
+    assert result == {"error": "error_filed_to_connect_url"}
 
 
 def test_is_domain_allowed_returns_true_if_it_exists():
@@ -182,7 +182,7 @@ def test_validate_and_shorten_url_returns_error_if_domain_not_allowed():
     helpers.is_domain_allowed = MagicMock(return_value=False)
     result = helpers.validate_and_shorten_url(original_url)
     assert result == {
-        "error": "URL is not registered in our system as an Official GC Domain.",
+        "error": "error_url_shorten_invalid_host",
         "form_url": "foo",
         "original_url": original_url,
         "status": "ERROR",
