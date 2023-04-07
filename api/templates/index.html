@@ -1,26 +1,22 @@
 {% extends "base.html" %}
 {% block page_content %}
-<form action="/" method="post" class="mb-500">
-  <h2 class="mb-400">Short and shareable links</h2>
-  <p class="mb-400">This service will shorten URLs from official government of Canada domains.
-    Save valuable space in your status updates while using a trusted GC domain. If your domain is not registered in
-    our system, <a href="{{ data.form_url }}">request to have your domain added.</a></p>
-
-  <h2 class="mb-400">GC URL</h2>
-  {% if data.error %}
-  <gcds-error-message message="{{ data.error }}" class="mb-300"></gcds-error-message>
-  {% endif %}
+<h2 class="mb-400">{{ i18n.short_shareable_links }}</h2>
+<p class="mb-500">
+  {{ i18n.short_service_desc }}
+  <a href="{{ data.form_url }}">{{ i18n.short_service_desc_add_domain }}</a>
+</p>
+<form action="/{{ i18n.lang }}" method="post" class="mb-500">
   {% if data.short_url %}
-  <p class="success-message" role="alert">Success - your link is shortened</p>
+  <p class="success-message" role="alert">{{ i18n.success_link_shortened }}</p>
   {% endif %}
-  <gcds-input label="Paste your link" hint="The link you would like to shorten." type="url" input-id="original_url"
-    value="{{ data.short_url }}" /></gcds-input>
+  <gcds-input label="{{ i18n.enter_original_link }}" type="url" input-id="original_url" value="{{ data.short_url }}"
+    error-message="{{ i18n[data.error] }}" /></gcds-input>
   {% if data.short_url %}
-  <gcds-button type="button" button-role="secondary" onclick="parent.location=''">Shorten another
-    link</gcds-button>
-  <gcds-button type="button" onclick="copyURL('original_url')" class="ml-100">Copy URL</gcds-button>
+  <gcds-button type="button" button-role="secondary" onclick="parent.location=''">{{ i18n.shorten_another_link
+    }}</gcds-button>
+  <gcds-button type="button" onclick="copyURL('original_url')" class="ml-100">{{ i18n.copy_link }}</gcds-button>
   {% else %}
-  <gcds-button type="submit">Shorten</gcds-button>
+  <gcds-button type="submit">{{ i18n.shorten }}</gcds-button>
   {% endif %}
 </form>
 {% endblock %}

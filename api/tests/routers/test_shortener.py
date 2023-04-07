@@ -42,9 +42,12 @@ def test_GET_login_returns_200(client, login_path):
 @patch("routers.shortener.create_magic_link")
 @patch("routers.shortener.get_language")
 def test_POST_login_returns_200_with_success_message_if_in_domain_list(
-    mock_get_language, mock_create_magic_link, client, login_path
+    mock_get_language, mock_create_magic_link, client, login_path, locale
 ):
-    mock_get_language.return_value = {"success_link_sent": "Success!"}
+    mock_get_language.return_value = {
+        "success_link_sent": "Success!",
+        "lang_swap": locale,
+    }
     mock_create_magic_link.return_value = {"success": "success_link_sent"}
     response = client.post(login_path, data={"email": "foo@canada.ca"})
     assert response.status_code == status.HTTP_200_OK
@@ -64,9 +67,12 @@ def test_POST_login_returns_200_with_error_message_if_not_in_domain_list(
 @patch("routers.shortener.create_magic_link")
 @patch("routers.shortener.get_language")
 def test_POST_login_returns_200_with_error_message_if_magic_link_fails(
-    mock_get_language, mock_create_magic_link, client, login_path
+    mock_get_language, mock_create_magic_link, client, login_path, locale
 ):
-    mock_get_language.return_value = {"error_link_failed": "Error!"}
+    mock_get_language.return_value = {
+        "error_link_failed": "Error!",
+        "lang_swap": locale,
+    }
     mock_create_magic_link.return_value = {"error": "error_link_failed"}
     response = client.post(login_path, data={"email": "foo@canada.ca"})
     assert response.status_code == status.HTTP_200_OK
@@ -77,10 +83,11 @@ def test_POST_login_returns_200_with_error_message_if_magic_link_fails(
 @patch("routers.shortener.create_magic_link")
 @patch("routers.shortener.get_language")
 def test_POST_login_returns_200_with_error_message_if_email_is_invalid(
-    mock_get_language, mock_create_magic_link, client, login_path
+    mock_get_language, mock_create_magic_link, client, login_path, locale
 ):
     mock_get_language.return_value = {
-        "error_invalid_email_address": "Not a valid email address"
+        "error_invalid_email_address": "Not a valid email address",
+        "lang_swap": locale,
     }
     response = client.post(login_path, data={"email": "foo"})
     assert response.status_code == status.HTTP_200_OK
@@ -118,8 +125,12 @@ def test_GET_magic_link_returns_200_if_invalid_and_does_not_set_cookie(
     mock_validate_magic_link,
     client,
     magic_link_path,
+    locale,
 ):
-    mock_get_language.return_value = {"magic_link_invalid": "Error!"}
+    mock_get_language.return_value = {
+        "magic_link_invalid": "Error!",
+        "lang_swap": locale,
+    }
     mock_validate_magic_link.return_value = {"error": "magic_link_invalid"}
     response = client.get(
         f"{magic_link_path}?guid=123&email=foo@canada.ca", follow_redirects=False

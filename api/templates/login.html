@@ -6,11 +6,8 @@
 {% else %}
 <p class="mb-400">{{ i18n.enter_your_email_address }}</p>
 <form action="/{{ i18n.lang }}/{{ i18n.login_path }}" method="post" class="mb-400">
-    {% if data.error %}
-    <gcds-error-message message="{{ i18n[data.error] }}" class="mb-400"></gcds-error-message>
-    {% endif %}
-    <gcds-input label="{{ i18n.email }}" type="email"
-        input-id="email" value="{{ data.email }}" /></gcds-input>
+    <gcds-input label="{{ i18n.email }}" type="email" input-id="email" value="{{ data.email }}"
+        error-message="{{ i18n[data.error] }}" /></gcds-input>
     <gcds-button type="submit">{{ i18n.login }}</gcds-button>
 </form>
 {% endif %}

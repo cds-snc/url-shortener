@@ -25,7 +25,10 @@
 </head>
 
 <body>
-  <gcds-header lang-href="/lang/{{ i18n.lang_swap }}" skip-to-href="#" lang="{{ i18n.lang }}">
+  {% if not lang_href is defined %}
+  {% set lang_href = "/lang/" + i18n.lang_swap %}
+  {% endif %}
+  <gcds-header lang-href="{{ lang_href }}" skip-to-href="#mc" lang="{{ i18n.lang }}">
     <div slot="menu">
       <gcds-site-menu alignment="right" class="header__nav">
         <span class="home-link" slot="left">{{ i18n.gc_link_shortener }}</span>

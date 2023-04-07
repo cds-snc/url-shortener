@@ -1,5 +1,9 @@
 {
+    "404_not_found": "404 non trouvé",
+    "404_link_not_found": "Le lien demandé n'a pas été trouvé.",
+    "copy_link": "Copier le lien",
     "email": "Courriel",
+    "enter_original_link": "Entrez le lien que vous souhaitez raccourcir",
     "enter_your_email_address": "Veuillez entrer votre adresse de courriel officielle du gouvernement du Canada pour vous connecter.",
     "error_create_magic_link": "Impossible de créer un lien magique",
     "error_email_has_magic_link": "Le courriel contient déjà un lien magique. Attendez 5 minutes pour en demander un nouveau.",
@@ -20,6 +24,16 @@
     "login_path": "connexion",
     "logout": "Déconnexion",
     "logout_path": "deconnexion",
+    "redirect_continue": "Si vous voulez continuer, cliquez sur le lien ci-dessus.",
+    "redirect_link_not_load": "Si le lien ne se charge pas, contactez le propriétaire du lien qui vous a envoyé ici.",
+    "redirect_notice": "Avis de redirection",
+    "redirect_redirected_to": "Vous êtes redirigé vers :",
+    "short_service_desc": "Ce service raccourcira les URL des domaines officiels du gouvernement du Canada. Économisez de l'espace précieux dans vos mises à jour de statut tout en utilisant un domaine fiable du gouvernement du Canada. Si votre domaine n'est pas enregistré dans notre système, ",
+    "short_service_desc_add_domain": "demander l'ajout de votre domaine.",
+    "short_shareable_links": "Liens courts et partageables",
+    "shorten": "Raccourcir",
+    "shorten_another_link": "Raccourcir un autre lien",
     "success_email_valid": "Le lien magique est valide",
+    "success_link_shortened": "Succès ! Votre lien a été raccourci",
     "success_magic_link_sent_email": "Lien magique envoyé à l'e-mail"
 }

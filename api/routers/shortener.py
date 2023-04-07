@@ -13,7 +13,13 @@ import os
 from pydantic import HttpUrl
 from utils.auth_token import validate_auth_token
 from utils.helpers import resolve_short_url, validate_and_shorten_url
-from utils.i18n import DEFAULT_LOCALE, Locale, get_language, get_locale_from_path
+from utils.i18n import (
+    DEFAULT_LOCALE,
+    LANGUAGES,
+    Locale,
+    get_language,
+    get_locale_from_path,
+)
 from utils.magic_link import create_magic_link, validate_magic_link
 from utils.session import delete_cookie, set_cookie, validate_cookie
 from fastapi.templating import Jinja2Templates
@@ -134,11 +140,16 @@ def create_shortened_url_api(
 
 @router.get("/{short_url}", response_class=HTMLResponse)
 def redirect_to_site(short_url: str, request: Request):
-    language = get_language(DEFAULT_LOCALE)
+    language_en = get_language(Locale.en)
     short_url_obj = resolve_short_url(short_url)
     if not short_url_obj:
         resp = templates.TemplateResponse(
-            "404.html", context={"request": request, "i18n": language}
+            "404.html",
+            context={
+                "request": request,
+                "i18n": language_en,
+                "i18n_all": LANGUAGES,
+            },
         )
         resp.status_code = status.HTTP_404_NOT_FOUND
         return resp
@@ -147,7 +158,8 @@ def redirect_to_site(short_url: str, request: Request):
         context={
             "request": request,
             "data": {"url": short_url_obj["original_url"]["S"]},
-            "i18n": language,
+            "i18n": language_en,
+            "i18n_all": LANGUAGES,
         },
     )
     resp.status_code = status.HTTP_200_OK

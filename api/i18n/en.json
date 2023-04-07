@@ -1,5 +1,9 @@
 {
+    "404_link_not_found": "The requested link could not be found.",
+    "404_not_found": "404 not found",
+    "copy_link": "Copy link",
     "email": "Email",
+    "enter_original_link": "Enter the link you would like to shorten",
     "enter_your_email_address": "Please enter your official Government of Canada email address to login.",
     "error_create_magic_link": "Could not create magic link.",
     "error_email_has_magic_link": "Email already has a magic link. 5 minutes requesting new.",
@@ -20,6 +24,16 @@
     "login_path": "login",
     "logout": "Logout",
     "logout_path": "logout",
+    "redirect_continue": "If you want to continue, please click the link above.",
+    "redirect_link_not_load": "If the link does not load contact the owner of the link that sent you here.",
+    "redirect_notice": "Redirect notice",
+    "redirect_redirected_to": "You are being redirected to:",
+    "short_service_desc": "This service will shorten URLs from official Government of Canada domains. Save valuable space in your status updates while using a trusted GC domain. If your domain is not registered in our system, ",
+    "short_service_desc_add_domain": "request to have your domain added.",
+    "short_shareable_links": "Short and shareable links",
+    "shorten": "Shorten",
+    "shorten_another_link": "Shorten another link",
     "success_email_valid": "Magic link is valid.",
-    "success_magic_link_sent_email": "Magic link sent to email."
+    "success_link_shortened": "Success! Your link was shortened.",
+    "success_magic_link_sent_email": "Magic link has been sent to email."
 }
