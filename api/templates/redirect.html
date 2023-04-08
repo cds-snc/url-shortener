@@ -1,31 +1,31 @@
 {% set lang_href = "" %}
 {% extends "base.html" %}
 {% block page_content %}
-<section class="mt-500">
+<section class="mt-500 mb-600">
         <gcds-grid tag="ul" columns="1fr" columns-tablet="1fr 1fr" gap="500">
-                <li class="list-none">
+                <li class="list-none" lang="{{ locale_order.0 }}">
                         <h2 class="mb-500">
                                 <gcds-icon name="diamond-turn-right" size="h1"></gcds-icon>
-                                {{ i18n_all['en']['redirect_notice'] }}
+                                {{ i18n_all[locale_order.0]['redirect_notice'] }}
                         </h2>
                         <p class="mb-500">
-                                {{ i18n_all['en']['redirect_redirected_to'] }}<br>
-                                <a href="{{ data.url }}" class="link_container">{{ data.url }}</a>
+                                {{ i18n_all[locale_order.0]['redirect_redirected_to'] }}<br>
+                                <a href="{{ data.url }}" class="link_container pt-100">{{ data.url }}</a>
                         </p>
-                        <p class="mb-500">{{ i18n_all['en']['redirect_continue'] }}</p>
-                        <p class="mb-500">{{ i18n_all['en']['redirect_link_not_load'] }}</p>
+                        <p class="mb-300">{{ i18n_all[locale_order.0]['redirect_continue'] }}</p>
+                        <p>{{ i18n_all[locale_order.0]['redirect_link_not_load'] }}</p>
                 </li>
-                <li class="list-none" lang="fr">
+                <li class="list-none" lang="{{ locale_order.1 }}">
                         <h2 class="mb-500">
                                 <gcds-icon name="diamond-turn-right" size="h1"></gcds-icon>
-                                {{ i18n_all['fr']['redirect_notice'] }}
+                                {{ i18n_all[locale_order.1]['redirect_notice'] }}
                         </h2>
                         <p class="mb-500">
-                                {{ i18n_all['fr']['redirect_redirected_to'] }}<br>
-                                <a href="{{ data.url }}" class="link_container">{{ data.url }}</a>
+                                {{ i18n_all[locale_order.1]['redirect_redirected_to'] }}<br>
+                                <a href="{{ data.url }}" class="link_container pt-100">{{ data.url }}</a>
                         </p>
-                        <p class="mb-500">{{ i18n_all['fr']['redirect_continue'] }}</p>
-                        <p class="mb-500">{{ i18n_all['fr']['redirect_link_not_load'] }}</p>
+                        <p class="mb-300">{{ i18n_all[locale_order.1]['redirect_continue'] }}</p>
+                        <p>{{ i18n_all[locale_order.1]['redirect_link_not_load'] }}</p>
                 </li>
         </gcds-grid>
 </section>

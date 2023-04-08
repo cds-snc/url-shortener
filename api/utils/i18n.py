@@ -45,6 +45,14 @@ def get_locale_from_path(path):
     return DEFAULT_LOCALE
 
 
+def get_locale_order(current_locale):
+    """Gets the locale order for the given locale"""
+    return [
+        current_locale,
+        Locale.fr if current_locale != Locale.fr else DEFAULT_LOCALE,
+    ]
+
+
 def generate_languages(locale_files):
     """Generates a dictionary of languages from the JSON files in the i18n folder"""
     languages = {}

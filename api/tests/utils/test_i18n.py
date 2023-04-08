@@ -36,6 +36,11 @@ def test_get_locale_from_path():
     assert i18n.get_locale_from_path(None) == "en"
 
 
+def test_get_locale_order():
+    assert i18n.get_locale_order("fr") == ["fr", "en"]
+    assert i18n.get_locale_order("en") == ["en", "fr"]
+
+
 @patch("utils.i18n.glob.glob")
 @patch("utils.i18n.open")
 def test_generate_languages(mock_open, mock_glob):

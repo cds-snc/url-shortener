@@ -1,4 +1,5 @@
 import os
+import re
 
 from typing import Annotated, Optional
 from fastapi import (
@@ -23,6 +24,7 @@ from utils.i18n import (
     get_language,
     get_locale_from_header,
     get_locale_from_path,
+    get_locale_order,
 )
 from utils.magic_link import create_magic_link, validate_magic_link
 from utils.session import delete_cookie, set_cookie, validate_cookie
@@ -31,6 +33,9 @@ from utils.session import delete_cookie, set_cookie, validate_cookie
 router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
+
+SHORTENER_PATH_LENGTH = int(os.environ.get("SHORTENER_PATH_LENGTH", "0"))
+SHORTENER_PATH_REGEX = re.compile(f"^[a-zA-Z0-9]{{{SHORTENER_PATH_LENGTH}}}$")
 
 
 @router.get("/", response_class=HTMLResponse, include_in_schema=False)
@@ -170,30 +175,43 @@ def create_shortened_url_api(
 
 
 @router.get("/{short_url}", response_class=HTMLResponse)
-def redirect_to_site(short_url: str, request: Request):
+def redirect_to_site(
+    short_url: str, request: Request, accept_language: str | None = Header(None)
+):
     """
     Handles shortened URLs and presents the user with a redirect notice page.
+    If the short URL path segment is not valid or can't be found, the user
+    gets a 404 page.  This is required as this route is a catch-all and
+    will match all root level requests.
     """
-    language_en = get_language(Locale.en)
-    short_url_obj = resolve_short_url(short_url)
+    user_locale = get_locale_from_header(accept_language)
+    locale_order = get_locale_order(user_locale)
+    language = get_language(user_locale)
+    short_url_obj = None
+    if SHORTENER_PATH_REGEX.match(short_url):
+        short_url_obj = resolve_short_url(short_url)
+
     if not short_url_obj:
         resp = templates.TemplateResponse(
             "404.html",
             context={
                 "request": request,
-                "i18n": language_en,
+                "i18n": language,
                 "i18n_all": LANGUAGES,
+                "locale_order": locale_order,
             },
         )
         resp.status_code = status.HTTP_404_NOT_FOUND
         return resp
+
     resp = templates.TemplateResponse(
         "redirect.html",
         context={
             "request": request,
             "data": {"url": short_url_obj["original_url"]["S"]},
-            "i18n": language_en,
+            "i18n": language,
             "i18n_all": LANGUAGES,
+            "locale_order": locale_order,
         },
     )
     resp.status_code = status.HTTP_200_OK
