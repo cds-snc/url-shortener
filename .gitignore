@@ -178,3 +178,4 @@ cython_debug/
 
 # Cypress
 *.mp4
+**/cypress/screenshots/*
