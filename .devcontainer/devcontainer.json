@@ -8,7 +8,7 @@
 	"workspaceFolder": "/workspace",
 	"remoteEnv": {
 		"PATH": "/home/vscode/.local/bin:${containerEnv:PATH}" // give our installed Python modules precedence
-	},	
+	},
 	"containerEnv": {
 		"SHELL": "/bin/zsh"
 	},
@@ -38,9 +38,10 @@
 				"github.copilot"
 			]
 		}
-	},	
+	},
 	"features": {
 		"ghcr.io/devcontainers/features/aws-cli:1": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
 		"ghcr.io/devcontainers/features/node:1": {},
 		"terraform": {
 			"version": "1.3.7",

@@ -1,8 +1,17 @@
-.PHONY: dev fmt install lint test fmt-ci lint-ci install-dev
+.PHONY: dev e2e fmt install lint test fmt-ci lint-ci install-dev
 
 dev:
 	@export $$(xargs < .env) > /dev/null &&\
 	uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+e2e:
+	docker build -t cypress-axe -f ./e2e/Dockerfile . &&\
+	docker run -it \
+	--network host \
+	-v $$PWD/e2e:/e2e  \
+	-w /e2e \
+	--entrypoint=cypress \
+	cypress-axe run
 
 fmt:
 	black . $(ARGS) --target-version py311

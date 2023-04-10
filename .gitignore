@@ -175,3 +175,6 @@ cython_debug/
 
 # Local DynamoDB
 .devcontainer/docker/dynamodb/shared-local-instance.db
+
+# Cypress
+*.mp4
