@@ -15,7 +15,7 @@ table = os.environ.get("TABLE_NAME", "url_shortener")
 MODEL_PREFIX = "URL"
 
 
-def create_short_url(original_url, short_url):
+def create_short_url(original_url, short_url, created_by):
     """
     create_short_url creates a new entry with short_url as key.
     If an entry already exists, the original_url is compared.
@@ -40,6 +40,7 @@ def create_short_url(original_url, short_url):
                 "click_count": {"N": "0"},
                 "active": {"BOOL": True},
                 "created_at": {"N": str(int(datetime.datetime.utcnow().timestamp()))},
+                "created_by": {"S": created_by},
                 "ttl": {"N": str(expiry_date)},
             },
             ConditionExpression="attribute_not_exists(key_id)",
@@ -66,7 +67,8 @@ def get_short_url(short_url):
 
     returns: response object containing original url.
     """
-    # AWS does not delete expired items immediately (typically deletes within 48 hours) so we still need to sure we don't return any expired urls
+    # AWS does not delete expired items immediately (typically deletes within 48 hours)
+    # so we still need to sure we don't return any expired urls
     epoch_time_now = int(time.time())
     response = client.query(
         TableName=table,
@@ -85,6 +87,13 @@ def get_short_url(short_url):
         and "Items" in response
         and len(response["Items"]) > 0
     ):
+        # Update the URL's click count
+        client.update_item(
+            TableName=table,
+            Key={"key_id": {"S": f"{MODEL_PREFIX}/{short_url}"}},
+            UpdateExpression="SET click_count = click_count + :val",
+            ExpressionAttributeValues={":val": {"N": "1"}},
+        )
         return response["Items"][0]
     else:
         return None

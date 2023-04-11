@@ -25,7 +25,7 @@ oauth2_bearer = OAuth2PasswordBearer(tokenUrl="", auto_error=False)
 
 def validate_auth_token(
     token: Annotated[str, Depends(oauth2_bearer)], request: Request
-):
+) -> str | None:
     """
     Validate that a request has an Authorization header with a valid bearer token.
     """
@@ -43,4 +43,4 @@ def validate_auth_token(
                 "WWW-Authenticate": 'Bearer realm="UrlShortener"' + error_attributes,
             },
         )
-    return is_valid
+    return token

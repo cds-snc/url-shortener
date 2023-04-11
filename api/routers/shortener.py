@@ -17,7 +17,7 @@ from fastapi.templating import Jinja2Templates
 from pydantic import HttpUrl
 
 from utils.auth_token import validate_auth_token
-from utils.helpers import resolve_short_url, validate_and_shorten_url
+from utils.helpers import redact_value, resolve_short_url, validate_and_shorten_url
 from utils.i18n import (
     LANGUAGES,
     Locale,
@@ -76,8 +76,10 @@ def create_shortened_url(
     Generates a shortened URL for the given original URL.  This route is used by the frontend.
     """
     locale = get_locale_from_path(request.url.path)
-    if validate_cookie(request):
-        data = validate_and_shorten_url(original_url)
+    user_session = validate_cookie(request)
+    if user_session and user_session.get("session_data"):
+        user_email = user_session["session_data"]["S"]
+        data = validate_and_shorten_url(original_url, user_email)
         data["logged_in"] = True
         return templates.TemplateResponse(
             "index.html",
@@ -162,13 +164,13 @@ def change_language(new_locale: Locale):
 
 @router.post("/v1", status_code=status.HTTP_201_CREATED)
 def create_shortened_url_api(
-    authenticated: Annotated[bool, Depends(validate_auth_token)],
+    auth_token: Annotated[str, Depends(validate_auth_token)],
     original_url: HttpUrl = Body(..., embed=True),
 ):
     """
     API endpoint for generating a shortened URL.  It requires a valid auth token.
     """
-    resp = validate_and_shorten_url(original_url)
+    resp = validate_and_shorten_url(original_url, redact_value(auth_token))
     if resp["status"] == "ERROR":
         raise HTTPException(status_code=400, detail=resp)
     return resp
