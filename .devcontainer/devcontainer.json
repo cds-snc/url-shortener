@@ -7,7 +7,8 @@
 	"service": "app",
 	"workspaceFolder": "/workspace",
 	"remoteEnv": {
-		"PATH": "/home/vscode/.local/bin:${containerEnv:PATH}" // give our installed Python modules precedence
+		"PATH": "/home/vscode/.local/bin:${containerEnv:PATH}", // give our installed Python modules precedence,
+		"PYTHONPATH": "./api"
 	},	
 	"containerEnv": {
 		"SHELL": "/bin/zsh"

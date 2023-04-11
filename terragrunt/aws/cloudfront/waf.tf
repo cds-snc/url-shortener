@@ -301,7 +301,7 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
 
   # allow homepage 
   regular_expression {
-    regex_string = "^/$"
+    regex_string = "^/?(en|fr)?$"
   }
 
   # allow static files 
@@ -309,9 +309,19 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
     regex_string = "^/static/*"
   }
 
-  # allow magic_link related pages
+  # allow english paths
   regular_expression {
-    regex_string = "^/(login|logout|magic_link*)$"
+    regex_string = "^/en/(login|logout|magic-link*)$"
+  }
+
+  # allow french paths
+  regular_expression {
+    regex_string = "^/fr/(connexion|deconnexion|lien-magique*)$"
+  }
+
+  # allow lang swap
+  regular_expression {
+    regex_string = "^/lang/(en|fr)$"
   }
 
   tags = {
