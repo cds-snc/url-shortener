@@ -35,8 +35,9 @@ jobs:
           - module: ecr
           - module: dynamodb
           - module: api
-          - module: cloudfront
-          - module: alarms
+          - module: cloudfront 
+          - module: alarms 
+          - module: backup_plan 
 
     runs-on: ubuntu-latest
     steps:

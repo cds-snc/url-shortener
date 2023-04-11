@@ -77,3 +77,7 @@ jobs:
       - name: Apply alarms
         working-directory: terragrunt/env/production/alarms
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
+
+      - name: Apply backup_plan 
+        working-directory: terragrunt/env/production/backup_plan
+        run: terragrunt apply --terragrunt-non-interactive -auto-approve
