@@ -8,7 +8,7 @@ data "aws_iam_policy_document" "api_policies" {
       "dynamodb:DeleteItem",
       "dynamodb:DescribeTable",
       "dynamodb:GetItem",
-      "dynamodb:PutItem",      
+      "dynamodb:PutItem",
       "dynamodb:Query",
       "dynamodb:UpdateItem",
     ]
