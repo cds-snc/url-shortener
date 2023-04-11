@@ -211,3 +211,11 @@ def test_known_shorturl_displays_original_url(client):
     response = client.get(f"/{shorturl}")
     assert "https://www.canada.ca/en/services/jobs/opportunities.html" in response.text
     assert response.status_code == status.HTTP_200_OK
+
+
+def test_shorturl_404_short_url_does_not_match_regex(client):
+    response = client.get("/this-is-not-a-real-short-url")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    response = client.get("/a2s3d4")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
