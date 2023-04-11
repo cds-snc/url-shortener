@@ -36,7 +36,8 @@
 				"redhat.vscode-yaml",
 				"timonwong.shellcheck",
 				"hashicorp.terraform",
-				"github.copilot"
+				"github.copilot",
+				"github.vscode-github-actions"
 			]
 		}
 	},	

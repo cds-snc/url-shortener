@@ -8,7 +8,7 @@ from utils import auth_token
 @patch("utils.auth_token.VALID_AUTH_TOKENS", ["auth_token"])
 def test_valid_token():
     mock_request = MagicMock()
-    assert auth_token.validate_auth_token("auth_token", mock_request) is True
+    assert auth_token.validate_auth_token("auth_token", mock_request) == "auth_token"
 
 
 def test_invalid_token():
