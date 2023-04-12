@@ -76,19 +76,18 @@ describe("Redirect page", () => {
 });
 
 describe("404 page", () => {
-    beforeEach(() => {
-        cy.visit("/fourohfour");
+
+
+    it("returns a 4040 status code", () => {
+        cy.request({
+            url: '/four-oh-four',
+            failOnStatusCode: false,
+        }).then((resp) => {
+            expect(resp.status).to.eq(404)
+        })
         // cy.injectAxe();
-        cy.waitForStableDOM({ pollInterval: 1000, timeout: 10000 })
+        // cy.checkA11y(null, null, terminalLog)
     });
-
-    it("has two h1 elements", () => {
-        cy.get("h1").should('have.length', 2)
-    });
-
-    // it("has no detectable a11y violations on load", () => {
-    //     cy.checkA11y(null, null, terminalLog)
-    // })
 });
 
 describe("generate short URL page in English", () => {
