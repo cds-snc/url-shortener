@@ -1,4 +1,4 @@
-.PHONY: dev e2e e2e-dev fmt install lint test fmt-ci lint-ci install-dev
+.PHONY: dev e2e e2e-ci e2e-dev fmt install lint test fmt-ci lint-ci install-dev
 
 dev:
 	@export $$(xargs < .env) > /dev/null &&\
@@ -7,6 +7,15 @@ dev:
 e2e:
 	docker build -t cypress-axe -f ./e2e/Dockerfile . &&\
 	docker run -it \
+	--network host \
+	-v $$PWD/e2e:/e2e  \
+	-w /e2e \
+	--entrypoint=cypress \
+	cypress-axe run
+
+e2e-ci:
+	docker build -t cypress-axe -f ./e2e/Dockerfile . &&\
+	docker run \
 	--network host \
 	-v $$PWD/e2e:/e2e  \
 	-w /e2e \

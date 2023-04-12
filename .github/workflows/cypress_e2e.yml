@@ -39,7 +39,7 @@ jobs:
         working-directory: ./api
         run: |
           nohup make e2e-dev &
-          make e2e
+          make e2e-ci
         env:
           ALLOWED_DOMAINS: "canada.ca,gc.ca"
           AUTH_TOKEN_APP: "auth_token_app"
