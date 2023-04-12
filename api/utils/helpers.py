@@ -73,8 +73,8 @@ def is_valid_url(original_url):
     returns: True if the url is valid and False if it is not."""
     try:
         return validators.url(original_url)
-    except Exception:
-        log.info(f"Error in validating url: {original_url}")
+    except Exception as err:
+        log.error(f"Error in validating url: {original_url}: {err}")
         return False
 
 
@@ -91,7 +91,7 @@ def resolve_short_url(short_url):
     returns: the original url or False if the short url cannot be resolved"""
     result = ShortUrls.get_short_url(short_url)
     if result is None:
-        log.info(f"Error in resolving url: {short_url}")
+        log.error(f"Error in resolving url: {short_url}")
         return False
     return result
 
@@ -105,10 +105,10 @@ def return_short_url(original_url, peppers, created_by):
     try:
         advocate.get(original_url)
     except advocate.UnacceptableAddressException:
-        log.info(f"Unacceptable address: {original_url}")
+        log.error(f"Unacceptable address: {original_url}")
         return {"error": "error_forbidden_resource"}
-    except requests.RequestException:
-        log.info(f"Failed to connect: {original_url}")
+    except requests.RequestException as err:
+        log.error(f"Failed to connect to {original_url}: {err}")
         return {"error": "error_filed_to_connect_url"}
 
     peppers_iter = iter(peppers)
