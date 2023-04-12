@@ -36,7 +36,7 @@ jobs:
         run: |
           curl -L https://github.com/grafana/k6/releases/download/v0.43.1/k6-v0.43.1-linux-amd64.tar.gz -o k6.tar.gz
           tar -xzf k6.tar.gz
-          sudo mv k6-*/ /usr/local/bin
+          sudo mv k6-*/k6 /usr/local/bin
 
       - name: Run load testing
         working-directory: ./api
