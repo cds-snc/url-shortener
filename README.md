@@ -80,7 +80,7 @@ curl -X POST http://localhost:8000/v1 \
 
 You can run end-to-end tests by doing the following:
 
-1. Start the dev server locally, ex: `make dev` in the `./api` folder.
+1. Start the dev server locally, ex: `make e2e-dev` in the `./api` folder.
 2. Run `make e2e` to start a docker container that has cypress installed as well as the `cypress-axe` extension for the `axe-core` package.
 
 Videos and screenshots of the test runs can be found in `./api/e2e/cypress/screenshots|videos` folder.

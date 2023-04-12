@@ -1,4 +1,4 @@
-.PHONY: dev e2e fmt install lint test fmt-ci lint-ci install-dev
+.PHONY: dev e2e e2e-dev fmt install lint test fmt-ci lint-ci install-dev
 
 dev:
 	@export $$(xargs < .env) > /dev/null &&\
@@ -13,6 +13,10 @@ e2e:
 	--entrypoint=cypress \
 	cypress-axe run
 
+e2e-dev:
+	@export $$(xargs < .env) > /dev/null &&\
+	CYPRESS_CI=foo uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
 fmt:
 	black . $(ARGS) --target-version py311
 
@@ -26,7 +30,7 @@ lint:
 	flake8 .
 
 test:
-	coverage run -m pytest -s -vv --last-failed --new-first tests &&\
+	coverage run -m pytest -s -vv tests &&\
 	coverage report -m
 
 lint-ci:
