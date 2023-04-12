@@ -82,7 +82,7 @@ describe("generate short URL page in English", () => {
         cy.waitForStableDOM({ pollInterval: 1000, timeout: 10000 })
     });
 
-    it("has a generate button", () => {
+    it("has the correct H1 header", () => {
         cy.get("h1").should("contain", "Short and shareable URLs");
     });
 
@@ -98,7 +98,7 @@ describe("generate short URL page in French", () => {
         cy.waitForStableDOM({ pollInterval: 1000, timeout: 10000 })
     });
 
-    it("has a generate button", () => {
+    it("has the correct H1 header", () => {
         cy.get("h1").should("contain", "URLs courts et partageables");
     });
 
