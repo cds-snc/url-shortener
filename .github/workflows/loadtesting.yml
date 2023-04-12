@@ -1,0 +1,59 @@
+name: Load testing
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - api/**
+      - .github/workflows/loadtesting.yml
+
+jobs:
+  load_testing:
+    runs-on: ubuntu-latest
+    services:
+      dynamodb-local:
+        image: "amazon/dynamodb-local"
+        ports:
+          - 9000:8000
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3 # v3.5.0
+
+      - name: Setup python
+        uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
+        with:
+          python-version: "3.11"
+
+      - name: Install dev dependencies
+        working-directory: ./api
+        run: make install-dev
+
+      - name: Install dependencies
+        working-directory: ./api
+        run: make install
+
+      - name: Download k6
+        run: |
+          curl -L https://github.com/grafana/k6/releases/download/v0.43.1/k6-v0.43.1-linux-amd64.tar.gz -o k6.tar.gz
+          tar -xzf k6.tar.gz
+          sudo mv k6 /usr/local/bin
+
+      - name: Run load testing
+        working-directory: ./api
+        run: |
+          nohup make dev &
+          k6 run ./loadtesting/test.js
+        env:
+          ALLOWED_DOMAINS: "canada.ca,gc.ca"
+          AUTH_TOKEN_APP: "auth_token_app"
+          AUTH_TOKEN_NOTIFY: "auth_token_notify"
+          AWS_ACCESS_KEY_ID: "AWS_ACCESS_KEY_ID"
+          AWS_SECRET_ACCESS_KEY: "AWS_SECRET_ACCESS_KEY"
+          AWS_REGION: "ca-central-1"
+          CYPRESS_CI: "true"
+          DYNAMODB_HOST: "http://localhost:9000"
+          NOTIFY_API_KEY: ""
+          NOTIFY_MAGIC_LINK_TEMPLATE: ""
+          SHORTENER_DOMAIN: "http://127.0.0.1:8000/"
+          SHORTENER_PATH_LENGTH: "6"
+          TABLE_NAME: "url_shortener_test"
