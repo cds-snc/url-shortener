@@ -12,5 +12,6 @@ skip-check:
   - CKV_AWS_111 # MKS: `resources=["*"]` references the key the policy is attached to
   - CKV_AWS_119 # DynamoDB default service key encryption is acceptable
   - CKV_AWS_136 # ECR: Default encryption key is acceptable 
+  - CKV_AWS_166 # Backup Vault: Default encryption is acceptable since DynamoDB are already encrypted
   - CKV_AWS_192 # CloudFront: False-positive, AWSManagedRulesKnownBadInputsRuleSet is being applied 
   - CKV_AWS_258 # Lambda: Lambda function url auth is handled at the API level 

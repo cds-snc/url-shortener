@@ -23,10 +23,16 @@ def test_GET_homepage_returns_200_if_logged_in(mock_validate_cookie, client, loc
 
 
 @patch("routers.shortener.validate_cookie")
-def test_POST_homepage_returns_200_if_logged_in(mock_validate_cookie, client, locale):
-    mock_validate_cookie.return_value = True
+@patch("routers.shortener.validate_and_shorten_url")
+def test_POST_homepage_returns_200_if_logged_in(
+    mocke_validate_and_shorten, mock_validate_cookie, client, locale
+):
+    mock_validate_cookie.return_value = {"session_data": {"S": "actor@cds-snc.ca"}}
     response = client.post(f"/{locale}", data={"original_url": "https://www.canada.ca"})
     assert response.status_code == status.HTTP_200_OK
+    assert mocke_validate_and_shorten.called_once_with(
+        "https://www.canada.ca", "actor@cds-snc.ca"
+    )
 
 
 def test_POST_homepage_returns_401_if_not_logged_in(client, locale):
@@ -151,6 +157,19 @@ def test_creating_a_valid_shortlink(client):
     assert response.json()["status"] == "OK"
 
 
+@patch("routers.shortener.validate_and_shorten_url")
+def test_creating_a_valid_shortlink_actor(mock_validate_and_shorten_url, client):
+    response = client.post(
+        "/v1",
+        json={"original_url": "https://www.canada.ca"},
+        headers={"Authorization": "Bearer auth_token_app"},
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+    assert mock_validate_and_shorten_url.called_one_with(
+        "https://www.canada.ca", "**********_app"
+    )
+
+
 def test_creating_a_blocked_shortlink(client):
     response = client.post(
         "/v1",
@@ -211,3 +230,11 @@ def test_known_shorturl_displays_original_url(client):
     response = client.get(f"/{shorturl}")
     assert "https://www.canada.ca/en/services/jobs/opportunities.html" in response.text
     assert response.status_code == status.HTTP_200_OK
+
+
+def test_shorturl_404_short_url_does_not_match_regex(client):
+    response = client.get("/this-is-not-a-real-short-url")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    response = client.get("/a2s3d4")
+    assert response.status_code == status.HTTP_404_NOT_FOUND

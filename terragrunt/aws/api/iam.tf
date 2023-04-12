@@ -5,11 +5,12 @@ data "aws_iam_policy_document" "api_policies" {
     effect = "Allow"
 
     actions = [
-      "dynamodb:GetItem",
       "dynamodb:DeleteItem",
-      "dynamodb:PutItem",
       "dynamodb:DescribeTable",
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
       "dynamodb:Query",
+      "dynamodb:UpdateItem",
     ]
 
     resources = [

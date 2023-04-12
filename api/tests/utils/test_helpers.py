@@ -70,7 +70,7 @@ def test_return_short_url_succeeds_if_advocate_passes(
         "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=",
         "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
     ]
-    short_url = helpers.return_short_url(original_url, peppers)
+    short_url = helpers.return_short_url(original_url, peppers, "actor")
     assert short_url == "FizzBuzz"
 
 
@@ -88,7 +88,7 @@ def test_return_short_url_succeeds_if_advocate_passes_but_save_fails(
         "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=",
         "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
     ]
-    result = helpers.return_short_url(original_url, peppers)
+    result = helpers.return_short_url(original_url, peppers, "actor")
     assert result == {"error": "error_url_shorten_failed"}
 
 
@@ -99,7 +99,7 @@ def test_return_short_url_unacceptable_address_exception():
         "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=",
         "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
     ]
-    result = helpers.return_short_url(original_url, peppers)
+    result = helpers.return_short_url(original_url, peppers, "actor")
     assert result == {"error": "error_forbidden_resource"}
 
 
@@ -110,7 +110,7 @@ def test_return_short_url_request_exception():
         "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=",
         "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
     ]
-    result = helpers.return_short_url(original_url, peppers)
+    result = helpers.return_short_url(original_url, peppers, "actor")
     assert result == {"error": "error_filed_to_connect_url"}
 
 
@@ -174,7 +174,7 @@ def test_resolve_short_url_returns_fixture_if_cypress_env_var_is_set():
 def test_validate_and_shorten_url_returns_error_if_invalid_url():
     original_url = "https://example.com"
     helpers.is_valid_url = MagicMock(return_value=False)
-    result = helpers.validate_and_shorten_url(original_url)
+    result = helpers.validate_and_shorten_url(original_url, "actor")
     assert result == {
         "error": "Unable to shorten link. Invalid URL.",
         "original_url": original_url,
@@ -187,7 +187,7 @@ def test_validate_and_shorten_url_returns_error_if_domain_not_allowed():
     original_url = "https://example.com"
     helpers.is_valid_url = MagicMock(return_value=True)
     helpers.is_domain_allowed = MagicMock(return_value=False)
-    result = helpers.validate_and_shorten_url(original_url)
+    result = helpers.validate_and_shorten_url(original_url, "actor")
     assert result == {
         "error": "error_url_shorten_invalid_host",
         "form_url": "foo",
@@ -203,7 +203,7 @@ def test_validate_and_shorten_url_returns_error_if_return_short_url_exception():
     helpers.return_short_url = MagicMock(
         return_value={"error": "That URL points to a forbidden resource"}
     )
-    result = helpers.validate_and_shorten_url(original_url)
+    result = helpers.validate_and_shorten_url(original_url, "actor")
     assert result == {
         "error": "That URL points to a forbidden resource",
         "original_url": original_url,
@@ -214,7 +214,7 @@ def test_validate_and_shorten_url_returns_error_if_return_short_url_exception():
 def test_validate_and_shorten_url_returns_error_if_any_type_of_exception():
     original_url = "https://example.com"
     helpers.is_valid_url.side_effect = Exception("FAILED")
-    result = helpers.validate_and_shorten_url(original_url)
+    result = helpers.validate_and_shorten_url(original_url, "actor")
     assert result == {
         "error": "Error in processing shortened url: FAILED",
         "original_url": original_url,
@@ -225,29 +225,41 @@ def test_validate_and_shorten_url_returns_error_if_any_type_of_exception():
 @patch.dict(os.environ, {"SHORTENER_DOMAIN": "http://127.0.0.1:8000/"})
 def test_validate_and_shorten_url_returns_success():
     original_url = "https://example.com"
+    peppers = [
+        "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=",
+        "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
+    ]
     helpers.is_valid_url = MagicMock(return_value=True)
     helpers.is_domain_allowed = MagicMock(return_value=True)
     helpers.return_short_url = MagicMock(return_value="XjbS35ah")
-    result = helpers.validate_and_shorten_url(original_url)
+    result = helpers.validate_and_shorten_url(original_url, "actor")
     assert result == {
         "original_url": original_url,
         "short_url": "http://127.0.0.1:8000/XjbS35ah",
         "status": "OK",
     }
+    helpers.return_short_url.assert_called_once_with(original_url, peppers, "actor")
 
 
 @patch.dict(os.environ, {"SHORTENER_DOMAIN": "https://foo.bar/"})
 def test_validate_and_shorten_url_returns_success_with_domain():
     original_url = "https://example.com"
+    peppers = [
+        "T4XuCG/uaDY7uHG+hG/01OOdgO77bl4GOdY5foLEHb8=",
+        "dPG6wEcrcOYc6lxqC/Hv3QD7CAHkzZ1wA0gZQW1kvkY=",
+    ]
     helpers.is_valid_url = MagicMock(return_value=True)
     helpers.is_domain_allowed = MagicMock(return_value=True)
     helpers.return_short_url = MagicMock(return_value="XjbS35ah")
-    result = helpers.validate_and_shorten_url(original_url)
+    result = helpers.validate_and_shorten_url(original_url, "anotheractor")
     assert result == {
         "original_url": original_url,
         "short_url": "https://foo.bar/XjbS35ah",
         "status": "OK",
     }
+    helpers.return_short_url.assert_called_once_with(
+        original_url, peppers, "anotheractor"
+    )
 
 
 @patch("utils.helpers.ShortUrls")
@@ -288,5 +300,14 @@ def test_resolve_short_url_does_not_return_original_url_expired_ttl(
     assert result is False
 
 
-def test_is_valid_scheme_https_ok():
+def test_is_valid_scheme_https():
     assert helpers.is_valid_scheme("https://example.com")
+    assert not helpers.is_valid_scheme("http://example.com")
+    assert not helpers.is_valid_scheme("ftp://example.com")
+    assert not helpers.is_valid_scheme("file://example.com")
+
+
+def test_redact_value():
+    assert helpers.redact_value("foo") == "***"
+    assert helpers.redact_value("foobar", 1) == "**obar"
+    assert helpers.redact_value("foobarbam") == "*****rbam"

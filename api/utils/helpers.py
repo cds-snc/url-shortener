@@ -73,8 +73,8 @@ def is_valid_url(original_url):
     returns: True if the url is valid and False if it is not."""
     try:
         return validators.url(original_url)
-    except Exception:
-        log.info(f"Error in validating url: {original_url}")
+    except Exception as err:
+        log.error(f"Error in validating url: {original_url}: {err}")
         return False
 
 
@@ -93,12 +93,12 @@ def resolve_short_url(short_url):
         return {"original_url": {"S": "https://digital.canada.ca/"}}
     result = ShortUrls.get_short_url(short_url)
     if result is None:
-        log.info(f"Error in resolving url: {short_url}")
+        log.error(f"Error in resolving url: {short_url}")
         return False
     return result
 
 
-def return_short_url(original_url, peppers):
+def return_short_url(original_url, peppers, created_by):
     """return_short_url function returns the shortened url
     parameter original_url: the url that the user passes to the api
     parameter peppers: peppers iterable used for hashing input
@@ -107,10 +107,10 @@ def return_short_url(original_url, peppers):
     try:
         advocate.get(original_url)
     except advocate.UnacceptableAddressException:
-        log.info(f"Unacceptable address: {original_url}")
+        log.error(f"Unacceptable address: {original_url}")
         return {"error": "error_forbidden_resource"}
-    except requests.RequestException:
-        log.info(f"Failed to connect: {original_url}")
+    except requests.RequestException as err:
+        log.error(f"Failed to connect to {original_url}: {err}")
         return {"error": "error_filed_to_connect_url"}
 
     peppers_iter = iter(peppers)
@@ -123,7 +123,9 @@ def return_short_url(original_url, peppers):
                 candidate_url = generate_short_url(
                     original_url, pepper, int(os.getenv("SHORTENER_PATH_LENGTH"))
                 )
-                short_url = ShortUrls.create_short_url(original_url, candidate_url)
+                short_url = ShortUrls.create_short_url(
+                    original_url, candidate_url, created_by
+                )
             except ValueError as err:
                 # collision
                 log.info(
@@ -137,7 +139,7 @@ def return_short_url(original_url, peppers):
     return short_url
 
 
-def validate_and_shorten_url(original_url):
+def validate_and_shorten_url(original_url, created_by):
     """validate_and_shorten_url function validates the url passed in as a parameter and then shortens it
     parameter original_url: the url that the user passes to the api
     returns: a dictionary containing the shortened url and the original url"""
@@ -167,7 +169,9 @@ def validate_and_shorten_url(original_url):
             }
         # Else, we are all good to shorten!
         else:
-            short_url = return_short_url(original_url, os.getenv("PEPPERS").split(","))
+            short_url = return_short_url(
+                original_url, os.getenv("PEPPERS").split(","), created_by
+            )
 
             if isinstance(short_url, dict):
                 return {
@@ -177,7 +181,9 @@ def validate_and_shorten_url(original_url):
                 }
 
             shortener_domain = os.getenv("SHORTENER_DOMAIN") or ""
-            log.info(f"Shortened URL: {short_url} from {original_url}")
+            log.info(
+                f"Shortened URL: '{short_url}' from '{original_url}' created by '{created_by}'"
+            )
             data = {
                 "short_url": f"{shortener_domain}{short_url}",
                 "original_url": original_url,
@@ -192,3 +198,14 @@ def validate_and_shorten_url(original_url):
         }
 
     return data
+
+
+def redact_value(value, min_length=8):
+    """Given a value, redact it and display the last 4 characters of the value
+    provided it is longer the minimum lenght (default 8)."""
+    value_length = len(value)
+    return (
+        "*" * (value_length - 4) + value[-4:]
+        if value_length >= min_length
+        else "*" * value_length
+    )

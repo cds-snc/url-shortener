@@ -7,8 +7,9 @@
 	"service": "app",
 	"workspaceFolder": "/workspace",
 	"remoteEnv": {
-		"PATH": "/home/vscode/.local/bin:${containerEnv:PATH}" // give our installed Python modules precedence
-	},
+		"PATH": "/home/vscode/.local/bin:${containerEnv:PATH}", // give our installed Python modules precedence,
+		"PYTHONPATH": "./api"
+	},	
 	"containerEnv": {
 		"SHELL": "/bin/zsh"
 	},
@@ -35,7 +36,8 @@
 				"redhat.vscode-yaml",
 				"timonwong.shellcheck",
 				"hashicorp.terraform",
-				"github.copilot"
+				"github.copilot",
+				"github.vscode-github-actions"
 			]
 		}
 	},
