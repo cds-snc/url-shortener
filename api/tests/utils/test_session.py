@@ -1,3 +1,4 @@
+import os
 from utils import session
 
 from unittest.mock import MagicMock, patch
@@ -61,3 +62,9 @@ def test_validate_cookie_returns_session_data_if_session_exists(mock_read):
     mock_request = MagicMock()
     mock_request.cookies = {"_sessionID": "session_id"}
     assert session.validate_cookie(mock_request) == "session_data"
+
+
+@patch.dict(os.environ, {"CYPRESS_CI": "1"}, clear=True)
+def test_validate_cookie_returns_true_if_cypress_ci_is_set():
+    mock_request = MagicMock()
+    assert session.validate_cookie(mock_request) is True

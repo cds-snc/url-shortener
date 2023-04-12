@@ -164,6 +164,13 @@ def test_resolve_short_url_returns_false_if_it_does_not_exist(mock_short_urls_mo
     assert result is False
 
 
+@patch.dict(os.environ, {"CYPRESS_CI": "1"}, clear=True)
+def test_resolve_short_url_returns_fixture_if_cypress_env_var_is_set():
+    short_url = "XjbS35ah"
+    result = helpers.resolve_short_url(short_url)
+    assert result == {"original_url": {"S": "https://digital.canada.ca/"}}
+
+
 def test_validate_and_shorten_url_returns_error_if_invalid_url():
     original_url = "https://example.com"
     helpers.is_valid_url = MagicMock(return_value=False)

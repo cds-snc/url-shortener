@@ -74,3 +74,13 @@ curl -X POST http://localhost:8000/v1 \
 
 {"short_url":"http://127.0.0.1:8000/IcWuXU64","original_url":"https://digital.canada.ca","status":"OK"}
 ```
+
+
+### Running end-to-end and accessbility tests using Cypress
+
+You can run end-to-end tests by doing the following:
+
+1. Start the dev server locally, ex: `make e2e-dev` in the `./api` folder.
+2. Run `make e2e` to start a docker container that has cypress installed as well as the `cypress-axe` extension for the `axe-core` package.
+
+Videos and screenshots of the test runs can be found in `./api/e2e/cypress/screenshots|videos` folder.

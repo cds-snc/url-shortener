@@ -89,6 +89,8 @@ def resolve_short_url(short_url):
     """resolve_short_url function resolves the short url to the original url
     parameter short_url: the shortened url
     returns: the original url or False if the short url cannot be resolved"""
+    if "CYPRESS_CI" in os.environ:
+        return {"original_url": {"S": "https://digital.canada.ca/"}}
     result = ShortUrls.get_short_url(short_url)
     if result is None:
         log.error(f"Error in resolving url: {short_url}")
