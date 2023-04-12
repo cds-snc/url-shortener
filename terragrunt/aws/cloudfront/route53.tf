@@ -19,9 +19,14 @@ module "resolver_dns" {
   firewall_enabled = true
 
   allowed_domains = [
+    "*.akamaiedge.net.",
     "*.amazonaws.com.",
+    "*.edgekey.net.",
     "*.gc.ca.",
+    "*.gg.ca.",
     "*.canada.ca.",
+    "canada.ca.",
+    "gg.ca.",
   ]
 
   billing_tag_value = var.billing_code
