@@ -75,6 +75,22 @@ describe("Redirect page", () => {
     // })
 });
 
+describe("404 page", () => {
+    beforeEach(() => {
+        cy.visit("/fourohfour");
+        // cy.injectAxe();
+        cy.waitForStableDOM({ pollInterval: 1000, timeout: 10000 })
+    });
+
+    it("has two h1 elements", () => {
+        cy.get("h1").should('have.length', 2)
+    });
+
+    // it("has no detectable a11y violations on load", () => {
+    //     cy.checkA11y(null, null, terminalLog)
+    // })
+});
+
 describe("generate short URL page in English", () => {
     beforeEach(() => {
         cy.visit("/en");
@@ -106,3 +122,5 @@ describe("generate short URL page in French", () => {
     //     cy.checkA11y(null, null, terminalLog)
     // })
 });
+
+
