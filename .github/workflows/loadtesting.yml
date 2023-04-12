@@ -42,6 +42,7 @@ jobs:
         working-directory: ./api
         run: |
           nohup make dev &
+          sleep 5
           k6 run ./loadtesting/test.js
         env:
           ALLOWED_DOMAINS: "canada.ca,gc.ca"
