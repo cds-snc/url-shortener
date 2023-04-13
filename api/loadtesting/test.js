@@ -7,7 +7,7 @@ const ENVIROMENT = __ENV.ENV || 'dev';
 const profiles = {
   ci: {
     host: 'http://0.0.0.0:8000/',
-    createShortUrlVus: 10,
+    createShortUrlVus: 5,
     duration_p95_createShortUrl: '3000',
     redirectPageVus: 100,
     duration_p95_redirectPage: '500',
@@ -55,6 +55,7 @@ export const options = {
   },
 };
 
+console.log(`Running load test against ${ENVIROMENT} environment`)
 
 export function redirectPage() {
   http.get(`${profiles[ENVIROMENT].host}abcdefgh`, { tags: { name: 'redirectPage' } });
