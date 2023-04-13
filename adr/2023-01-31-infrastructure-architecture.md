@@ -95,3 +95,10 @@ The API will need to have a mechanism that prevents direct access to it using th
 
 - having CloudFront add a secret header value and then ensuring it's present in the API's handler; or
 - by redirecting all raw Function URL requests to the main API URL. 
+
+
+
+## Other architectual decisions
+
+### Nightly DynamoDB backup
+In order to satify [CP-9 (Contigency Planning - information systems backup)](https://github.com/cds-snc/url-shortener-documentation/issues/171), we needed to setup an AWS Backup for our DynamoDB tables. Currently, the backup executes via AWS Backup at 12:00am every day and is stored in AWS Vault. In order to allow persistency and to create/run the backup, we wrote a [backup plan](https://github.com/cds-snc/url-shortener/tree/main/terragrunt/aws/backup_plan) using terraform that executes the backup actions.
