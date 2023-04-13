@@ -2,13 +2,13 @@ import http from 'k6/http';
 import { sleep } from 'k6';
 
 export const options = {
-  duration: '10s',
-  vus: 20,
+  duration: '30s',
+  vus: 100,
   thresholds: {
     'http_req_failed{name:redirectPage}': ['rate<0.01'], // http errors should be less than 1%
     'http_req_duration{name:redirectPage}': ['p(95)<500'], // 95 percent of response times must be below 500ms
     'http_req_failed{name:createShortUrl}': ['rate<0.01'], // http errors should be less than 1%
-    'http_req_duration{name:createShortUrl}': ['p(95)<750'], // 95 percent of response times must be below 750ms
+    'http_req_duration{name:createShortUrl}': ['p(95)<2500'], // 95 percent of response times must be below 2500ms
   },
 };
 
@@ -26,7 +26,6 @@ export default function () {
     tags: { name: 'createShortUrl' }
   }
 
-  const res = http.post('http://0.0.0.0:8000/v1', data, params);
-  console.log(res.body);
+  http.post('http://0.0.0.0:8000/v1', data, params);
   sleep(1);
 };
