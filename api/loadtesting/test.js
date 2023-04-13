@@ -1,7 +1,33 @@
 import http from 'k6/http';
 import { sleep } from 'k6';
 
-const HOST = __ENV.SHORTENER_DOMAIN || 'http://0.0.0.0:8000/';
+
+const ENVIROMENT = __ENV.ENV || 'dev';
+
+const profiles = {
+  ci: {
+    host: 'http://0.0.0.0:8000/',
+    createShortUrlVus: 10,
+    duration_p95_createShortUrl: '2000',
+    redirectPageVus: 100,
+    duration_p95_redirectPage: '500',
+  },
+  dev: {
+    host: 'http://127.0.0.1:8000/',
+    createShortUrlVus: 25,
+    duration_p95_createShortUrl: '1000',
+    redirectPageVus: 100,
+    duration_p95_redirectPage: '500',
+  },
+  staging: {
+    host: 'https://url-shortener.cdssandbox.xyz/',
+    createShortUrlVus: 50,
+    duration_p95_createShortUrl: '1000',
+    redirectPageVus: 100,
+    duration_p95_redirectPage: '500',
+  },
+
+}
 
 export const options = {
   discardResponseBodies: true,
@@ -9,14 +35,14 @@ export const options = {
     createShortUrl: {
       executor: 'constant-vus',
       exec: 'createShortUrl',
-      vus: 50,
+      vus: profiles[ENVIROMENT].createShortUrlVus,
       duration: '30s',
       gracefulStop: '0s',
     },
     redirectPage: {
       executor: 'constant-vus',
       exec: 'redirectPage',
-      vus: 100,
+      vus: profiles[ENVIROMENT].redirectPageVus,
       duration: '30s',
       gracefulStop: '0s',
       startTime: '30s',
@@ -24,15 +50,15 @@ export const options = {
   },
   thresholds: {
     'http_req_failed{name:redirectPage}': ['rate<0.01'], // http errors should be less than 1%
-    'http_req_duration{name:redirectPage}': ['p(95)<500'], // 95 percent of response times must be below 500ms
+    'http_req_duration{name:redirectPage}': [`p(95)<${profiles[ENVIROMENT].duration_p95_redirectPage}`],
     'http_req_failed{name:createShortUrl}': ['rate<0.01'], // http errors should be less than 1%
-    'http_req_duration{name:createShortUrl}': ['p(95)<2500'], // 95 percent of response times must be below 2000ms
+    'http_req_duration{name:createShortUrl}': [`p(95)<${profiles[ENVIROMENT].duration_p95_createShortUrl}`],
   },
 };
 
 
 export function redirectPage() {
-  http.get(`${HOST}abcdefgh`, { tags: { name: 'redirectPage' } });
+  http.get(`${profiles[ENVIROMENT].host}abcdefgh`, { tags: { name: 'redirectPage' } });
   sleep(1);
 }
 
@@ -46,6 +72,6 @@ export function createShortUrl() {
     tags: { name: 'createShortUrl' }
   }
 
-  http.post(`${HOST}v1`, data, params);
+  http.post(`${profiles[ENVIROMENT].host}v1`, data, params);
   sleep(1);
 }
