@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { sleep } from 'k6';
 
 export const options = {
-  duration: '1m',
+  duration: '10s',
   vus: 20,
   thresholds: {
     'http_req_failed{name:redirectPage}': ['rate<0.01'], // http errors should be less than 1%
@@ -13,7 +13,7 @@ export const options = {
 };
 
 export default function () {
-  http.get('http://0.0.0.0:8000/foobared', { tags: { name: 'redirectPage' } });
+  http.get('http://0.0.0.0:8000/foobar', { tags: { name: 'redirectPage' } });
 
   sleep(1);
 
@@ -26,6 +26,7 @@ export default function () {
     tags: { name: 'createShortUrl' }
   }
 
-  http.post('http://0.0.0.0:8000/v1', data, params);
+  const res = http.post('http://0.0.0.0:8000/v1', data, params);
+  console.log(res.body);
   sleep(1);
 };
