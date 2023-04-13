@@ -7,7 +7,7 @@ const ENVIROMENT = __ENV.ENV || 'dev';
 const profiles = {
   ci: {
     host: 'http://0.0.0.0:8000/',
-    createShortUrlVus: 5,
+    createShortUrlVus: 10,
     duration_p95_createShortUrl: '3000',
     redirectPageVus: 100,
     duration_p95_redirectPage: '500',
