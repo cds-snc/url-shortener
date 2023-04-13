@@ -14,6 +14,12 @@ export default function () {
   const get_resp = http.get('http://127.0.0.1:8000/foobar');
   sleep(1);
   const data = JSON.stringify({ "original_url": "https://digital.canada.ca" })
-  const post_resp = http.post('http://127.0.0.1:8000/v1', data, { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer auth_token_app' } });
+  const params = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer auth_token_app'
+    },
+  }
+  const post_resp = http.post('http://127.0.0.1:8000/v1', data, params);
   sleep(1);
 }
