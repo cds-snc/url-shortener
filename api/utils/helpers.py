@@ -74,7 +74,7 @@ def is_valid_url(original_url):
     try:
         return validators.url(original_url)
     except Exception as err:
-        log.warning(fCould not validate url: {original_url}: {err}")
+        log.warning(f"Could not validate url: {original_url}: {err}")
         return False
 
 
