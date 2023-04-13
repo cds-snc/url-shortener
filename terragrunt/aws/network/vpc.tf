@@ -24,7 +24,7 @@ module "url_shortener_vpc" {
 #
 resource "aws_network_acl_rule" "block_ssh" {
   network_acl_id = module.url_shortener_vpc.main_nacl_id
-  rule_number    = 50
+  rule_number    = 52
   egress         = false
   protocol       = "tcp"
   rule_action    = "deny"
@@ -35,7 +35,7 @@ resource "aws_network_acl_rule" "block_ssh" {
 
 resource "aws_network_acl_rule" "block_rdp" {
   network_acl_id = module.url_shortener_vpc.main_nacl_id
-  rule_number    = 51
+  rule_number    = 53
   egress         = false
   protocol       = "tcp"
   rule_action    = "deny"
