@@ -26,6 +26,7 @@ export default function () {
     tags: { name: 'createShortUrl' }
   }
 
-  http.post('http://0.0.0.0:8000/v1', data, params);
+  const res = http.post('http://0.0.0.0:8000/v1', data, params);
+  console.log(res.body);
   sleep(1);
 };
