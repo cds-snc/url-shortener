@@ -41,7 +41,7 @@ jobs:
       - name: Run load testing
         working-directory: ./api
         run: |
-          nohup make dev &
+          nohup make e2e-dev &
           sleep 5
           make loadtest
         env:
