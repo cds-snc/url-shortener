@@ -1,4 +1,4 @@
-.PHONY: dev e2e e2e-ci e2e-dev fmt install lint test fmt-ci lint-ci install-dev
+.PHONY: dev e2e e2e-ci e2e-dev fmt install loadtest lint test fmt-ci lint-ci install-dev
 
 dev:
 	@export $$(xargs < .env) > /dev/null &&\
@@ -34,6 +34,9 @@ install:
 
 install-dev:
 	pip3 install --user -r requirements_dev.txt
+
+loadtest:
+	k6 run ./loadtesting/test.js
 
 lint:
 	flake8 .
