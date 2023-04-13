@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_log_metric_filter" "url_shortener_api_error" {
   name           = local.error_logged_api
-  pattern        = "?ERROR ?Error ?error ?failed"
+  pattern        = "{$.levelname=\"ERROR\"}" 
   log_group_name = local.api_cloudwatch_log_group
 
   metric_transformation {
