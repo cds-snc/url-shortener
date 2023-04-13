@@ -43,7 +43,7 @@ jobs:
         run: |
           nohup make dev &
           sleep 5
-          k6 run ./loadtesting/test.js
+          make loadtest
         env:
           ALLOWED_DOMAINS: "canada.ca,gc.ca"
           AUTH_TOKEN_APP: "auth_token_app"
