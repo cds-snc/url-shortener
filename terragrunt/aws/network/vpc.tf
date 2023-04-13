@@ -20,6 +20,32 @@ module "url_shortener_vpc" {
 }
 
 #
+# VPC Network ACL
+#
+resource "aws_network_acl_rule" "block_ssh" {
+  network_acl_id = module.url_shortener_vpc.main_nacl_id
+  rule_number    = 50
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "deny"
+  cidr_block     = "0.0.0.0/0" 
+  from_port      = 22
+  to_port        = 22
+}
+
+resource "aws_network_acl_rule" "block_rdp" {
+  network_acl_id = module.url_shortener_vpc.main_nacl_id 
+  rule_number    = 51
+  egress         = false
+  protocol       = "tcp"
+  rule_action    = "deny"
+  cidr_block     = "0.0.0.0/0"
+  from_port      = 3389
+  to_port        = 3389
+}
+
+
+#
 # VPC endpoints
 #
 resource "aws_vpc_endpoint" "logs" {
