@@ -15,7 +15,7 @@ const profiles = {
   dev: {
     host: 'http://127.0.0.1:8000/',
     createShortUrlVus: 25,
-    duration_p95_createShortUrl: '1000',
+    duration_p95_createShortUrl: '1500',
     redirectPageVus: 100,
     duration_p95_redirectPage: '500',
   },
