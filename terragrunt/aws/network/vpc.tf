@@ -28,13 +28,13 @@ resource "aws_network_acl_rule" "block_ssh" {
   egress         = false
   protocol       = "tcp"
   rule_action    = "deny"
-  cidr_block     = "0.0.0.0/0" 
+  cidr_block     = "0.0.0.0/0"
   from_port      = 22
   to_port        = 22
 }
 
 resource "aws_network_acl_rule" "block_rdp" {
-  network_acl_id = module.url_shortener_vpc.main_nacl_id 
+  network_acl_id = module.url_shortener_vpc.main_nacl_id
   rule_number    = 51
   egress         = false
   protocol       = "tcp"
