@@ -51,10 +51,10 @@ jobs:
           AWS_ACCESS_KEY_ID: "AWS_ACCESS_KEY_ID"
           AWS_SECRET_ACCESS_KEY: "AWS_SECRET_ACCESS_KEY"
           AWS_REGION: "ca-central-1"
-          CYPRESS_CI: "true"
           DYNAMODB_HOST: "http://localhost:9000"
           NOTIFY_API_KEY: ""
           NOTIFY_MAGIC_LINK_TEMPLATE: ""
+          PEPPERS: 'ejp8zh0QHl1BKPMvH4d9zFvS1rkbnYz9uqaEae9uwmY=,fwNAF1u7dA3j0YtsOoHtE0wIzCisSyzqTOhI4TkG5dA=,W2ktstHWiB1+UJLku8Mi0f1Su5RhX+p7hx7UxsrNVOE=,QIPgZU1zZ/tdLAigsLPl4j1zQ8Yc2rUMrVrSMTnZwlM=,sUUmk4x4tgVvfAxM9cu/ZCeIL88SJefJYFkZcHERYEY='
           SHORTENER_DOMAIN: "http://127.0.0.1:8000/"
           SHORTENER_PATH_LENGTH: "6"
           TABLE_NAME: "url_shortener_test"
