@@ -74,7 +74,7 @@ def is_valid_url(original_url):
     try:
         return validators.url(original_url)
     except Exception as err:
-        log.warning(f"Error in validating url: {original_url}: {err}")
+        log.warning(fCould not validate url: {original_url}: {err}")
         return False
 
 
@@ -93,7 +93,7 @@ def resolve_short_url(short_url):
         return {"original_url": {"S": "https://digital.canada.ca/"}}
     result = ShortUrls.get_short_url(short_url)
     if result is None:
-        log.warning(f"Error in resolving url: {short_url}")
+        log.warning(f"Could not resolve url: {short_url}")
         return False
     return result
 
