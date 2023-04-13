@@ -74,7 +74,7 @@ def is_valid_url(original_url):
     try:
         return validators.url(original_url)
     except Exception as err:
-        log.error(f"Error in validating url: {original_url}: {err}")
+        log.warning(f"Could not validate url: {original_url}: {err}")
         return False
 
 
@@ -93,7 +93,7 @@ def resolve_short_url(short_url):
         return {"original_url": {"S": "https://digital.canada.ca/"}}
     result = ShortUrls.get_short_url(short_url)
     if result is None:
-        log.error(f"Error in resolving url: {short_url}")
+        log.warning(f"Could not resolve url: {short_url}")
         return False
     return result
 
@@ -107,7 +107,7 @@ def return_short_url(original_url, peppers, created_by):
     try:
         advocate.get(original_url)
     except advocate.UnacceptableAddressException:
-        log.error(f"Unacceptable address: {original_url}")
+        log.warning(f"Unacceptable address: {original_url}")
         return {"error": "error_forbidden_resource"}
     except requests.RequestException as err:
         log.error(f"Failed to connect to {original_url}: {err}")
