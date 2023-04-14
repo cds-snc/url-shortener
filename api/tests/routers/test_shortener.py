@@ -15,19 +15,19 @@ def test_GET_homepage_returns_307_if_not_logged_in(mock_validate_cookie, client)
 
 
 @patch("routers.shortener.validate_cookie")
-def test_GET_homepage_returns_200_if_logged_in(mock_validate_cookie, client, locale):
-    mock_validate_cookie.return_value = True
-    response = client.get(f"/{locale}", follow_redirects=False)
-    assert response.status_code == status.HTTP_200_OK
-
-
-@patch("routers.shortener.validate_cookie")
-def test_GET_homepage_returns_307_if_not_logged_in(
+def test_GET_homepage_locale_returns_307_if_not_logged_in(
     mock_validate_cookie, client, locale
 ):
     mock_validate_cookie.return_value = False
     response = client.get(f"/{locale}", follow_redirects=False)
     assert response.status_code == status.HTTP_307_TEMPORARY_REDIRECT
+
+
+@patch("routers.shortener.validate_cookie")
+def test_GET_homepage_returns_200_if_logged_in(mock_validate_cookie, client, locale):
+    mock_validate_cookie.return_value = True
+    response = client.get(f"/{locale}", follow_redirects=False)
+    assert response.status_code == status.HTTP_200_OK
 
 
 @patch("routers.shortener.validate_and_shorten_url")
