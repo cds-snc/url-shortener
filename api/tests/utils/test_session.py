@@ -74,7 +74,6 @@ def test_validate_cookie_returns_true_if_cypress_ci_is_set():
 @patch("utils.session.validate_cookie")
 def test_validate_user_email(mock_validate_cookie):
     mock_request = MagicMock()
-    mock_request.cookies = {"_sessionID": "session_id"}
     mock_session_data = {"session_data": {"S": "user_email"}}
     mock_validate_cookie.return_value = mock_session_data
     assert session.validate_user_email(mock_request) == "user_email"
