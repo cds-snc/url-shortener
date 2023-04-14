@@ -1,11 +1,10 @@
 import os
 
 from models.MagicLinks import create, delete, get, check_if_exists
-from notifications_python_client.notifications import NotificationsAPIClient
 from logger import log
 
+from utils.helpers import notification_client
 
-NOTIFY_API_KEY = os.environ.get("NOTIFY_API_KEY", None)
 NOTIFY_MAGIC_LINK_TEMPLATE = os.environ.get("NOTIFY_MAGIC_LINK_TEMPLATE", None)
 SHORTENER_DOMAIN = os.environ.get("SHORTENER_DOMAIN", None)
 
@@ -41,9 +40,3 @@ def validate_magic_link(guid, email):
         return {"success": "success_email_valid"}
     else:
         return {"error": "error_email_not_valid"}
-
-
-def notification_client():
-    return NotificationsAPIClient(
-        NOTIFY_API_KEY, base_url="https://api.notification.canada.ca"
-    )

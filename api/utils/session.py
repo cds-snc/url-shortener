@@ -1,6 +1,7 @@
 import os
 import uuid
 
+from fastapi import HTTPException, status, Request
 from models.Session import create, read, delete
 
 COOKIE_NAME = "_sessionID"
@@ -43,3 +44,21 @@ def validate_cookie(request):
             return False
     else:
         return False
+
+
+def validate_user_email(request: Request):
+    """
+    Validates the user's email address exists in the cookie session
+    data.  If it is not found, a 401 Unauthorized error is raised as this
+    method is used as a dependency for routes that require a logged in user.
+    """
+    user_email = None
+    session_data = validate_cookie(request)
+
+    if session_data and session_data.get("session_data"):
+        user_email = session_data["session_data"].get("S")
+
+    if not user_email:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+
+    return user_email

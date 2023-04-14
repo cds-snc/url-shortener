@@ -3,7 +3,7 @@
 <h1 class="mt-400 mb-400">{{ i18n.short_shareable_links }}</h1>
 <p class="mb-500">
   {{ i18n.short_service_desc }}
-  <a href="{{ data.form_url }}">{{ i18n.short_service_desc_add_domain }}</a>
+  <a href="/{{ i18n.lang }}/{{ i18n.contact_path }}?subject=domain">{{ i18n.short_service_desc_add_domain }}</a>
 </p>
 <form action="/{{ i18n.lang }}" method="post" class="mb-500">
   {% set field_label = "enter_original_link" %}

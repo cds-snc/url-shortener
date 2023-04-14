@@ -1,7 +1,8 @@
 import os
-from utils import session
-
+import pytest
 from unittest.mock import MagicMock, patch
+from fastapi import HTTPException
+from utils import session
 
 
 @patch("utils.session.delete")
@@ -68,3 +69,19 @@ def test_validate_cookie_returns_session_data_if_session_exists(mock_read):
 def test_validate_cookie_returns_true_if_cypress_ci_is_set():
     mock_request = MagicMock()
     assert session.validate_cookie(mock_request) is True
+
+
+@patch("utils.session.validate_cookie")
+def test_validate_user_email(mock_validate_cookie):
+    mock_request = MagicMock()
+    mock_request.cookies = {"_sessionID": "session_id"}
+    mock_session_data = {"session_data": {"S": "user_email"}}
+    mock_validate_cookie.return_value = mock_session_data
+    assert session.validate_user_email(mock_request) == "user_email"
+
+
+def test_validate_user_email_no_session():
+    mock_request = MagicMock()
+    patch("utils.session.validate_cookie", return_value=False)
+    with pytest.raises(HTTPException):
+        session.validate_user_email(mock_request)
