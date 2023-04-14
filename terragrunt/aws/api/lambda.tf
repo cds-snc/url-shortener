@@ -16,6 +16,7 @@ module "url_shortener_lambda" {
 
   environment_variables = {
     ALLOWED_DOMAINS            = "canada.ca,gc.ca,cds-snc.ca"
+    NOTIFY_CONTACT_TEMPLATE    = "47a6be8d-c472-426e-81bb-af1bb89aca87"
     NOTIFY_MAGIC_LINK_TEMPLATE = "092f910a-c3cd-4a91-901d-a2d93fe1e603"
     SHORTENER_DOMAIN           = "https://${var.domain}/"
     SHORTENER_PATH_LENGTH      = var.shortener_path_length
