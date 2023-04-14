@@ -28,7 +28,8 @@ data "aws_iam_policy_document" "api_policies" {
       aws_ssm_parameter.auth_token_app.arn,
       aws_ssm_parameter.auth_token_notify.arn,
       aws_ssm_parameter.hashing_peppers.arn,
-      aws_ssm_parameter.notify_api_key.arn
+      aws_ssm_parameter.notify_api_key.arn,
+      aws_ssm_parameter.notify_contact_email.arn
     ]
   }
 }

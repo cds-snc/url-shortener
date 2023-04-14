@@ -49,6 +49,13 @@ variable "ecr_tag" {
 variable "notify_api_key" {
   description = "The API key used to send emails via Notify"
   type        = string
+  sensitive   = true
+}
+
+variable "notify_contact_email" {
+  description = "The email address used by Notify to send contact form emails to"
+  type        = string
+  sensitive   = true
 }
 
 variable "shortener_path_length" {

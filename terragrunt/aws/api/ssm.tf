@@ -31,11 +31,21 @@ resource "aws_ssm_parameter" "hashing_peppers" {
   }
 }
 
-
 resource "aws_ssm_parameter" "notify_api_key" {
   name  = "notify_api_key"
   type  = "SecureString"
   value = "NOTIFY_API_KEY=${var.notify_api_key}"
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}
+
+resource "aws_ssm_parameter" "notify_contact_email" {
+  name  = "notify_contact_email"
+  type  = "SecureString"
+  value = "NOTIFY_CONTACT_EMAIL=${var.notify_contact_email}"
 
   tags = {
     CostCentre = var.billing_code
