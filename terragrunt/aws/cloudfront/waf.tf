@@ -291,17 +291,17 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
 
   # api call to shorten url
   regular_expression {
-    regex_string = "^/v1$"
+    regex_string = "^/v1/?$"
   }
 
   # allow base64 and get short url
   regular_expression {
-    regex_string = "^/[0-9A-Za-z]{8}$"
+    regex_string = "^/[0-9A-Za-z]{8}/?$"
   }
 
   # allow homepage 
   regular_expression {
-    regex_string = "^/?(en|fr)?$"
+    regex_string = "^/?(en|fr)?/?$"
   }
 
   # allow static files 
@@ -311,12 +311,12 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
 
   # allow english paths
   regular_expression {
-    regex_string = "^/en/(login|logout|contact|magic-link*)/?$"
+    regex_string = "^/en/(login|logout|contact|magic-link)/?$"
   }
 
   # allow french paths
   regular_expression {
-    regex_string = "^/fr/(connexion|deconnexion|contact|lien-magique*)/?$"
+    regex_string = "^/fr/(connexion|deconnexion|contact|lien-magique)/?$"
   }
 
   # allow lang swap
