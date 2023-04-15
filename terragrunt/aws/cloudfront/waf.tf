@@ -306,22 +306,22 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
 
   # allow static files 
   regular_expression {
-    regex_string = "^/static/*"
+    regex_string = "^/static/(css|js|img)/[^/]+$"
   }
 
   # allow english paths
   regular_expression {
-    regex_string = "^/en/(login|logout|magic-link*)$"
+    regex_string = "^/en/(login|logout|contact|magic-link*)/?$"
   }
 
   # allow french paths
   regular_expression {
-    regex_string = "^/fr/(connexion|deconnexion|lien-magique*)$"
+    regex_string = "^/fr/(connexion|deconnexion|contact|lien-magique*)/?$"
   }
 
   # allow lang swap
   regular_expression {
-    regex_string = "^/lang/(en|fr)$"
+    regex_string = "^/lang/(en|fr)/?$"
   }
 
   tags = {
