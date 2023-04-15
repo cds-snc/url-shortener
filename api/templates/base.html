@@ -35,6 +35,7 @@
         <ul>
           <li><a href="/{{ i18n.lang }}">{{ i18n.home }}</a></li>
           {% if data and data.logged_in %}
+          <li><a href="/{{ i18n.lang }}/{{ i18n.contact_path }}">{{ i18n.contact_us }}</a></li>
           <li><a href="/{{ i18n.lang }}/{{ i18n.logout_path }}">{{ i18n.logout }}</a></li>
           {% endif %}
         </ul>

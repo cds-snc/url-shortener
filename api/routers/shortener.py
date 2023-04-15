@@ -17,6 +17,7 @@ from fastapi.templating import Jinja2Templates
 from pydantic import HttpUrl
 
 from utils.auth_token import validate_auth_token
+from utils.contact import send_contact_email
 from utils.helpers import redact_value, resolve_short_url, validate_and_shorten_url
 from utils.i18n import (
     LANGUAGES,
@@ -27,7 +28,12 @@ from utils.i18n import (
     get_locale_order,
 )
 from utils.magic_link import create_magic_link, validate_magic_link
-from utils.session import delete_cookie, set_cookie, validate_cookie
+from utils.session import (
+    delete_cookie,
+    set_cookie,
+    validate_cookie,
+    validate_user_email,
+)
 
 
 router = APIRouter()
@@ -71,22 +77,18 @@ def home(request: Request):
 def create_shortened_url(
     request: Request,
     original_url: Optional[str] = Form(""),
+    user_email: str = Depends(validate_user_email),
 ):
     """
     Generates a shortened URL for the given original URL.  This route is used by the frontend.
     """
     locale = get_locale_from_path(request.url.path)
-    user_session = validate_cookie(request)
-    if user_session and user_session.get("session_data"):
-        user_email = user_session["session_data"]["S"]
-        data = validate_and_shorten_url(original_url, user_email)
-        data["logged_in"] = True
-        return templates.TemplateResponse(
-            "index.html",
-            context={"request": request, "data": data, "i18n": get_language(locale)},
-        )
-    else:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+    data = validate_and_shorten_url(original_url, user_email)
+    data["logged_in"] = True
+    return templates.TemplateResponse(
+        "index.html",
+        context={"request": request, "data": data, "i18n": get_language(locale)},
+    )
 
 
 @router.get("/{locale}/connexion", response_class=HTMLResponse)
@@ -176,7 +178,65 @@ def create_shortened_url_api(
     return resp
 
 
-@router.get("/{short_url}", response_class=HTMLResponse)
+@router.get(
+    "/{locale}/contact", response_class=HTMLResponse, status_code=status.HTTP_200_OK
+)
+def contact(
+    locale: Locale,
+    request: Request,
+    subject: Optional[str] = None,
+    user_email: str = Depends(validate_user_email),
+):
+    """
+    Renders the contact page for logged in users.
+    """
+    return templates.TemplateResponse(
+        "contact.html",
+        context={
+            "request": request,
+            "data": {
+                "logged_in": True,
+                "user_email": user_email,
+                "contact_subject": "Register a new domain"
+                if subject == "domain"
+                else "",
+            },
+            "i18n": get_language(locale),
+        },
+    )
+
+
+@router.post(
+    "/{locale}/contact", response_class=HTMLResponse, status_code=status.HTTP_200_OK
+)
+def contact_send(
+    locale: Locale,
+    request: Request,
+    contact_subject: Annotated[str, Form()],
+    contact_details: Annotated[str, Form()],
+    user_email: str = Depends(validate_user_email),
+):
+    """
+    Contact form submissions.
+    """
+    result = send_contact_email(user_email, contact_subject, contact_details)
+    return templates.TemplateResponse(
+        "contact.html",
+        context={
+            "request": request,
+            "data": {
+                "logged_in": True,
+                "user_email": user_email,
+                "contact_subject": contact_subject,
+                "contact_details": contact_details,
+            }
+            | result,
+            "i18n": get_language(locale),
+        },
+    )
+
+
+@router.get("/{short_url}", response_class=HTMLResponse, status_code=status.HTTP_200_OK)
 def redirect_to_site(
     short_url: str, request: Request, accept_language: str | None = Header(None)
 ):

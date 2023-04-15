@@ -1,6 +1,5 @@
-from fastapi import status
-
 from unittest.mock import patch
+from fastapi import status
 
 
 def test_unknown_shorturl_returns_404(client):
@@ -16,18 +15,25 @@ def test_GET_homepage_returns_307_if_not_logged_in(mock_validate_cookie, client)
 
 
 @patch("routers.shortener.validate_cookie")
+def test_GET_homepage_locale_returns_307_if_not_logged_in(
+    mock_validate_cookie, client, locale
+):
+    mock_validate_cookie.return_value = False
+    response = client.get(f"/{locale}", follow_redirects=False)
+    assert response.status_code == status.HTTP_307_TEMPORARY_REDIRECT
+
+
+@patch("routers.shortener.validate_cookie")
 def test_GET_homepage_returns_200_if_logged_in(mock_validate_cookie, client, locale):
     mock_validate_cookie.return_value = True
     response = client.get(f"/{locale}", follow_redirects=False)
     assert response.status_code == status.HTTP_200_OK
 
 
-@patch("routers.shortener.validate_cookie")
 @patch("routers.shortener.validate_and_shorten_url")
 def test_POST_homepage_returns_200_if_logged_in(
-    mocke_validate_and_shorten, mock_validate_cookie, client, locale
+    mocke_validate_and_shorten, logged_in_user, client, locale
 ):
-    mock_validate_cookie.return_value = {"session_data": {"S": "actor@cds-snc.ca"}}
     response = client.post(f"/{locale}", data={"original_url": "https://www.canada.ca"})
     assert response.status_code == status.HTTP_200_OK
     assert mocke_validate_and_shorten.called_once_with(
@@ -238,3 +244,43 @@ def test_shorturl_404_short_url_does_not_match_regex(client):
 
     response = client.get("/a2s3d4")
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+def test_GET_contact_returns_200_if_logged_in(client, logged_in_user, contact_path):
+    response = client.get(contact_path)
+    assert response.status_code == status.HTTP_200_OK
+
+
+def test_GET_contact_returns_401_if_not_logged_in(client, contact_path):
+    response = client.get(contact_path)
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+@patch("routers.shortener.send_contact_email")
+def test_POST_contact_returns_200_if_logged_in(
+    mock_send_contact_email, client, logged_in_user, contact_path
+):
+    response = client.post(
+        contact_path,
+        data={
+            "contact_subject": "A subject",
+            "contact_details": "Some contact details",
+        },
+    )
+    assert response.status_code == status.HTTP_200_OK
+    mock_send_contact_email.assert_called_once_with(
+        "actor@cds-snc.ca",
+        "A subject",
+        "Some contact details",
+    )
+
+
+def test_POST_contact_returns_401_if_not_logged_in(client, contact_path):
+    response = client.post(contact_path)
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def test_GET_change_language(locale, client):
+    response = client.get(f"/lang/{locale}", follow_redirects=False)
+    assert response.status_code == status.HTTP_307_TEMPORARY_REDIRECT
+    assert response.headers["Location"] == f"/{locale}"

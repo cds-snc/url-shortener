@@ -4,6 +4,7 @@ import boto3
 from fastapi.testclient import TestClient
 from unittest import mock
 from main import app
+from utils.session import validate_user_email
 
 
 dynamodb_client = boto3.client(
@@ -81,6 +82,18 @@ def mock_settings_env_vars():
 @pytest.fixture(scope="session")
 def client() -> TestClient:
     yield TestClient(app)
+
+
+@pytest.fixture(scope="function")
+def logged_in_user():
+    app.dependency_overrides[validate_user_email] = lambda: "actor@cds-snc.ca"
+    yield app
+    del app.dependency_overrides[validate_user_email]
+
+
+@pytest.fixture(params=["/en/contact", "/fr/contact"])
+def contact_path(request):
+    return request.param
 
 
 @pytest.fixture(params=["en", "fr"])

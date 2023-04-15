@@ -5,9 +5,15 @@ import requests
 import validators
 import math
 import base64
+
 from urllib.parse import urlparse
 from models import ShortUrls
 from logger import log
+
+from notifications_python_client.notifications import NotificationsAPIClient
+
+
+NOTIFY_API_KEY = os.environ.get("NOTIFY_API_KEY", None)
 
 
 def calculate_hash_bytes(length: int):
@@ -208,4 +214,10 @@ def redact_value(value, min_length=8):
         "*" * (value_length - 4) + value[-4:]
         if value_length >= min_length
         else "*" * value_length
+    )
+
+
+def notification_client():
+    return NotificationsAPIClient(
+        NOTIFY_API_KEY, base_url="https://api.notification.canada.ca"
     )

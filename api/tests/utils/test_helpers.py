@@ -311,3 +311,8 @@ def test_redact_value():
     assert helpers.redact_value("foo") == "***"
     assert helpers.redact_value("foobar", 1) == "**obar"
     assert helpers.redact_value("foobarbam") == "*****rbam"
+
+
+@patch("utils.helpers.NotificationsAPIClient")
+def test_notification_client(mock_notifications_api_client):
+    assert helpers.notification_client() == mock_notifications_api_client.return_value

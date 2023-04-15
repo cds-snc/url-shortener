@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block page_content %}
+<h1 class="mt-400 mb-400">{{ i18n.contact_us }}</h1>
+{% if data.success %}
+<div class="mb-500">
+    <p class="success-message" role="alert">{{ i18n[data.success] }} <em>{{ data.user_email }}</em></p>
+    <div class="mt-500">
+        <gcds-button type="link" href="/{{ i18n.lang }}">{{ i18n.home }}</gcds-button>
+        <gcds-button type="link" button-role="secondary" href="/{{ i18n.lang }}/{{ i18n.contact_path }}">{{ i18n.send_another }}</gcds-button>
+    </div>
+</div>
+{% else %}
+
+{% if data.error %}
+<gcds-error-message message-id="error-message" message="{{ i18n[data.error] }}" class="mb-400"></gcds-error-message>
+{% endif %}
+
+<form action="/{{ i18n.lang }}/{{ i18n.contact_path }}" method="post" class="mb-500">
+    <gcds-fieldset fieldset-id="contact_subject" legend="{{ i18n.how_can_we_help }}" class="mb-400">
+        {% set contact_subject_1_checked = 'checked=""' if data.contact_subject == 'Technical support' else '' %}
+        {% set contact_subject_2_checked = 'checked=""' if data.contact_subject == 'Register a new domain' else '' %}
+        {% set contact_subject_3_checked = 'checked=""' if data.contact_subject == 'Give feedback' else '' %}
+        {% set contact_subject_4_checked = 'checked=""' if data.contact_subject == 'Other' else '' %}
+        <gcds-radio radio-id="contact_subject_1" label="{{ i18n.techical_support }}" name="contact_subject" value="Technical support" required {{ contact_subject_1_checked }}></gcds-radio>
+        <gcds-radio radio-id="contact_subject_2" label="{{ i18n.register_new_domain }}" name="contact_subject" value="Register a new domain" required {{ contact_subject_2_checked }}></gcds-radio>
+        <gcds-radio radio-id="contact_subject_3" label="{{ i18n.give_feedback }}" name="contact_subject" value="Give feedback" required {{ contact_subject_3_checked }}></gcds-radio>
+        <gcds-radio radio-id="contact_subject_4" label="{{ i18n.other }}" name="contact_subject" value="Other" required {{ contact_subject_4_checked }}></gcds-radio>
+    </gcds-fieldset>
+
+    <gcds-textarea textarea-id="contact_details" label="{{ i18n.more_detail_please }}" value="{{ data.contact_details }}" required></gcds-textarea>
+
+    <gcds-button type="submit">{{ i18n.send }}</gcds-button>
+</form>
+{% endif %}
+{% endblock %}

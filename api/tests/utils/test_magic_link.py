@@ -66,10 +66,3 @@ def test_validate_magic_link_returns_success_if_magic_link_is_valid(mock_get):
     result = magic_link.validate_magic_link("guid", EMAIL)
     assert result == {"success": "success_email_valid"}
     mock_get.assert_called_once_with("guid")
-
-
-@patch("utils.magic_link.NotificationsAPIClient")
-def test_notification_client(mock_notifications_api_client):
-    assert (
-        magic_link.notification_client() == mock_notifications_api_client.return_value
-    )
