@@ -17,8 +17,8 @@ env:
   TF_VAR_hashing_peppers: ${{ secrets.PROD_HASHING_PEPPERS }}
   TF_VAR_notify_api_key: ${{ secrets.PROD_NOTIFY_API_KEY }}
   TF_VAR_notify_contact_email: ${{ secrets.PROD_NOTIFY_CONTACT_EMAIL }}
-  TF_VAR_sentinel_customer_id: ${{ secrets.SENTINEL_CUSTOMER_ID }}
-  TF_VAR_sentinel_shared_key: ${{ secrets.SENTINEL_SHARED_KEY }}    
+  TF_VAR_sentinel_customer_id: ${{ secrets.LOG_ANALYTICS_WORKSPACE_ID }}
+  TF_VAR_sentinel_shared_key: ${{ secrets.LOG_ANALYTICS_WORKSPACE_KEY }}
 
 permissions:
   id-token: write
