@@ -75,3 +75,9 @@ variable "shortener_path_length" {
   type        = string
   default     = "8"
 }
+
+variable "slack_webhook_url" {
+  description = "The URL of the Slack webhook."
+  type        = string
+  sensitive   = true
+}

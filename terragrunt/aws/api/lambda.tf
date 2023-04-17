@@ -1,5 +1,5 @@
 module "url_shortener_lambda" {
-  source                 = "github.com/cds-snc/terraform-modules?ref=v5.0.2//lambda"
+  source                 = "github.com/cds-snc/terraform-modules?ref=v5.1.5//lambda"
   name                   = "${var.product_name}-api"
   billing_tag_value      = var.billing_code
   ecr_arn                = var.ecr_repository_arn
@@ -7,7 +7,7 @@ module "url_shortener_lambda" {
   image_uri              = "${var.ecr_repository_url}:${var.ecr_tag}"
   memory                 = 3008
   timeout                = 300
-
+  dead_letter_queue_arn  = aws_sns_topic.lambda_dead_letter.arn
 
   vpc = {
     security_group_ids = [var.api_security_group_id]
