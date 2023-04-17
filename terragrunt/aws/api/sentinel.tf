@@ -1,5 +1,6 @@
 locals {
-  api_log_group_arn            = "arn:aws:logs:${var.region}:${var.account_id}:log-group:/aws/lambda/${module.url_shortener_lambda.function_name}"
+  api_log_group_name           = "/aws/lambda/${module.url_shortener_lambda.function_name}"
+  api_log_group_arn            = "arn:aws:logs:${var.region}:${var.account_id}:log-group:${local.api_log_group_name}"
   sentinel_forwarder_layer_arn = "arn:aws:lambda:ca-central-1:283582579564:layer:aws-sentinel-connector-layer:54"
 }
 
@@ -18,7 +19,7 @@ module "sentinel_forwarder" {
 
 resource "aws_cloudwatch_log_subscription_filter" "api_request" {
   name            = "API request"
-  log_group_name  = local.api_log_group_arn
+  log_group_name  = local.api_log_group_name
   filter_pattern  = "?INFO ?WARNING ?ERROR"
   destination_arn = module.sentinel_forwarder.lambda_arn
   distribution    = "Random"
