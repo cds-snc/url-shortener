@@ -15,3 +15,11 @@ module "sentinel_forwarder" {
 
   cloudwatch_log_arns = [local.api_log_group_arn]
 }
+
+resource "aws_cloudwatch_log_subscription_filter" "api_request" {
+  name            = "API request"
+  log_group_name  = local.api_log_group_arn
+  filter_pattern  = "?INFO ?WARNING ?ERROR"
+  destination_arn = module.sentinel_forwarder.lambda_arn
+  distribution    = "Random"
+}
