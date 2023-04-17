@@ -1,0 +1,26 @@
+name: Smoke test staging
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 3 * * *"
+  pull_request:
+    paths:
+      - .github/workflows/smoke_test.yml
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Smoke test
+        run: |
+          response=$(curl -X POST https://url-shortener.cdssandbox.xyz/v1 \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{secrets.STAGING_AUTH_TOKEN_APP}}" \
+            -d "{\"original_url\": \"https://digital.canada.ca?time=`date +%s`\"}" | jq -r '.short_url')
+
+          if curl -s $response | grep -q "https://digital.canada.ca"; then
+              echo "Smoke test passed"
+          else
+              echo "Smoke test failed"
+              exit 1
+          fi
