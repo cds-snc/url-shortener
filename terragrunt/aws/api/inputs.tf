@@ -58,6 +58,18 @@ variable "notify_contact_email" {
   sensitive   = true
 }
 
+variable "sentinel_customer_id" {
+  description = "The Sentinel customer ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "sentinel_shared_key" {
+  description = "The Sentinel shared customer key"
+  type        = string
+  sensitive   = true
+}
+
 variable "shortener_path_length" {
   description = "A variable to set the length of the shortened url"
   type        = string
