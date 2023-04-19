@@ -19,7 +19,7 @@ resource "aws_cloudfront_distribution" "url_shortener_api" {
     custom_header {
       name  = "X-CloudFront-Header"
       value = var.cloudfront_header
-    }    
+    }
   }
 
   default_cache_behavior {

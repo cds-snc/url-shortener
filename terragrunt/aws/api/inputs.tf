@@ -10,6 +10,12 @@ variable "auth_token_notify" {
   sensitive   = true
 }
 
+variable "cloudfront_header" {
+  description = "Header that gets added to all origin requests by CloudFront.  The API validates that this header is present and has the expected value."
+  type        = string
+  sensitive   = true
+}
+
 variable "hashing_peppers" {
   description = "csv of peppers used by hashing algorithm."
   type        = string
