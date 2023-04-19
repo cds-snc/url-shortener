@@ -12,6 +12,7 @@ env:
   TERRAGRUNT_VERSION: 0.40.2
   TF_VAR_auth_token_app: ${{ secrets.PROD_AUTH_TOKEN_APP }}
   TF_VAR_auth_token_notify: ${{ secrets.PROD_AUTH_TOKEN_NOTIFY }}
+  TF_VAR_cloudfront_header: ${{ secrets.PROD_CLOUDFRONT_HEADER }}
   TF_VAR_slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL_PROD }}
   TF_VAR_hashing_peppers: ${{ secrets.PROD_HASHING_PEPPERS }}
   TF_VAR_notify_api_key: ${{ secrets.PROD_NOTIFY_API_KEY }}

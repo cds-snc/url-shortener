@@ -20,6 +20,17 @@ resource "aws_ssm_parameter" "auth_token_notify" {
   }
 }
 
+resource "aws_ssm_parameter" "cloudfront_header" {
+  name  = "cloudfront_header"
+  type  = "SecureString"
+  value = "CLOUDFRONT_HEADER=${var.cloudfront_header}"
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}
+
 resource "aws_ssm_parameter" "hashing_peppers" {
   name  = "hashing_peppers"
   type  = "SecureString"

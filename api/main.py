@@ -1,10 +1,14 @@
-from fastapi import FastAPI
 from os import environ
-from pydantic import BaseSettings
-from routers import shortener, ops
+
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import PlainTextResponse
 from mangum import Mangum
+from pydantic import BaseSettings
+from starlette.middleware.base import BaseHTTPMiddleware
+
+from middleware.cloudfront import check_header
+from routers import shortener, ops
 
 
 class Settings(BaseSettings):
@@ -37,6 +41,9 @@ app = FastAPI(
 # include other routes
 app.include_router(ops.router)
 app.include_router(shortener.router)
+
+# include middleware
+app.add_middleware(BaseHTTPMiddleware, dispatch=check_header)
 
 # include the lambda handler function
 handler = Mangum(app)
