@@ -65,6 +65,13 @@ else
         aws ssm get-parameters \
             --region ca-central-1 \
             --with-decryption \
+            --names cloudfront_header \
+            --query 'Parameters[*].Value' \
+            --output text >> "$TMP_ENV_FILE"            
+
+        aws ssm get-parameters \
+            --region ca-central-1 \
+            --with-decryption \
             --names hashing_peppers \
             --query 'Parameters[*].Value' \
             --output text >> "$TMP_ENV_FILE"
