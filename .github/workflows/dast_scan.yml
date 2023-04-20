@@ -1,0 +1,31 @@
+name: DAST vulnerability scan
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "Docker build and push to staging" 
+    types:
+      - completed
+
+jobs:
+  dast-vulnerability-scan:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - url: 'https://url-shortener.cdssandbox.xyz'
+    
+    steps:
+      - name: Run Dastardly
+        uses: PortSwigger/dastardly-github-action@main
+        with:
+          target-url: '${{ matrix.url }}'
+
+      - name: Publish report
+        if: always()
+        uses: mikepenz/action-junit-report@959aefb7f095e717eb407fe917238d61ca323ff3 # v3.7.6
+        with:
+          report_paths: '**/dastardly-report.xml'
+          require_tests: true
