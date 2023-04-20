@@ -90,3 +90,8 @@ We currently use k6 to run our loadtests. Assuming you are in the devcontainer:
 
 1. Start the dev server locally, ex: `make e2e-dev` in the `./api` folder.
 2. Run `make loadtest` to start the test script in `./api/loadtesting/test.js`
+
+## Security and support
+If you have any questions or concerns about the security of this application, please consult our [Security policy](SECURITY.md).
+
+If you have support related questions for the service, please use the `Contact Us` feature once you have logged in.
