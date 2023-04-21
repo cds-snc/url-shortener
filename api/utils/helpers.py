@@ -30,6 +30,44 @@ def calculate_hash_bytes(length: int):
     return math.ceil(3 * (length / 4))
 
 
+def translate_safe_charset(b64string: str):
+    """
+    translate standard base64 char set so that chars are in a-zA-Z0-9 excluding:
+      bB cC dD gG iI mM nN oO pP tT uU vV 0 1 3
+
+    this follows covid alert char set guidance: AEFHJKLQRSUWXYZ and 2456789
+    deviation from guidance:
+      uU is deliberately excluded
+      lower cases are included
+
+    translation table:
+      bB -> aA
+      cC -> eE
+      dD -> eE
+      gG -> hH
+      iI -> jJ
+      mM -> qQ
+      nN -> qQ
+      oO -> qQ
+      pP -> qQ
+      tT -> sS
+      uU -> wW
+      vV -> wW
+      0  -> 2
+      1  -> 2
+      3  -> 4
+      +  -> A
+      /  -> Z
+
+    """
+    std_base64charset = (
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+    )
+    safe_charset = "AAEEEFHHJJKLQQQQQRSSWWWXYZaaedefhhhjklqqqqqrsswwwxyz2224456789AZ"
+
+    return b64string.translate(b64string.maketrans(std_base64charset, safe_charset))
+
+
 def generate_short_url(
     original_url: str, pepper: str, length: int = 8, hint=None, padding=False
 ):
@@ -54,8 +92,8 @@ def generate_short_url(
     digest = hashlib.shake_256()
     digest.update(data.encode())
 
-    return (
-        base64.b64encode(digest.digest(calculate_hash_bytes(length)), altchars=b"AZ")
+    return translate_safe_charset(
+        base64.b64encode(digest.digest(calculate_hash_bytes(length)))
         .decode()
         .rstrip("=" if not padding else "")
     )
