@@ -79,3 +79,7 @@ jobs:
       - name: Apply backup_plan 
         working-directory: terragrunt/env/staging/backup_plan
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
+      
+      - name: Apply conformance_pack 
+        working-directory: terragrunt/env/staging/conformance_pack
+        run: terragrunt apply --terragrunt-non-interactive -auto-approve

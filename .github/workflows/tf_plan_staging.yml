@@ -44,6 +44,7 @@ jobs:
           - module: cloudfront 
           - module: alarms 
           - module: backup_plan 
+          - module: conformance_pack 
 
     runs-on: ubuntu-latest
     steps:
