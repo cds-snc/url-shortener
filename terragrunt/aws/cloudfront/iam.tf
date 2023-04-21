@@ -1,51 +1,65 @@
-data "aws_iam_policy_document" "cloudfront_policies" {
+resource "aws_iam_role" "waf_log_role" {
+  name               = "${var.product_name}-waf-logs"
+  assume_role_policy = data.aws_iam_policy_document.firehose_assume_role.json
 
-  #checkov:skip=CKV_AWS_111: Resource must be "*"
-  #checkov:skip=CKV_AWS_109: Resource must be "*"
-  # See: https://stackoverflow.com/questions/41991480/the-new-key-policy-will-not-allow-you-to-update-the-key-policy-in-the-future
-  # Resource – (Required) In a key policy, you use "*" for the resource, which means "this CMK."
-  # A key policy applies only to the CMK it is attached to.
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}
+
+resource "aws_iam_policy" "write_waf_logs" {
+  name        = "${var.product_name}-waf-logs"
+  description = "Allow Firehose to write WAF logs to S3"
+  policy      = data.aws_iam_policy_document.write_waf_logs.json
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "write_waf_logs" {
+  role       = aws_iam_role.waf_log_role.name
+  policy_arn = aws_iam_policy.write_waf_logs.arn
+}
+
+data "aws_iam_policy_document" "firehose_assume_role" {
   statement {
-    sid    = "AllowKMSAllAccess"
     effect = "Allow"
 
     principals {
-      identifiers = [
-        "arn:aws:iam::${var.account_id}:root",
-      ]
-      type = "AWS"
+      type        = "Service"
+      identifiers = ["firehose.amazonaws.com"]
     }
 
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+data "aws_iam_policy_document" "write_waf_logs" {
+  statement {
+    effect = "Allow"
+
     actions = [
-      "kms:*",
+      "s3:ListBucket",
     ]
 
     resources = [
-      "*",
+      local.cbs_satellite_bucket_arn
     ]
   }
 
   statement {
-    sid    = "AllowKMSAccessToCloudWatchLogs"
     effect = "Allow"
 
-    principals {
-      identifiers = [
-        "logs.us-east-1.amazonaws.com",
-      ]
-      type = "Service"
-    }
-
     actions = [
-      "kms:Encrypt*",
-      "kms:Decrypt*",
-      "kms:ReEncrypt*",
-      "kms:GenerateDataKey*",
-      "kms:Describe*",
+      "s3:GetObject*",
+      "s3:PutObject*",
     ]
 
     resources = [
-      "*",
+      "${local.cbs_satellite_bucket_arn}/waf_acl_logs/*"
     ]
   }
 }

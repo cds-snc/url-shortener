@@ -27,37 +27,6 @@ resource "aws_wafv2_web_acl" "api_waf" {
   }
 
   rule {
-    name     = "AWSRoute53HealthchecksAllRegions"
-    priority = 3
-
-    action {
-      dynamic "allow" {
-        for_each = var.enable_waf == true ? [""] : []
-        content {
-        }
-      }
-
-      dynamic "count" {
-        for_each = var.enable_waf == false ? [""] : []
-        content {
-        }
-      }
-    }
-
-    statement {
-      ip_set_reference_statement {
-        arn = aws_wafv2_ip_set.aws-route53-healthchecks-all-regions.arn
-      }
-    }
-
-    visibility_config {
-      cloudwatch_metrics_enabled = true
-      metric_name                = "AWSRoute53HealthchecksAllRegions"
-      sampled_requests_enabled   = true
-    }
-  }
-
-  rule {
     name     = "APIInvalidPath"
     priority = 5
 
@@ -330,37 +299,26 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
   }
 }
 
-resource "aws_wafv2_ip_set" "aws-route53-healthchecks-all-regions" {
-  provider           = aws.us-east-1
-  name               = "aws-route53-healthchecks-all-regions"
-  description        = "AWS Route 53 Healthchecks all regions"
-  scope              = "CLOUDFRONT"
-  ip_address_version = "IPV4"
-  addresses = [
-    "15.177.0.0/18",
-    "52.80.197.0/25",
-    "52.80.197.128/25",
-    "52.80.198.0/25",
-    "52.83.34.128/25",
-    "52.83.35.0/25",
-    "52.83.35.128/25",
-    "54.248.220.0/26",
-    "54.250.253.192/26",
-    "54.251.31.128/26",
-    "54.255.254.192/26",
-    "54.252.254.192/26",
-    "54.252.79.128/26",
-    "176.34.159.192/26",
-    "54.228.16.0/26",
-    "177.71.207.128/26",
-    "54.232.40.64/26",
-    "107.23.255.0/26",
-    "54.243.31.192/26",
-    "54.183.255.128/26",
-    "54.241.32.64/26",
-    "54.244.52.192/26",
-    "54.245.168.0/26",
-  ]
+resource "aws_kinesis_firehose_delivery_stream" "api" {
+  provider = aws.us-east-1
+
+  name        = "aws-waf-logs-${var.product_name}"
+  destination = "extended_s3"
+
+  server_side_encryption {
+    enabled = true
+  }
+
+  extended_s3_configuration {
+    role_arn           = aws_iam_role.waf_log_role.arn
+    prefix             = "waf_acl_logs/AWSLogs/${var.account_id}/"
+    bucket_arn         = local.cbs_satellite_bucket_arn
+    compression_format = "GZIP"
+
+    cloudwatch_logging_options {
+      enabled = false
+    }
+  }
 
   tags = {
     CostCentre = var.billing_code
@@ -368,62 +326,8 @@ resource "aws_wafv2_ip_set" "aws-route53-healthchecks-all-regions" {
   }
 }
 
-resource "aws_kms_key" "wafv2-log-group-kms-key" {
-  provider                 = aws.us-east-1
-  description              = "WAF Cloudwatch logs KMS key"
-  key_usage                = "ENCRYPT_DECRYPT"
-  customer_master_key_spec = "SYMMETRIC_DEFAULT"
-  is_enabled               = true
-  enable_key_rotation      = true
-  policy                   = data.aws_iam_policy_document.cloudfront_policies.json
-
-  tags = {
-    CostCentre = var.billing_code
-    Terraform  = true
-  }
-}
-
-resource "aws_cloudwatch_log_group" "wafv2-log-group" {
-  provider          = aws.us-east-1
-  name              = "aws-waf-logs-${var.product_name}"
-  retention_in_days = 90
-  kms_key_id        = aws_kms_key.wafv2-log-group-kms-key.arn
-
-  tags = {
-    CostCentre = var.billing_code
-    Terraform  = true
-  }
-}
-
-resource "aws_wafv2_web_acl_logging_configuration" "waf_logging_configuration" {
+resource "aws_wafv2_web_acl_logging_configuration" "api" {
   provider                = aws.us-east-1
-  log_destination_configs = [aws_cloudwatch_log_group.wafv2-log-group.arn]
+  log_destination_configs = [aws_kinesis_firehose_delivery_stream.api.arn]
   resource_arn            = aws_wafv2_web_acl.api_waf.arn
-  depends_on              = [aws_cloudwatch_log_group.wafv2-log-group]
-}
-
-resource "aws_cloudwatch_log_metric_filter" "wafv2-log-metric-filter" {
-  provider       = aws.us-east-1
-  name           = "aws-waf-logs-${var.product_name}-metric-filter"
-  pattern        = "{ $.httpRequest.uri != \"/version\" }"
-  log_group_name = aws_cloudwatch_log_group.wafv2-log-group.name
-
-  metric_transformation {
-    name      = "RequestCount"
-    namespace = "UserTraffic"
-    value     = "1"
-  }
-}
-
-resource "aws_cloudwatch_log_metric_filter" "wafv2-log-metric-filter-health-check" {
-  provider       = aws.us-east-1
-  name           = "aws-waf-logs-${var.product_name}-metric-filter-health-check"
-  pattern        = "{ $.httpRequest.uri = \"/version\" }"
-  log_group_name = aws_cloudwatch_log_group.wafv2-log-group.name
-
-  metric_transformation {
-    name      = "RequestCount"
-    namespace = "HealthCheckTraffic"
-    value     = "1"
-  }
 }
