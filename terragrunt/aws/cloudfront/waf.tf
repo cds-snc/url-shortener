@@ -329,5 +329,5 @@ resource "aws_kinesis_firehose_delivery_stream" "api" {
 resource "aws_wafv2_web_acl_logging_configuration" "api" {
   provider                = aws.us-east-1
   log_destination_configs = [aws_kinesis_firehose_delivery_stream.api.arn]
-  resource_arn            = aws_wafv2_web_acl.api.arn
+  resource_arn            = aws_wafv2_web_acl.api_waf.arn
 }
