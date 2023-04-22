@@ -58,7 +58,7 @@ resource "aws_cloudwatch_metric_alarm" "url_shoretener_api_warning" {
 
 resource "aws_cloudwatch_log_metric_filter" "url_shortener_api_suspicious" {
   name           = local.suspicious_logged_api
-  pattern        = "?SUSPICIOUS"
+  pattern        = "SUSPICIOUS"
   log_group_name = local.api_cloudwatch_log_group
 
   metric_transformation {
