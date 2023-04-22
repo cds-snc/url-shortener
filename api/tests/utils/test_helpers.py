@@ -7,6 +7,8 @@ import time
 import advocate
 import requests
 import os
+import string
+import random
 
 
 def round_to(n, roundto):
@@ -16,6 +18,18 @@ def round_to(n, roundto):
 def test_calculate_hash_bytes_ok():
     for length, b in [(4, 3), (5, 4), (6, 5), (7, 6), (8, 6), (9, 7), (10, 8)]:
         assert helpers.calculate_hash_bytes(length) == b
+
+
+def test_translate_safe_charset__letters_translated_ok():
+    safe_charset = "AAEEEFHHJJKLQQQQQRSSWWWXYZaaedefhhhjklqqqqqrsswwwxyz2224456789AZ"
+    tr = "".join(random.choice(string.ascii_letters + "+/") for i in range(100))
+    assert all(c in safe_charset for c in helpers.translate_safe_charset(tr))
+
+
+def test_translate_safe_charset__digits_translated_ok():
+    safe_charset = "AAEEEFHHJJKLQQQQQRSSWWWXYZaaedefhhhjklqqqqqrsswwwxyz2224456789AZ"
+    tr = "".join(random.choice(string.digits) for i in range(100))
+    assert all(c in safe_charset for c in helpers.translate_safe_charset(tr))
 
 
 def test_generate_short_url__length_ok():
