@@ -13,7 +13,7 @@ resource "aws_cloudwatch_query_definition" "api_errors" {
   QUERY
 }
 
-resource "aws_cloudwatch_query_definition" "api_warnings" {
+resource "aws_cloudwatch_query_definition" "api_suspicious" {
   name = "Suspicious activity API"
 
   log_group_names = [
