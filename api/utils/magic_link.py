@@ -39,4 +39,5 @@ def validate_magic_link(guid, email):
         delete(guid)
         return {"success": "success_email_valid"}
     else:
+        log.warning("SUSPICIOUS: attempted login with invalid magic link")
         return {"error": "error_email_not_valid"}

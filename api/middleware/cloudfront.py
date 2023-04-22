@@ -6,6 +6,7 @@ directly accessible through the Lambda function URL.
 from os import environ
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from logger import log
 
 CLOUDFRONT_HEADER = environ.get("CLOUDFRONT_HEADER", None)
 
@@ -17,6 +18,7 @@ async def check_header(request: Request, call_next):
     "Check if the CloudFront header is present"
     header = request.headers.get("X-CloudFront-Header", None)
     if CLOUDFRONT_HEADER != "localhost" and CLOUDFRONT_HEADER != header:
+        log.warning("SUSPICIOUS: attempted bypass of CloudFront to access API")
         return JSONResponse(
             {"status": "ERROR", "message": "Direct access to the API is not allowed"},
             status_code=403,

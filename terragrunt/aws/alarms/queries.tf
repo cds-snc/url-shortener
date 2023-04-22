@@ -14,6 +14,21 @@ resource "aws_cloudwatch_query_definition" "api_errors" {
 }
 
 resource "aws_cloudwatch_query_definition" "api_warnings" {
+  name = "Suspicious activity API"
+
+  log_group_names = [
+    local.api_cloudwatch_log_group
+  ]
+
+  query_string = <<-QUERY
+    fields @timestamp, @message, @logStream
+    | filter @message like /SUSPICIOUS/
+    | sort @timestamp desc
+    | limit 20
+  QUERY
+}
+
+resource "aws_cloudwatch_query_definition" "api_warnings" {
   name = "Warnings API"
 
   log_group_names = [

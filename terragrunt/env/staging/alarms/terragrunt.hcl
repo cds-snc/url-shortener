@@ -19,7 +19,8 @@ dependency "api" {
 inputs = {
   function_name                     = dependency.api.outputs.function_name
   api_error_threshold                = "1"
-  api_warning_threshold              = "5"
+  api_suspicious_threshold           = "5"
+  api_warning_threshold              = "10"
 }
 
 include {

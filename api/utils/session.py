@@ -4,6 +4,8 @@ import uuid
 from fastapi import HTTPException, status, Request
 from models.Session import create, read, delete
 
+from logger import log
+
 COOKIE_NAME = "_sessionID"
 
 
@@ -59,6 +61,9 @@ def validate_user_email(request: Request):
         user_email = session_data["session_data"].get("S")
 
     if not user_email:
+        log.warning(
+            "SUSPICIOUS: failed to get user email from session for an authenticated route"
+        )
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
     return user_email
