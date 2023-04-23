@@ -15,6 +15,11 @@ variable "api_error_threshold" {
   type        = string
 }
 
+variable "api_suspicious_threshold" {
+  description = "CloudWatch alarm threshold for the URL Shortener API lambda function SUSPICIOUS logs"
+  type        = string
+}
+
 variable "api_warning_threshold" {
   description = "CloudWatch alarm threshold for the URL Shortener API lambda function WARNING logs"
   type        = string
