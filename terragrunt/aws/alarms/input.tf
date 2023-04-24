@@ -1,8 +1,17 @@
+variable "cloudfront_api_arn" {
+  description = "The ARN of the API's CloudFront distribution."
+  type        = string
+}
+
 variable "function_name" {
   description = "The name of the API function."
   type        = string
 }
 
+variable "hosted_zone_id" {
+  description = "The ID of the hosted zone."
+  type        = string
+}
 
 variable "slack_webhook_url" {
   description = "The URL of the Slack webhook."
