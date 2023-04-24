@@ -3,7 +3,8 @@ resource "aws_shield_protection" "cloudfront_api" {
   resource_arn = var.cloudfront_api_arn
 
   tags = {
-    (var.billing_tag_key) = var.billing_tag_value
+    CostCentre = var.billing_code
+    Terraform  = true
   }
 }
 
@@ -12,6 +13,7 @@ resource "aws_shield_protection" "route53_hosted_zone" {
   resource_arn = "arn:aws:route53:::hostedzone/${var.hosted_zone_id}"
 
   tags = {
-    (var.billing_tag_key) = var.billing_tag_value
+    CostCentre = var.billing_code
+    Terraform  = true
   }
 }
