@@ -32,7 +32,7 @@ dependency "cloudfront" {
   mock_outputs_allowed_terraform_commands = ["init", "fmt", "validate", "plan", "show"]
   mock_outputs_merge_strategy_with_state  = "shallow"
   mock_outputs = {
-    cloudfront_api_arn = "arn:aws:cloudfront::12345678012:distribution/A2Z6W4OZAEKEKP"
+    cloudfront_api_arn = "arn:aws:cloudfront::123456789012:distribution/A2Z6W4OZAEKEKP"
   }
 }
 
