@@ -34,7 +34,9 @@ def validate_auth_token(
     """
     is_valid = isinstance(token, str) and token.strip() and token in VALID_AUTH_TOKENS
     if not is_valid:
-        log.warning("SUSPICIOUS: failed to validate auth token")
+        log.warning(
+            "SUSPICIOUS: unable to validate auth token for an authenticated route"
+        )
         authorization = request.headers.get("Authorization")
         error_attributes = (
             ', error="invalid_token", error_description="The api key is invalid"'

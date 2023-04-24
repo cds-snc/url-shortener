@@ -62,7 +62,7 @@ def validate_user_email(request: Request):
 
     if not user_email:
         log.warning(
-            "SUSPICIOUS: failed to get user email from session for an authenticated route"
+            "SUSPICIOUS: unable to get user email from session for an authenticated route"
         )
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
