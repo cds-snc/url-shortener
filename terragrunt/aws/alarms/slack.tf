@@ -6,6 +6,7 @@ module "cloudwatch_alarms_slack" {
   slack_webhook_url = var.slack_webhook_url
   sns_topic_arns = [
     aws_sns_topic.cloudwatch_warning.arn,
+    aws_sns_topic.cloudwatch_warning_us_east.arn,
   ]
 
   billing_tag_value = var.billing_code
