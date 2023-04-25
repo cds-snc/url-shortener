@@ -33,7 +33,7 @@ jobs:
         run: |
           docker build \
             --build-arg GIT_SHA=$GITHUB_SHA \
-            -t $REGISTRY/api:$GITHUB_SHA
+            -t $REGISTRY/api:$GITHUB_SHA .
 
       - name: Login to ECR
         id: login-ecr
