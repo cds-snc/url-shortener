@@ -145,6 +145,61 @@ resource "aws_wafv2_web_acl" "api_waf" {
   }
 
   rule {
+    name     = "LoginAPIRateLimit"
+    priority = 25
+
+    action {
+      dynamic "block" {
+        for_each = var.enable_waf == true ? [""] : []
+        content {
+          custom_response {
+            custom_response_body_key = "json_request_rate_limited_error_response"
+            response_code            = "429"
+          }
+        }
+      }
+
+      dynamic "count" {
+        for_each = var.enable_waf == false ? [""] : []
+        content {
+        }
+      }
+    }
+
+    statement {
+      rate_based_statement {
+        limit              = 100
+        aggregate_key_type = "IP"
+
+        scope_down_statement {
+          statement {
+            regex_pattern_set_reference_statement {
+              arn = aws_wafv2_regex_pattern_set.login_uri_paths.arn
+              field_to_match {
+                uri_path {}
+              }
+              text_transformation {
+                priority = 1
+                type     = "COMPRESS_WHITE_SPACE"
+              }
+              text_transformation {
+                priority = 2
+                type     = "LOWERCASE"
+              }
+            }
+          }
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "LoginAPIRateLimit"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  rule {
     name     = "AWSManagedRulesCommonRuleSet"
     priority = 30
 
@@ -291,6 +346,28 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
   # allow lang swap
   regular_expression {
     regex_string = "^/lang/(en|fr)/?$"
+  }
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}
+
+resource "aws_wafv2_regex_pattern_set" "login_uri_paths" {
+  provider    = aws.us-east-1
+  name        = "valid-api-paths"
+  description = "Regex to match the login paths of the API"
+  scope       = "CLOUDFRONT"
+
+  # English
+  regular_expression {
+    regex_string = "^/en/(login|magic-link)/?$"
+  }
+
+  # French
+  regular_expression {
+    regex_string = "^/fr/(connexion|lien-magique)/?$"
   }
 
   tags = {
