@@ -172,20 +172,18 @@ resource "aws_wafv2_web_acl" "api_waf" {
         aggregate_key_type = "IP"
 
         scope_down_statement {
-          statement {
-            regex_pattern_set_reference_statement {
-              arn = aws_wafv2_regex_pattern_set.login_uri_paths.arn
-              field_to_match {
-                uri_path {}
-              }
-              text_transformation {
-                priority = 1
-                type     = "COMPRESS_WHITE_SPACE"
-              }
-              text_transformation {
-                priority = 2
-                type     = "LOWERCASE"
-              }
+          regex_pattern_set_reference_statement {
+            arn = aws_wafv2_regex_pattern_set.login_uri_paths.arn
+            field_to_match {
+              uri_path {}
+            }
+            text_transformation {
+              priority = 1
+              type     = "COMPRESS_WHITE_SPACE"
+            }
+            text_transformation {
+              priority = 2
+              type     = "LOWERCASE"
             }
           }
         }
