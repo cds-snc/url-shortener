@@ -354,7 +354,7 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
 
 resource "aws_wafv2_regex_pattern_set" "login_uri_paths" {
   provider    = aws.us-east-1
-  name        = "valid-api-paths"
+  name        = "login-uri-paths"
   description = "Regex to match the login paths of the API"
   scope       = "CLOUDFRONT"
 
