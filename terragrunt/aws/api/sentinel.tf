@@ -1,7 +1,7 @@
 locals {
   api_log_group_name           = "/aws/lambda/${module.url_shortener_lambda.function_name}"
   api_log_group_arn            = "arn:aws:logs:${var.region}:${var.account_id}:log-group:${local.api_log_group_name}"
-  sentinel_forwarder_layer_arn = "arn:aws:lambda:ca-central-1:283582579564:layer:aws-sentinel-connector-layer:54"
+  sentinel_forwarder_layer_arn = "arn:aws:lambda:ca-central-1:283582579564:layer:aws-sentinel-connector-layer:58"
 }
 
 module "sentinel_forwarder" {
