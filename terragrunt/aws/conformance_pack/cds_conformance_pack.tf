@@ -9,11 +9,11 @@ module "conformance_pack" {
     "CloudTrailEncryptionEnabled",          # Default CloudTrail encryption is acceptable
     "LambdaDlqCheck",                       # Lambda API only uses syncronous invocations
     "LambdaFunctionPublicAccessProhibited", # Public access is required for the Lambda API
-    "LambdaInsideVpc",			    # Lambda functions outside VPC are org level functions
+    "LambdaInsideVpc",                      # Lambda functions outside VPC are org level functions
     "S3BucketLoggingEnabled",               # S3 access logging is monitored through CloudTrail events by CCCS
     "S3BucketReplicationEnabled",           # S3 bucket replication is not required
     "S3BucketVersioningEnabled",            # S3 bucket versioning is not required
-    "SnsEncryptedKms",			    # Encryption at rest not required for Alarm topic
+    "SnsEncryptedKms",                      # Encryption at rest not required for Alarm topic
   ]
 
   billing_tag_value = var.billing_code
