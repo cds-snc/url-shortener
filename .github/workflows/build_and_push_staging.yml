@@ -15,10 +15,6 @@ env:
 permissions:
   id-token: write
   contents: write
-  pull-requests: write
-  actions: write
-  checks: write
-  statuses: write
   security-events: write
 
 jobs:
@@ -42,6 +38,7 @@ jobs:
           --build-arg GIT_SHA=$GITHUB_SHA \
           -t $REGISTRY/api:$GITHUB_SHA \
           -t $REGISTRY/api:latest .
+
       - name: Login to ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@2f9f10ea3fa2eed41ac443fee8bfbd059af2d0a4 # v1.6.0
@@ -50,6 +47,7 @@ jobs:
         run: |
           docker push $REGISTRY/api:$GITHUB_SHA
           docker push $REGISTRY/api:latest
+
       - name: Docker generate SBOM
         uses: cds-snc/security-tools/.github/actions/generate-sbom@cfec0943e40dbb78cee115bbbe89dc17f07b7a0f # v2.1.3
         with:

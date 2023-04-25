@@ -1,0 +1,48 @@
+name: Deploy API to production
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/manifests/lambda_api_version
+
+env:
+  AWS_REGION: ca-central-1
+  FUNCTION_NAME: url-shortener-api
+  REGISTRY: 806721586252.dkr.ecr.ca-central-1.amazonaws.com/url-shortener
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-lambda:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@e1e17a757e536f70e52b5a12b2e8d1d1c60e04ef # v2.0.0
+        with:
+          role-to-assume: arn:aws:iam::806721586252:role/url-shortener-apply
+          role-session-name: DeployAPI
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy lambda
+        run: |
+          VERSION="$(cat .github/manifests/lambda_api_version)"
+          aws lambda update-function-code \
+            --function-name ${{ env.FUNCTION_NAME }} \
+            --image-uri $REGISTRY/api:$VERSION  > /dev/null 2>&1
+
+      - name: CloudFront cache invalidate
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.PROD_CLOUDFRONT_DIST_ID }} --paths "/*"
+
+      - name: API healthcheck
+        uses: jtalk/url-health-check-action@61a0e49fff5cde3773b0bbe069d4ebbd04d24f07 # tag=v2
+        with:
+          url: https://o.alpha.canada.ca/healthcheck
+          max-attempts: 3
+          retry-delay: 5s

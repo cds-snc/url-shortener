@@ -1,0 +1,48 @@
+name: Docker build and push to production
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  REGISTRY: 806721586252.dkr.ecr.ca-central-1.amazonaws.com/url-shortener
+  AWS_REGION: ca-central-1  
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@e1e17a757e536f70e52b5a12b2e8d1d1c60e04ef # v2.0.0
+        with:
+          role-to-assume: arn:aws:iam::806721586252:role/url-shortener-apply
+          role-session-name: ECRPush
+          aws-region: ca-central-1
+
+      - name: Build image
+        working-directory: ./api
+        run: |
+          docker build \
+            --build-arg GIT_SHA=$GITHUB_SHA \
+            -t $REGISTRY/api:$GITHUB_SHA
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@2f9f10ea3fa2eed41ac443fee8bfbd059af2d0a4 # v1.6.0
+
+      - name: Push image to ECR
+        run: |
+          docker push $REGISTRY/api:$GITHUB_SHA
+
+      - name: Logout of Amazon ECR
+        if: always()
+        run: docker logout ${{ steps.login-ecr.outputs.registry }}
