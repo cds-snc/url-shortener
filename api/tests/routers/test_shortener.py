@@ -77,6 +77,15 @@ def test_POST_login_returns_200_with_error_message_if_not_in_domain_list(
 
 
 @patch("routers.shortener.create_magic_link")
+def test_POST_login_returns_200_with_error_message_if_invalid_email(
+    mock_create_magic_link, client, login_path
+):
+    response = client.post(login_path, data={"email": "certainly-not-an-email"})
+    assert response.status_code == status.HTTP_200_OK
+    mock_create_magic_link.assert_not_called()
+
+
+@patch("routers.shortener.create_magic_link")
 @patch("routers.shortener.get_language")
 def test_POST_login_returns_200_with_error_message_if_magic_link_fails(
     mock_get_language, mock_create_magic_link, client, login_path, locale

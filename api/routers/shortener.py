@@ -1,6 +1,7 @@
 import os
 import re
 
+from email.utils import parseaddr
 from typing import Annotated, Optional
 from fastapi import (
     APIRouter,
@@ -108,12 +109,15 @@ def login_post(locale: Locale, request: Request, email: Optional[str] = Form("")
     """
     Attempts to generate and send a magic login link to the given email address.
     """
-    domain = email.split("@").pop()
-    result = {}
+    # Check if the email address looks valid
+    email_parsed = parseaddr(email)
+    domain = email.split("@").pop() if "@" in email_parsed[1] else None
+
     if domain in os.getenv("ALLOWED_DOMAINS").split(","):
         result = create_magic_link(email)
     else:
-        result["error"] = "error_invalid_email_address"
+        result = {"error": "error_invalid_email_address"}
+
     data = {
         "error": result.get("error", None),
         "success": result.get("success", None),
