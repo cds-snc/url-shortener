@@ -12,6 +12,7 @@ module "conformance_pack" {
     "S3BucketLoggingEnabled",               # S3 access logging is monitored through CloudTrail events by CCCS
     "S3BucketReplicationEnabled",           # S3 bucket replication is not required
     "S3BucketVersioningEnabled",            # S3 bucket versioning is not required
+    "SnsEncryptedKms",			    # Encryption at rest not required for Alarm topic
   ]
 
   billing_tag_value = var.billing_code
