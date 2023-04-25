@@ -7,7 +7,7 @@ module "url_shortener_vpc" {
   name              = var.product_name
   billing_tag_value = var.billing_code
   high_availability = true
-  enable_flow_log   = true
+  enable_flow_log   = false # These are created separately for CBS
   block_ssh         = true
   block_rdp         = true
 
