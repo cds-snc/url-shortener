@@ -6,6 +6,7 @@ on:
       - "Deploy API to production"
       - "Docker build and push to production"
       - "Docker build and push to staging"
+      - "Smoke test"
       - "Terraform apply production"
       - "Terraform apply staging"
     types:

@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   workflow_run:
     workflows:
-      - "Docker build and push to staging" 
+      - "Docker build and push to staging"
+      - "Deploy API to production"
     types:
       - completed
 
@@ -16,6 +17,7 @@ jobs:
       matrix:
         include:
           - url: 'https://url-shortener.cdssandbox.xyz'
+          - url: 'https://o.alpha.canada.ca'
     
     steps:
       - name: Run Dastardly
