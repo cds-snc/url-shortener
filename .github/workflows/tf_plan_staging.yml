@@ -46,6 +46,7 @@ jobs:
           - module: alarms 
           - module: backup_plan 
           - module: conformance_pack 
+          - module: security_hub 
 
     runs-on: ubuntu-latest
     steps:

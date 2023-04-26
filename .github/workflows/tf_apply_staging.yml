@@ -84,3 +84,7 @@ jobs:
       - name: Apply conformance_pack 
         working-directory: terragrunt/env/staging/conformance_pack
         run: terragrunt apply --terragrunt-non-interactive -auto-approve
+
+      - name: Apply security_hub 
+        working-directory: terragrunt/env/staging/security_hub
+        run: terragrunt apply --terragrunt-non-interactive -auto-approve
