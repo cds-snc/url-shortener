@@ -17,6 +17,7 @@ env:
   TF_VAR_cloudfront_header: ${{ secrets.STAGING_CLOUDFRONT_HEADER }}
   TF_VAR_slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL_STAGING }}
   TF_VAR_hashing_peppers: ${{ secrets.STAGING_HASHING_PEPPERS }}
+  TF_VAR_login_token_salt: ${{ secrets.STAGING_LOGIN_TOKEN_SALT }}
   TF_VAR_notify_api_key: ${{ secrets.STAGING_NOTIFY_API_KEY }}
   TF_VAR_notify_contact_email: ${{ secrets.STAGING_NOTIFY_CONTACT_EMAIL }}
   TF_VAR_sentinel_customer_id: ${{ secrets.LOG_ANALYTICS_WORKSPACE_ID }}

@@ -22,6 +22,12 @@ variable "hashing_peppers" {
   sensitive   = true
 }
 
+variable "login_token_salt" {
+  description = "Salt used to generate the expiring login JWT."
+  type        = string
+  sensitive   = true
+}
+
 variable "url_shortener_table_name" {
   description = "DynamoDB table name for the URL shortener"
   type        = string

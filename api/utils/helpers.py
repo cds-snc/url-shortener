@@ -1,15 +1,18 @@
-import hashlib
-import advocate
-import os
-import requests
-import validators
-import math
 import base64
+import datetime
+import hashlib
+import math
+import os
 
 from urllib.parse import urlparse
+
+import advocate
+import jwt
+import requests
+import validators
+
 from models import ShortUrls
 from logger import log
-
 from notifications_python_client.notifications import NotificationsAPIClient
 
 
@@ -253,6 +256,27 @@ def redact_value(value, min_length=8):
         if value_length >= min_length
         else "*" * value_length
     )
+
+
+def generate_token(salt, valid_minutes=5):
+    """Generate a JWT that is valid for a set period of time"""
+    return jwt.encode(
+        {"exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=valid_minutes)},
+        key=salt,
+        algorithm="HS256",
+    )
+
+
+def validate_token(jwt_token, salt):
+    """Check that a given JWT has not expired"""
+    try:
+        jwt.decode(jwt_token, key=salt, algorithms=["HS256"])
+    except Exception:
+        log.warning(
+            "SUSPICIOUS: JWT token failed to validate with salt %s", redact_value(salt)
+        )
+        return False
+    return True
 
 
 def notification_client():
