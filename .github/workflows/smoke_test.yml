@@ -1,4 +1,4 @@
-name: Smoke test staging
+name: Smoke test
 on:
   workflow_dispatch:
   workflow_run:
