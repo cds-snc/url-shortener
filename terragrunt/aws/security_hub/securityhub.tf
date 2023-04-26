@@ -7,7 +7,7 @@ locals {
     },
     {
       control = "aws-foundational-security-best-practices/v/1.0.0/Lambda.3"
-      reason  = "The lambdas that are not inside VPC are organization/global account  pertaining functions"
+      reason  = "The lambdas that are not inside VPC are organization/global account pertaining functions"
     },
     # S3 
     {
