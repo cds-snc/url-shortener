@@ -14,6 +14,7 @@
     "error_forbidden_resource": "Cette URL pointe vers une ressource interdite",
     "error_filed_to_connect_url": "Échec de la connexion à l'URL spécifiée",
     "error_invalid_email_address": "Le courriel fournie n'est pas une adresse officielle du gouvernement du Canada ou n'a pas été autorisée à accéder à ce service.",
+    "error_login_failed": "Impossible de se connecter. Veuillez réessayer.",
     "error_send_magic_link_email": "Impossible d'envoyer le lien magique à le courriel",
     "error_url_shorten_failed": "Erreur interne : impossibilité de générer l'URL",
     "error_url_shorten_invalid": "Impossible de raccourcir l'URL.",

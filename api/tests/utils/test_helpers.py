@@ -1,14 +1,16 @@
-from utils import helpers
+import datetime
+import os
+import random
+import time
+import string
+
 from unittest.mock import MagicMock, patch
 
-import datetime
-import time
-
 import advocate
+import jwt
 import requests
-import os
-import string
-import random
+
+from utils import helpers
 
 
 def round_to(n, roundto):
@@ -330,3 +332,44 @@ def test_redact_value():
 @patch("utils.helpers.NotificationsAPIClient")
 def test_notification_client(mock_notifications_api_client):
     assert helpers.notification_client() == mock_notifications_api_client.return_value
+
+
+@patch("utils.helpers.datetime")
+@patch("utils.helpers.jwt")
+def test_generate_token(mock_jwt, mock_datetime):
+    mock_datetime.datetime.utcnow.return_value = datetime.datetime(1970, 1, 1, 0, 0, 0)
+    mock_datetime.timedelta.return_value = datetime.timedelta(minutes=1)
+    helpers.generate_token("foo")
+    mock_jwt.encode.assert_called_once_with(
+        {"exp": datetime.datetime(1970, 1, 1, 0, 1)},
+        key="foo",
+        algorithm="HS256",
+    )
+
+
+def test_validate_token_is_valid():
+    token = jwt.encode(
+        {"exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=1)},
+        key="foo",
+        algorithm="HS256",
+    )
+    assert helpers.validate_token(token, "foo") is True
+
+
+def test_validate_token_is_not_valid():
+    token_bad_sig = jwt.encode(
+        {"exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=1)},
+        key="foo",
+        algorithm="HS256",
+    )
+    assert helpers.validate_token(token_bad_sig, "bar") is False
+
+    token_expired = jwt.encode(
+        {"exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=-1)},
+        key="foo",
+        algorithm="HS256",
+    )
+    assert helpers.validate_token(token_expired, "foo") is False
+
+    assert helpers.validate_token("", "foo") is False
+    assert helpers.validate_token(None, "foo") is False

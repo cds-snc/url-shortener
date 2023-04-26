@@ -14,6 +14,7 @@
     "error_forbidden_resource": "That URL points to a forbidden resource",
     "error_filed_to_connect_url": "Failed to connect to the specified URL",
     "error_invalid_email_address": "The email address provided is not an official Government of Canada address or has not been granted access to this service.",
+    "error_login_failed": "Login failed. Please try again.",
     "error_send_magic_link_email": "Could not send magic link to email.",
     "error_url_shorten_failed": "Internal error, could not generate url",
     "error_url_shorten_invalid": "Unable to shorten URL.",

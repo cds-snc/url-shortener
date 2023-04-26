@@ -42,6 +42,17 @@ resource "aws_ssm_parameter" "hashing_peppers" {
   }
 }
 
+resource "aws_ssm_parameter" "login_token_salt" {
+  name  = "login_token_salt"
+  type  = "SecureString"
+  value = "LOGIN_TOKEN_SALT=${var.login_token_salt}"
+
+  tags = {
+    CostCentre = var.billing_code
+    Terraform  = true
+  }
+}
+
 resource "aws_ssm_parameter" "notify_api_key" {
   name  = "notify_api_key"
   type  = "SecureString"

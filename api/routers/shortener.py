@@ -19,7 +19,13 @@ from pydantic import HttpUrl
 
 from utils.auth_token import validate_auth_token
 from utils.contact import send_contact_email
-from utils.helpers import redact_value, resolve_short_url, validate_and_shorten_url
+from utils.helpers import (
+    generate_token,
+    validate_token,
+    redact_value,
+    resolve_short_url,
+    validate_and_shorten_url,
+)
 from utils.i18n import (
     LANGUAGES,
     Locale,
@@ -41,6 +47,7 @@ router = APIRouter()
 
 templates = Jinja2Templates(directory="templates")
 
+LOGIN_TOKEN_SALT = os.environ.get("LOGIN_TOKEN_SALT")
 SHORTENER_PATH_LENGTH = int(os.environ.get("SHORTENER_PATH_LENGTH", "0"))
 SHORTENER_PATH_REGEX = re.compile(f"^[a-zA-Z0-9]{{{SHORTENER_PATH_LENGTH}}}$")
 
@@ -99,7 +106,12 @@ def login(locale: Locale, request: Request):
     Renders the login page.
     """
     return templates.TemplateResponse(
-        "login.html", {"request": request, "data": {}, "i18n": get_language(locale)}
+        "login.html",
+        {
+            "request": request,
+            "data": {"login_token": generate_token(LOGIN_TOKEN_SALT)},
+            "i18n": get_language(locale),
+        },
     )
 
 
@@ -108,7 +120,8 @@ def login(locale: Locale, request: Request):
 def login_post(
     locale: Locale,
     request: Request,
-    email: Optional[str] = Form(""),
+    email: str = Form(""),
+    login_token: str = Form(""),
     cache: Optional[str] = Form(""),
 ):
     """
@@ -117,16 +130,22 @@ def login_post(
     # Check if the email address looks valid
     email_parsed = parseaddr(email)
     domain = email.split("@").pop() if "@" in email_parsed[1] else None
+    is_valid_token = validate_token(login_token, LOGIN_TOKEN_SALT)
 
-    # `cache` is a hidden field used as a honeypot to prevent bots from spamming the login form.
-    if not cache and domain in os.getenv("ALLOWED_DOMAINS").split(","):
-        result = create_magic_link(email)
-    else:
+    # Failed form submission spam checks (bad JWT or honeypot field filled in)
+    if not is_valid_token or cache:
+        result = {"error": "error_login_failed"}
+    # Email is not a safelisted domain
+    elif domain not in os.getenv("ALLOWED_DOMAINS").split(","):
         result = {"error": "error_invalid_email_address"}
+    # All is good, send the magic link
+    else:
+        result = create_magic_link(email)
 
     data = {
         "error": result.get("error", None),
         "success": result.get("success", None),
+        "login_token": generate_token(LOGIN_TOKEN_SALT),
     }
     return templates.TemplateResponse(
         "login.html", {"request": request, "data": data, "i18n": get_language(locale)}
