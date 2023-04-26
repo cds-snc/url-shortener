@@ -272,9 +272,6 @@ def validate_token(jwt_token, salt):
     try:
         jwt.decode(jwt_token, key=salt, algorithms=["HS256"])
     except Exception:
-        log.warning(
-            "SUSPICIOUS: JWT token failed to validate with salt %s", redact_value(salt)
-        )
         return False
     return True
 
