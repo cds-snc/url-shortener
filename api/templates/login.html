@@ -10,6 +10,8 @@
 <form action="/{{ i18n.lang }}/{{ i18n.login_path }}" method="post" class="mb-500">
     <gcds-input label="{{ i18n.email }}" type="email" input-id="email" value="{{ data.email }}"
         error-message="{{ i18n[data.error] }}" required /></gcds-input>
+    
+    <label for="cache" aria-hidden="true" class="d-none" >Cache <input type="radio" name="cache" id="cache" value="1" class="d-none"></label>
     <gcds-button type="submit">{{ i18n.login }}</gcds-button>
 </form>
 {% endif %}
