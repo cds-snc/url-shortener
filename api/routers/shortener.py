@@ -105,7 +105,12 @@ def login(locale: Locale, request: Request):
 
 @router.post("/{locale}/connexion", response_class=HTMLResponse)
 @router.post("/{locale}/login", response_class=HTMLResponse)
-def login_post(locale: Locale, request: Request, email: Optional[str] = Form("")):
+def login_post(
+    locale: Locale,
+    request: Request,
+    email: Optional[str] = Form(""),
+    cache: Optional[str] = Form(""),
+):
     """
     Attempts to generate and send a magic login link to the given email address.
     """
@@ -113,7 +118,8 @@ def login_post(locale: Locale, request: Request, email: Optional[str] = Form("")
     email_parsed = parseaddr(email)
     domain = email.split("@").pop() if "@" in email_parsed[1] else None
 
-    if domain in os.getenv("ALLOWED_DOMAINS").split(","):
+    # `cache` is a hidden field used as a honeypot to prevent bots from spamming the login form.
+    if not cache and domain in os.getenv("ALLOWED_DOMAINS").split(","):
         result = create_magic_link(email)
     else:
         result = {"error": "error_invalid_email_address"}
