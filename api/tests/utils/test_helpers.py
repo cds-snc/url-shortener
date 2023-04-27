@@ -192,13 +192,12 @@ def test_validate_and_shorten_url_returns_error_if_invalid_url():
     helpers.is_valid_url = MagicMock(return_value=False)
     result = helpers.validate_and_shorten_url(original_url, "actor")
     assert result == {
-        "error": "Unable to shorten link. Invalid URL.",
+        "error": "error_url_shorten_url_not_valid",
         "original_url": original_url,
         "status": "ERROR",
     }
 
 
-@patch.dict(os.environ, {"FORMS_URL": "foo"}, clear=True)
 def test_validate_and_shorten_url_returns_error_if_domain_not_allowed():
     original_url = "https://example.com"
     helpers.is_valid_url = MagicMock(return_value=True)
@@ -206,7 +205,6 @@ def test_validate_and_shorten_url_returns_error_if_domain_not_allowed():
     result = helpers.validate_and_shorten_url(original_url, "actor")
     assert result == {
         "error": "error_url_shorten_invalid_host",
-        "form_url": "foo",
         "original_url": original_url,
         "status": "ERROR",
     }
@@ -232,7 +230,7 @@ def test_validate_and_shorten_url_returns_error_if_any_type_of_exception():
     helpers.is_valid_url.side_effect = Exception("FAILED")
     result = helpers.validate_and_shorten_url(original_url, "actor")
     assert result == {
-        "error": "Error in processing shortened url: FAILED",
+        "error": "error_url_shorten_failed",
         "original_url": original_url,
         "status": "ERROR",
     }

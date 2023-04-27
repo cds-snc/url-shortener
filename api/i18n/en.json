@@ -20,6 +20,7 @@
     "error_url_shorten_invalid": "Unable to shorten URL.",
     "error_url_shorten_invalid_host": "The URL is not recognized as an Official Government of Canada Domain.",
     "error_url_shorten_invalid_scheme": "Unable to shorten URL. Invalid Scheme; only https is permitted.",
+    "error_url_shorten_url_not_valid": "The URL is not valid.",
     "gc_link_shortener": "GC URL Shortener",
     "home": "Home",
     "how_can_we_help": "How can we help?",
