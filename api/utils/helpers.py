@@ -244,6 +244,12 @@ def validate_and_shorten_url(original_url, created_by):
             "status": "ERROR",
         }
 
+    # Log the result of the operation without the status.
+    # This is to avoid triggering ERROR CloudWatch alarms.
+    data_no_status = data.copy()
+    data_no_status.pop("status", None)
+    log.info("Shorten URL result: %s", data_no_status)
+
     return data
 
 

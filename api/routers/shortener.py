@@ -17,6 +17,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import HttpUrl
 
+from logger import log
 from utils.auth_token import validate_auth_token
 from utils.contact import send_contact_email
 from utils.helpers import (
@@ -147,6 +148,8 @@ def login_post(
         "success": result.get("success", None),
         "login_token": generate_token(LOGIN_TOKEN_SALT),
     }
+
+    log.info("Login result for email '%s': %s", email, result)
     return templates.TemplateResponse(
         "login.html", {"request": request, "data": data, "i18n": get_language(locale)}
     )
@@ -201,7 +204,9 @@ def create_shortened_url_api(
     """
     API endpoint for generating a shortened URL.  It requires a valid auth token.
     """
-    resp = validate_and_shorten_url(original_url, redact_value(auth_token))
+    redacted_token = redact_value(auth_token)
+    log.info("API shorten URL with auth token '%s'", redacted_token)
+    resp = validate_and_shorten_url(original_url, redacted_token)
     if resp["status"] == "ERROR":
         raise HTTPException(status_code=400, detail=resp)
     return resp
