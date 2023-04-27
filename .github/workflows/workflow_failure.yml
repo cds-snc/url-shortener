@@ -9,6 +9,7 @@ on:
       - "Smoke test"
       - "Terraform apply production"
       - "Terraform apply staging"
+      - "Terraform drift check"
     types:
       - completed
 
