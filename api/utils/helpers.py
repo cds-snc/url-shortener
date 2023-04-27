@@ -142,6 +142,11 @@ def resolve_short_url(short_url):
     if result is None:
         log.warning(f"Could not resolve url: {short_url}")
         return False
+    elif not is_domain_allowed(result["original_url"]["S"]):
+        log.warning(
+            f"SUSPICIOUS: found shortened URL '{short_url}' that is not allowed for '{result['original_url']['S']}'"
+        )
+        return False
     return result
 
 
