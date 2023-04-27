@@ -89,7 +89,7 @@ resource "aws_cloudfront_response_headers_policy" "security_headers_api" {
       override = true
     }
     content_security_policy {
-      content_security_policy = "report-uri https://csp-report-to.security.cdssandbox.xyz/report; default-src 'none'; script-src 'self' 'unsafe-inline' https://unpkg.com/@cdssnc/ https://${var.domain}/static/js/ https://kit.fontawesome.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://kit.fontawesome.com https://ka-f.fontawesome.com https://unpkg.com/font-awesome@4.7.0/; connect-src 'self' https://ka-f.fontawesome.com; img-src 'self' https://${var.domain}/static/img/ data: w3.org/svg/2000; style-src 'self' 'unsafe-inline' https://${var.domain}/static/css/ https://unpkg.com/@cdssnc/ https://unpkg.com/font-awesome/ https://kit.fontawesome.com https://fonts.googleapis.com; frame-ancestors 'self'; form-action 'self';"
+      content_security_policy = "report-uri https://csp-report-to.security.cdssandbox.xyz/report; default-src 'none'; script-src 'self' 'unsafe-inline' https://unpkg.com/@cdssnc/ https://${var.domain}/static/js/ https://kit.fontawesome.com *.token.awswaf.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://kit.fontawesome.com https://ka-f.fontawesome.com https://unpkg.com/font-awesome@4.7.0/; connect-src 'self' https://ka-f.fontawesome.com *.token.awswaf.com; img-src 'self' https://${var.domain}/static/img/ data: w3.org/svg/2000; style-src 'self' 'unsafe-inline' https://${var.domain}/static/css/ https://unpkg.com/@cdssnc/ https://unpkg.com/font-awesome/ https://kit.fontawesome.com https://fonts.googleapis.com; frame-ancestors 'self'; form-action 'self';"
       override                = false
     }
     referrer_policy {
