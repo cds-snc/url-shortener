@@ -70,7 +70,7 @@ jobs:
           CLOUDFRONT_HEADER: "localhost"
           DYNAMODB_HOST: "http://localhost:9000"
           ENV: "ci"
-          LOGIN_TOKEN_SALT: "jesuisunsel"
+          LOGIN_TOKEN_SALT: "je_suis_un_sel"
           NOTIFY_API_KEY: ""
           NOTIFY_CONTACT_EMAIL: ""
           NOTIFY_CONTACT_TEMPLATE: ""          

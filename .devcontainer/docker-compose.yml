@@ -28,7 +28,7 @@ services:
       DOCS_URL: '/docs'
       DYNAMO_ENDPOINT: 'http://db:8000'
       DYNAMODB_HOST: 'http://db:8000'
-      LOGIN_TOKEN_SALT: 'jesuisunsel'
+      LOGIN_TOKEN_SALT: 'je_suis_un_sel'
       SHORTENER_DOMAIN: 'http://127.0.0.1:8000/'
       SHORTENER_PATH_LENGTH: '8'
       PEPPERS: 'ejp8zh0QHl1BKPMvH4d9zFvS1rkbnYz9uqaEae9uwmY=,fwNAF1u7dA3j0YtsOoHtE0wIzCisSyzqTOhI4TkG5dA=,W2ktstHWiB1+UJLku8Mi0f1Su5RhX+p7hx7UxsrNVOE=,QIPgZU1zZ/tdLAigsLPl4j1zQ8Yc2rUMrVrSMTnZwlM=,sUUmk4x4tgVvfAxM9cu/ZCeIL88SJefJYFkZcHERYEY='
