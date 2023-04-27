@@ -10,6 +10,7 @@ SHORTENER_DOMAIN = os.environ.get("SHORTENER_DOMAIN", None)
 
 
 def create_magic_link(email):
+    result = {}
     if not check_if_exists(email):
         [guid, email] = create(email)
         if guid:
@@ -23,21 +24,30 @@ def create_magic_link(email):
                         "magic_link_fr": f"{SHORTENER_DOMAIN}fr/lien-magique?guid={guid}&email={email}",
                     },
                 )
+                result = {"success": "success_magic_link_sent_email"}
             except Exception as error:
                 log.error(error)
-                return {"error": "error_send_magic_link_email"}
-            return {"success": "success_magic_link_sent_email"}
+                result = {"error": "error_send_magic_link_email"}
         else:
-            return {"error": "error_create_magic_link"}
+            result = {"error": "error_create_magic_link"}
     else:
-        return {"error": "error_email_has_magic_link"}
+        result = {"error": "error_email_has_magic_link"}
+    log.info("Magic link create for email '%s': %s", email, result)
+    return result
 
 
 def validate_magic_link(guid, email):
     link_email = get(guid)
     if email == link_email:
         delete(guid)
-        return {"success": "success_email_valid"}
+        result = {"success": "success_email_valid"}
     else:
         log.warning("SUSPICIOUS: attempted login with invalid magic link")
-        return {"error": "error_email_not_valid"}
+        result = {"error": "error_email_not_valid"}
+    log.info(
+        "Magic link validate for guid '%s' and email '%s': %s",
+        guid,
+        email,
+        result,
+    )
+    return result

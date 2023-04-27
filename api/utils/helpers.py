@@ -194,7 +194,7 @@ def validate_and_shorten_url(original_url, created_by):
         # Check to see if the url confronts to a valid format. If not then display error.
         if not is_valid_url(original_url):
             data = {
-                "error": "Unable to shorten link. Invalid URL.",
+                "error": "error_url_shorten_url_not_valid",
                 "original_url": original_url,
                 "status": "ERROR",
             }
@@ -205,12 +205,10 @@ def validate_and_shorten_url(original_url, created_by):
                 "original_url": original_url,
                 "status": "ERROR",
             }
-        # Else if the domain is not allowed, display error and link to GC Forms page
+        # Else if the domain is not allowed, display error
         elif not is_domain_allowed(original_url):
-            forms_url = os.getenv("FORMS_URL")
             data = {
                 "error": "error_url_shorten_invalid_host",
-                "form_url": forms_url,
                 "original_url": original_url,
                 "status": "ERROR",
             }
@@ -238,11 +236,18 @@ def validate_and_shorten_url(original_url, created_by):
             }
 
     except Exception as err:
+        log.error("Could not shorten URL '%s': %s", original_url, err)
         data = {
-            "error": f"Error in processing shortened url: {err}",
+            "error": "error_url_shorten_failed",
             "original_url": original_url,
             "status": "ERROR",
         }
+
+    # Log the result of the operation without the status.
+    # This is to avoid triggering ERROR CloudWatch alarms.
+    data_no_status = data.copy()
+    data_no_status.pop("status", None)
+    log.info("Shorten URL result: %s", data_no_status)
 
     return data
 
