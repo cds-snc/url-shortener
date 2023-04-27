@@ -1,7 +1,6 @@
 import datetime
 import os
 import random
-import time
 import string
 
 from unittest.mock import MagicMock, patch
@@ -165,17 +164,33 @@ def test_is_valid_url_returns_false_if_throws_an_exception(mock_validators):
 
 
 @patch("utils.helpers.ShortUrls")
+@patch.dict(os.environ, {"ALLOWED_DOMAINS": "foo_bar.com"}, clear=True)
 def test_resolve_short_url_returns_original_url(mock_short_urls_model):
     short_url = "XjbS35ah"
-    mock_short_urls_model.get_short_url.return_value = "https://example.com"
+    mock_short_urls_model.get_short_url.return_value = {
+        "original_url": {"S": "https://foo_bar.com"},
+    }
     result = helpers.resolve_short_url(short_url)
-    assert result == "https://example.com"
+    assert result == {
+        "original_url": {"S": "https://foo_bar.com"},
+    }
 
 
 @patch("utils.helpers.ShortUrls")
 def test_resolve_short_url_returns_false_if_it_does_not_exist(mock_short_urls_model):
     short_url = "XjbS35ah"
     mock_short_urls_model.get_short_url.return_value = None
+    result = helpers.resolve_short_url(short_url)
+    assert result is False
+
+
+@patch("utils.helpers.ShortUrls")
+@patch.dict(os.environ, {"ALLOWED_DOMAINS": "bam_baz.com"}, clear=True)
+def test_resolve_short_url_returns_false_if_it_is_not_allowed(mock_short_urls_model):
+    short_url = "XjbS35ah"
+    mock_short_urls_model.get_short_url.return_value = {
+        "original_url": {"S": "https://foo_bar.com"},
+    }
     result = helpers.resolve_short_url(short_url)
     assert result is False
 
@@ -274,44 +289,6 @@ def test_validate_and_shorten_url_returns_success_with_domain():
     helpers.return_short_url.assert_called_once_with(
         original_url, peppers, "anotheractor"
     )
-
-
-@patch("utils.helpers.ShortUrls")
-def test_resolve_short_url_returns_original_url_with_valid_ttl(mock_short_urls_model):
-    # get epoch time for 2 years in the future
-    future_epoch_time = int(
-        time.mktime(
-            (datetime.datetime.today() + datetime.timedelta(days=(365 * 2))).timetuple()
-        )
-    )
-    mock_short_urls_model.create_short_url = MagicMock(
-        ttl=str(future_epoch_time),
-        original_url="https://foo_bar.com",
-        short_url="foo_bar",
-        click_count=0,
-        active=True,
-        created="2023-03-14 20:58:47.603829",
-    )
-    mock_short_urls_model.get_short_url.return_value = "https://foo_bar.com"
-    result = helpers.resolve_short_url("foo_bar")
-    assert result == "https://foo_bar.com"
-
-
-@patch("utils.helpers.ShortUrls")
-def test_resolve_short_url_does_not_return_original_url_expired_ttl(
-    mock_short_urls_model,
-):
-    mock_short_urls_model.create_short_url = MagicMock(
-        ttl="100",
-        original_url="https://foo_bar.com",
-        short_url="foo_bar",
-        click_count=0,
-        active=True,
-        created="2023-03-14 20:58:47.603829",
-    )
-    mock_short_urls_model.get_short_url.return_value = None
-    result = helpers.resolve_short_url("foo_bar")
-    assert result is False
 
 
 def test_is_valid_scheme_https():
