@@ -293,6 +293,48 @@ resource "aws_wafv2_web_acl" "api_waf" {
     }
   }
 
+  rule {
+    name     = "LoginChallenge"
+    priority = 60
+
+    action {
+      dynamic "challenge" {
+        for_each = var.enable_waf == true ? [""] : []
+        content {
+        }
+      }
+
+      dynamic "count" {
+        for_each = var.enable_waf == false ? [""] : []
+        content {
+        }
+      }
+    }
+
+    statement {
+      regex_pattern_set_reference_statement {
+        arn = aws_wafv2_regex_pattern_set.login_uri_paths.arn
+        field_to_match {
+          uri_path {}
+        }
+        text_transformation {
+          priority = 1
+          type     = "COMPRESS_WHITE_SPACE"
+        }
+        text_transformation {
+          priority = 2
+          type     = "LOWERCASE"
+        }
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "LoginChallenge"
+      sampled_requests_enabled   = true
+    }
+  }
+
   visibility_config {
     cloudwatch_metrics_enabled = true
     metric_name                = "api"
