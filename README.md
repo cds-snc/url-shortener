@@ -20,8 +20,8 @@ SHAKE is an extendable-output functions (XOFs), i.e. it can produce a variable l
 The default output character set is hex digits: `a-z0-9`
 
 See also:
-- https://github.com/cds-snc/url-shortener/issues/87
-- https://medium.com/asecuritysite-when-bob-met-alice/shake-stirs-up-crypto-7d87f3cf39f4
+- [Replace base64 hashing with NanoIDs ticket](https://github.com/cds-snc/url-shortener/issues/87)
+- [Article by Prof Bill Buchanan: SHAKE Stirs-up Cryto(graphy)](https://medium.com/asecuritysite-when-bob-met-alice/shake-stirs-up-crypto-7d87f3cf39f4)
 
 ### Clone the repo:
 Clone the repo by typing
