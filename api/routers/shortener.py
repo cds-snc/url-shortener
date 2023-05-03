@@ -35,7 +35,11 @@ from utils.i18n import (
     get_locale_from_path,
     get_locale_order,
 )
-from utils.magic_link import create_magic_link, validate_magic_link
+from utils.magic_link import (
+    create_magic_link,
+    is_allowed_email_domain,
+    validate_magic_link,
+)
 from utils.session import (
     delete_cookie,
     set_cookie,
@@ -129,6 +133,7 @@ def login_post(
     Attempts to generate and send a magic login link to the given email address.
     """
     # Check if the email address looks valid
+    allowed_domains = os.getenv("ALLOWED_DOMAINS").split(",")
     email_parsed = parseaddr(email)
     domain = email.split("@").pop() if "@" in email_parsed[1] else None
     is_valid_token = validate_token(login_token, LOGIN_TOKEN_SALT)
@@ -137,7 +142,7 @@ def login_post(
     if not is_valid_token or cache:
         result = {"error": "error_login_failed"}
     # Email is not a safelisted domain
-    elif domain not in os.getenv("ALLOWED_DOMAINS").split(","):
+    elif not is_allowed_email_domain(allowed_domains, domain):
         result = {"error": "error_invalid_email_address"}
     # All is good, send the magic link
     else:

@@ -53,6 +53,21 @@ def test_create_magic_link_returns_error_if_notify_throws_an_error(
     assert result == {"error": "error_send_magic_link_email"}
 
 
+def test_is_allowed_email_domain_returns_false_if_domain_is_not_allowed():
+    result = magic_link.is_allowed_email_domain(["canada.ca", "gc.ca"], "aircanada.ca")
+    assert result is False
+
+
+def test_is_allowed_email_domain_returns_true_if_domain_is_allowed():
+    result = magic_link.is_allowed_email_domain(["canada.ca", "gc.ca"], "foo.gc.ca")
+    assert result is True
+
+
+def test_is_allowed_email_domain_returns_false_if_domain_is_None():
+    result = magic_link.is_allowed_email_domain(["canada.ca", "gc.ca"], None)
+    assert result is False
+
+
 @patch("utils.magic_link.get")
 def test_validate_magic_link_returns_error_if_magic_link_is_not_valid(mock_get):
     mock_get.return_value = None
