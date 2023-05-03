@@ -67,10 +67,10 @@ jobs:
             aws lambda wait function-updated --function-name ${{ env.FUNCTION_PREFIX }}-api
             echo "VERSION=$(aws lambda publish-version --function-name ${{ env.FUNCTION_PREFIX }}-api | jq -r '.Version')" >> $GITHUB_ENV
 
-      - name: Shift lambda traffic over 10 minutes
+      - name: Shift lambda traffic over 4 minutes
         uses: cds-snc/aws-lambda-traffic-shifting-action@0.4
         env:
-            ALIAS: ${{ env.FUNCTION_PREFIX }}-api
+            ALIAS: latest
             FUNCTION_NAME: ${{ env.FUNCTION_PREFIX }}-api
             GREEN_VERSION: ${{ env.VERSION }}
             ROLLOUT_STEPS: 4

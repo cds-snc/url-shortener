@@ -27,7 +27,22 @@ module "url_shortener_lambda" {
   ]
 }
 
+resource "aws_lambda_alias" "url_shortener_lambda_alias" {
+  name             = "latest"
+  description      = "The latest version of the lambda function"
+  function_name    = module.url_shortener_lambda.function_name
+  function_version = "1"
+
+  lifecycle {
+    ignore_changes = [
+      function_version,
+      routing_config
+    ]
+  }
+}
+
 resource "aws_lambda_function_url" "url_shortener_url" {
   function_name      = module.url_shortener_lambda.function_name
+  qualifier          = aws_lambda_alias.url_shortener_lambda_alias.name
   authorization_type = "NONE"
 }
