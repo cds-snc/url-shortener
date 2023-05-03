@@ -37,6 +37,20 @@ jobs:
             --function-name ${{ env.FUNCTION_NAME }} \
             --image-uri $REGISTRY/api:$VERSION  > /dev/null 2>&1
 
+      - name: Publish new lambda version
+        run: |
+            aws lambda wait function-updated --function-name ${{ env.FUNCTION_NAME }}
+            echo "VERSION=$(aws lambda publish-version --function-name ${{ env.FUNCTION_NAME }} | jq -r '.Version')" >> $GITHUB_ENV
+
+      - name: Shift lambda traffic over 4 minutes
+        uses: cds-snc/aws-lambda-traffic-shifting-action@0.4
+        env:
+            ALIAS: latest
+            FUNCTION_NAME: ${{ env.FUNCTION_NAME }}
+            GREEN_VERSION: ${{ env.VERSION }}
+            ROLLOUT_STEPS: 4
+            ROLLOUT_TIME_IN_MINUTES: 4
+
       - name: CloudFront cache invalidate
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.PROD_CLOUDFRONT_DIST_ID }} --paths "/*"
 
