@@ -36,6 +36,18 @@ def create_magic_link(email):
     return result
 
 
+def is_allowed_email_domain(domain_list, domain):
+    """
+    Returns True if the given domain is a subdomain of any of the domains in the list.
+    """
+    if domain is None:
+        return False
+    for d in domain_list:
+        if domain.endswith("." + d) or domain == d:
+            return True
+    return False
+
+
 def validate_magic_link(guid, email):
     link_email = get(guid)
     if email == link_email:
