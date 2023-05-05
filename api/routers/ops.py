@@ -2,6 +2,7 @@
 API routes for for operational and status requests
 """
 from os import environ
+import traceback
 from fastapi import APIRouter
 import boto3
 from logger import log
@@ -40,7 +41,7 @@ def is_db_up():
         table_name = environ.get("TABLE_NAME", "url_shortener")
         client.describe_table(TableName=table_name)
     # Catch all errors, log the error and return False
-    except Exception as err:
-        log.error(f"Error in healthcheck: {err}")
+    except Exception:
+        log.error(f"Error in healthcheck: {traceback.format_exc()}")
         return False
     return True

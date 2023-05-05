@@ -1,4 +1,5 @@
 import os
+import traceback
 
 from models.MagicLinks import create, delete, get, check_if_exists
 from logger import log
@@ -25,8 +26,8 @@ def create_magic_link(email):
                     },
                 )
                 result = {"success": "success_magic_link_sent_email"}
-            except Exception as error:
-                log.error(error)
+            except Exception:
+                log.error("Failed to send magic link: %s", traceback.format_exc())
                 result = {"error": "error_send_magic_link_email"}
         else:
             result = {"error": "error_create_magic_link"}
