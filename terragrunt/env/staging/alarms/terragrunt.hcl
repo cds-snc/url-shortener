@@ -37,12 +37,13 @@ dependency "cloudfront" {
 }
 
 inputs = {
-  api_error_threshold      = "1"
-  api_suspicious_threshold = "5"
-  api_warning_threshold    = "10"
-  cloudfront_api_arn       = dependency.cloudfront.outputs.cloudfront_api_arn
-  function_name            = dependency.api.outputs.function_name
-  hosted_zone_id           = dependency.hosted_zone.outputs.hosted_zone_id
+  api_error_threshold                = "1"
+  api_high_magic_link_sent_threshold = "10"
+  api_suspicious_threshold           = "5"
+  api_warning_threshold              = "10"
+  cloudfront_api_arn                 = dependency.cloudfront.outputs.cloudfront_api_arn
+  function_name                      = dependency.api.outputs.function_name
+  hosted_zone_id                     = dependency.hosted_zone.outputs.hosted_zone_id
 }
 
 include {

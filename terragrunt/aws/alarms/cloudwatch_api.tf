@@ -84,3 +84,32 @@ resource "aws_cloudwatch_metric_alarm" "url_shoretener_api_suspicious" {
   alarm_actions = [aws_sns_topic.cloudwatch_warning.arn]
   ok_actions    = [aws_sns_topic.cloudwatch_warning.arn]
 }
+
+resource "aws_cloudwatch_log_metric_filter" "url_shortener_api_magic_link_sent" {
+  name           = local.magic_link_sent
+  pattern        = "success_magic_link_sent_email"
+  log_group_name = local.api_cloudwatch_log_group
+
+  metric_transformation {
+    name      = local.magic_link_sent
+    namespace = local.error_namespace
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "url_shoretener_api_high_magic_link_sent" {
+  alarm_name          = "URL Shortener API high magic link sent"
+  alarm_description   = "A high number of magic link emails sent over 5 minutes"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+
+  metric_name        = aws_cloudwatch_log_metric_filter.url_shortener_api_magic_link_sent.metric_transformation[0].name
+  namespace          = aws_cloudwatch_log_metric_filter.url_shortener_api_magic_link_sent.metric_transformation[0].namespace
+  period             = "300"
+  evaluation_periods = "1"
+  statistic          = "Sum"
+  threshold          = var.api_high_magic_link_sent_threshold
+  treat_missing_data = "notBreaching"
+
+  alarm_actions = [aws_sns_topic.cloudwatch_warning.arn]
+  ok_actions    = [aws_sns_topic.cloudwatch_warning.arn]
+}
