@@ -24,6 +24,11 @@ variable "api_error_threshold" {
   type        = string
 }
 
+variable "api_high_magic_link_sent_threshold" {
+  description = "CloudWatch alarm threshold for the URL Shortener API lambda function magic link emails sent in a 5 minute period"
+  type        = string
+}
+
 variable "api_suspicious_threshold" {
   description = "CloudWatch alarm threshold for the URL Shortener API lambda function SUSPICIOUS logs"
   type        = string
