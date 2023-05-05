@@ -56,7 +56,7 @@ resource "aws_ssm_parameter" "login_token_salt" {
 resource "aws_ssm_parameter" "notify_api_key" {
   name  = "notify_api_key"
   type  = "SecureString"
-  value = "NOTIFY_API_KEY=${var.notify_api_key}"
+  value = "NOTIFY_API_KEY=${var.notify_api_key}" # Last rotated on 2023-05-05
 
   tags = {
     CostCentre = var.billing_code
