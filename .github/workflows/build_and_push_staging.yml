@@ -68,7 +68,7 @@ jobs:
             echo "VERSION=$(aws lambda publish-version --function-name ${{ env.FUNCTION_PREFIX }}-api | jq -r '.Version')" >> $GITHUB_ENV
 
       - name: Shift lambda traffic over 4 minutes
-        uses: cds-snc/aws-lambda-traffic-shifting-action@0.4
+        uses: cds-snc/aws-lambda-traffic-shifting-action@6b134de1b3404f6c12331f5cf25904671228a960 # 0.4
         env:
             ALIAS: latest
             FUNCTION_NAME: ${{ env.FUNCTION_PREFIX }}-api
