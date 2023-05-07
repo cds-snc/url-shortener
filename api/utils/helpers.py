@@ -2,6 +2,7 @@ import base64
 import datetime
 import hashlib
 import math
+import time
 import os
 
 from urllib.parse import urlparse
@@ -293,3 +294,5 @@ def notification_client():
     return NotificationsAPIClient(
         NOTIFY_API_KEY, base_url="https://api.notification.canada.ca"
     )
+
+

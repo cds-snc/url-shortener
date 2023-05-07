@@ -4,6 +4,7 @@ import datetime
 import time
 import os
 
+
 client = boto3.client(
     "dynamodb",
     endpoint_url=(os.environ.get("DYNAMODB_HOST", None)),
@@ -28,9 +29,8 @@ def create_short_url(original_url, short_url, created_by):
 
     returns: shortened url
     """
-    # Expire an url after 2 years in epoch time
-    two_years_time = datetime.datetime.today() + datetime.timedelta(days=(365 * 2))
-    expiry_date = int(time.mktime(two_years_time.timetuple()))
+    # Expire an url after 2 years in epoch time since its creation or last accessed date
+    expiry_date = get_two_year_future_time()
     try:
         response = client.put_item(
             TableName=table,
@@ -41,6 +41,9 @@ def create_short_url(original_url, short_url, created_by):
                 "active": {"BOOL": True},
                 "created_at": {"N": str(int(datetime.datetime.utcnow().timestamp()))},
                 "created_by": {"S": created_by},
+                "last_access_at": {
+                    "N": str(int(datetime.datetime.utcnow().timestamp()))
+                },
                 "ttl": {"N": str(expiry_date)},
             },
             ConditionExpression="attribute_not_exists(key_id)",
@@ -70,6 +73,7 @@ def get_short_url(short_url):
     # AWS does not delete expired items immediately (typically deletes within 48 hours)
     # so we still need to sure we don't return any expired urls
     epoch_time_now = int(time.time())
+    print("epoch_time_now", epoch_time_now)
     response = client.query(
         TableName=table,
         KeyConditionExpression="#key_id = :key_id",
@@ -87,13 +91,29 @@ def get_short_url(short_url):
         and "Items" in response
         and len(response["Items"]) > 0
     ):
-        # Update the URL's click count
+        # Update the URL's click count, last accessed date and new expiry date
+        print("Get two year future time: ", get_two_year_future_time())
         client.update_item(
             TableName=table,
             Key={"key_id": {"S": f"{MODEL_PREFIX}/{short_url}"}},
-            UpdateExpression="SET click_count = click_count + :val",
-            ExpressionAttributeValues={":val": {"N": "1"}},
+            UpdateExpression="SET click_count = click_count + :val, last_access_date = :current_date, #ttl = :expiry_date",
+            ExpressionAttributeValues={
+                ":val": {"N": "1"},
+                ":current_date": {
+                    "N": str(int(datetime.datetime.utcnow().timestamp()))
+                },
+                ":expiry_date": {"N": str(get_two_year_future_time())},
+            },
+            ExpressionAttributeNames={
+                "#ttl": "ttl"
+  }
         )
         return response["Items"][0]
     else:
         return None
+
+    
+def get_two_year_future_time():
+    """Get the current time plus two years in epoch time"""
+    two_years_time = datetime.datetime.today() + datetime.timedelta(days=(365 * 2))
+    return int(time.mktime(two_years_time.timetuple()))

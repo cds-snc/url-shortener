@@ -27,6 +27,22 @@ class TestCreateShortUrl(TestCase):
         short_url = ShortUrls.get_short_url("test")
         assert short_url["click_count"]["N"] == "2"
 
+    def test_update_last_access_at(self):
+        ShortUrls.create_short_url("https://www.canada.ca", "test", "actor")
+        short_url = ShortUrls.get_short_url("test")
+        assert short_url["last_access_at"]["N"] == short_url["created_at"]["N"]
+        time.sleep(5)
+        short_url = ShortUrls.get_short_url("test")
+        assert short_url["last_access_at"]["N"] != short_url["created_at"]["N"]
+
+    def test_ttl_time(self):
+        ShortUrls.create_short_url("https://www.canada.ca", "test", "actor")
+        short_url = ShortUrls.get_short_url("test")
+        two_years_time = str(ShortUrls.get_two_year_future_time())
+        assert short_url["ttl"]["N"] == two_years_time 
+        short_url = ShortUrls.get_short_url("test")
+        assert short_url["ttl"]["N"] != two_years_time
+
     def test_ttl_is_valid(self):
         short_url = ShortUrls.get_short_url("test")
         epoch_time_now = int(time.time())
