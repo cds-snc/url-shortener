@@ -163,7 +163,7 @@ def return_short_url(original_url, peppers, created_by):
         log.warning(f"Unacceptable address: {original_url}")
         return {"error": "error_forbidden_resource"}
     except requests.RequestException:
-        log.error(f"Failed to connect to {original_url}: {traceback.format_exc()}")
+        log.warning(f"Failed to connect to {original_url}: {traceback.format_exc()}")
         return {"error": "error_filed_to_connect_url"}
 
     peppers_iter = iter(peppers)
