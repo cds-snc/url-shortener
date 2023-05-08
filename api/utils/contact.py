@@ -1,4 +1,5 @@
 import os
+import traceback
 from logger import log
 from utils.helpers import notification_client
 
@@ -25,7 +26,7 @@ def send_contact_email(
                 "contact_details": contact_details[:10000],
             },
         )
-    except Exception as error:
-        log.error("Failed to send contact email: %s", error)
+    except Exception:
+        log.error("Failed to send contact email: %s", traceback.format_exc())
         return {"error": "error_contact_send_failed"}
     return {"success": "success_contact_sent"}

@@ -3,6 +3,7 @@ import datetime
 import hashlib
 import math
 import os
+import traceback
 
 from urllib.parse import urlparse
 
@@ -161,8 +162,8 @@ def return_short_url(original_url, peppers, created_by):
     except advocate.UnacceptableAddressException:
         log.warning(f"Unacceptable address: {original_url}")
         return {"error": "error_forbidden_resource"}
-    except requests.RequestException as err:
-        log.error(f"Failed to connect to {original_url}: {err}")
+    except requests.RequestException:
+        log.error(f"Failed to connect to {original_url}: {traceback.format_exc()}")
         return {"error": "error_filed_to_connect_url"}
 
     peppers_iter = iter(peppers)
@@ -240,8 +241,10 @@ def validate_and_shorten_url(original_url, created_by):
                 "status": "OK",
             }
 
-    except Exception as err:
-        log.error("Could not shorten URL '%s': %s", original_url, err)
+    except Exception:
+        log.error(
+            "Could not shorten URL '%s': %s", original_url, traceback.format_exc()
+        )
         data = {
             "error": "error_url_shorten_failed",
             "original_url": original_url,
