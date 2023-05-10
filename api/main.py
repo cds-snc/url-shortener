@@ -19,12 +19,16 @@ description = """
 API to shorten a url
 """
 
-ALLOWED_DOMAINS = environ.get("ALLOWED_DOMAINS", "").split(",")
+ALLOWED_EMAIL_DOMAINS = environ.get("ALLOWED_EMAIL_DOMAINS", "").split(",")
+ALLOWED_SHORTENED_DOMAINS = environ.get("ALLOWED_SHORTENED_DOMAINS", "").split(",")
 SHORTENER_DOMAIN = environ.get("SHORTENER_DOMAIN", "")
 DOCS_URL = environ.get("DOCS_URL", None)
 
-if len(ALLOWED_DOMAINS) == 0:
-    raise ValueError("ALLOWED_DOMAINS environment variable is empty")
+if len(ALLOWED_EMAIL_DOMAINS) == 0:
+    raise ValueError("ALLOWED_EMAIL_DOMAINS environment variable is empty")
+
+if len(ALLOWED_SHORTENED_DOMAINS) == 0:
+    raise ValueError("ALLOWED_SHORTENED_DOMAINS environment variable is empty")
 
 if len(SHORTENER_DOMAIN.strip()) == 0:
     raise ValueError("SHORTENER_DOMAIN environment variable is empty")
