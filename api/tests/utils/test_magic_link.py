@@ -81,3 +81,17 @@ def test_validate_magic_link_returns_success_if_magic_link_is_valid(mock_get):
     result = magic_link.validate_magic_link("guid", EMAIL)
     assert result == {"success": "success_email_valid"}
     mock_get.assert_called_once_with("guid")
+
+
+def test_get_email_domain_valid():
+    assert magic_link.get_email_domain("gandalf@wizards.com") == "wizards.com"
+    assert magic_link.get_email_domain("frodo@theshire.gc.ca") == "theshire.gc.ca"
+
+
+def test_get_email_domain_invalid():
+    assert magic_link.get_email_domain("shelob@mirkwood@forest") is None
+    assert magic_link.get_email_domain("gollum") is None
+    assert magic_link.get_email_domain(f"{'x' * 65}@fartoolong.com") is None
+    assert magic_link.get_email_domain(f"stilltoolong@{'x' * 256}") is None
+    assert magic_link.get_email_domain(None) is None
+    assert magic_link.get_email_domain("") is None
