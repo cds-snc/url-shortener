@@ -1,7 +1,6 @@
 import os
 import re
 
-from email.utils import parseaddr
 from typing import Annotated, Optional
 from fastapi import (
     APIRouter,
@@ -37,6 +36,7 @@ from utils.i18n import (
 )
 from utils.magic_link import (
     create_magic_link,
+    get_email_domain,
     is_allowed_email_domain,
     validate_magic_link,
 )
@@ -134,15 +134,14 @@ def login_post(
     """
     # Check if the email address looks valid
     allowed_domains = os.getenv("ALLOWED_EMAIL_DOMAINS").split(",")
-    email_parsed = parseaddr(email)
-    domain = email.split("@").pop() if "@" in email_parsed[1] else None
+    email_domain = get_email_domain(email)
     is_valid_token = validate_token(login_token, LOGIN_TOKEN_SALT)
 
     # Failed form submission spam checks (bad JWT or honeypot field filled in)
     if not is_valid_token or cache:
         result = {"error": "error_login_failed"}
     # Email is not a safelisted domain
-    elif not is_allowed_email_domain(allowed_domains, domain):
+    elif not is_allowed_email_domain(allowed_domains, email_domain):
         result = {"error": "error_invalid_email_address"}
     # All is good, send the magic link
     else:
