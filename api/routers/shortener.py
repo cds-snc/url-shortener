@@ -133,7 +133,7 @@ def login_post(
     Attempts to generate and send a magic login link to the given email address.
     """
     # Check if the email address looks valid
-    allowed_domains = os.getenv("ALLOWED_DOMAINS").split(",")
+    allowed_domains = os.getenv("ALLOWED_EMAIL_DOMAINS").split(",")
     email_parsed = parseaddr(email)
     domain = email.split("@").pop() if "@" in email_parsed[1] else None
     is_valid_token = validate_token(login_token, LOGIN_TOKEN_SALT)

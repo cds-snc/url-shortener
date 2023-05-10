@@ -53,7 +53,8 @@ jobs:
           nohup make e2e-dev &
           make e2e-ci
         env:
-          ALLOWED_DOMAINS: "canada.ca,gc.ca"
+          ALLOWED_EMAIL_DOMAINS: "canada.ca,gc.ca"
+          ALLOWED_SHORTENED_DOMAINS: "canada.ca,gc.ca"
           AUTH_TOKEN_APP: "auth_token_app"
           AUTH_TOKEN_NOTIFY: "auth_token_notify"
           AWS_ACCESS_KEY_ID: "AWS_ACCESS_KEY_ID"

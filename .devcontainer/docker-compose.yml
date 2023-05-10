@@ -18,7 +18,8 @@ services:
         VARIANT: "3.11"
         NODE_VERSION: "none"
     environment:
-      ALLOWED_DOMAINS: 'canada.ca,gc.ca,cds-snc.ca'
+      ALLOWED_EMAIL_DOMAINS: 'canada.ca,gc.ca,cds-snc.ca'
+      ALLOWED_SHORTENED_DOMAINS: 'canada.ca,gc.ca'
       AUTH_TOKEN_APP: 'auth_token_app'
       AUTH_TOKEN_NOTIFY: 'auth_token_notify'
       AWS_ACCESS_KEY_ID: 'AWS_ACCESS_KEY_ID'

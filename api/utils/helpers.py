@@ -110,7 +110,7 @@ def is_domain_allowed(original_url):
     try:
         # Obtain the domain from the url
         domain = ".".join(urlparse(original_url).hostname.split(".")[-2:])
-        return domain in os.getenv("ALLOWED_DOMAINS").split(",")
+        return domain in os.getenv("ALLOWED_SHORTENED_DOMAINS").split(",")
     except Exception:
         return {"error": "error retrieving domain"}
 

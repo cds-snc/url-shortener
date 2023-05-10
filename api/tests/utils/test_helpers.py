@@ -164,7 +164,7 @@ def test_is_valid_url_returns_false_if_throws_an_exception(mock_validators):
 
 
 @patch("utils.helpers.ShortUrls")
-@patch.dict(os.environ, {"ALLOWED_DOMAINS": "foo_bar.com"}, clear=True)
+@patch.dict(os.environ, {"ALLOWED_SHORTENED_DOMAINS": "foo_bar.com"}, clear=True)
 def test_resolve_short_url_returns_original_url(mock_short_urls_model):
     short_url = "XjbS35ah"
     mock_short_urls_model.get_short_url.return_value = {
@@ -185,7 +185,7 @@ def test_resolve_short_url_returns_false_if_it_does_not_exist(mock_short_urls_mo
 
 
 @patch("utils.helpers.ShortUrls")
-@patch.dict(os.environ, {"ALLOWED_DOMAINS": "bam_baz.com"}, clear=True)
+@patch.dict(os.environ, {"ALLOWED_SHORTENED_DOMAINS": "bam_baz.com"}, clear=True)
 def test_resolve_short_url_returns_false_if_it_is_not_allowed(mock_short_urls_model):
     short_url = "XjbS35ah"
     mock_short_urls_model.get_short_url.return_value = {
