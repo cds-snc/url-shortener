@@ -25,6 +25,7 @@ def set_cookie(response, session_data):
             key=COOKIE_NAME,
             value=session_id,
             httponly=True,
+            secure=True,
             max_age=60 * 60 * 2,  # 2 hours
             expires=60 * 60 * 2,  # 2 hours
             samesite="lax",
