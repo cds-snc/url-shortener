@@ -350,7 +350,7 @@ resource "aws_wafv2_regex_pattern_set" "valid_uri_paths" {
 
   # ops
   regular_expression {
-    regex_string = "^/(version|healthcheck|openapi.json|.well-known/security.txt)$"
+    regex_string = "^/(version|openapi.json|.well-known/security.txt)$"
   }
 
   # api call to shorten url

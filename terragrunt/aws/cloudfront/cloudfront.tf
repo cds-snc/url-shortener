@@ -36,9 +36,9 @@ resource "aws_cloudfront_distribution" "url_shortener_api" {
     origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac" # AllViewerExceptHostHeader https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html
   }
 
-  # Prevent caching of healthcheck calls
+  # Prevent caching of version calls
   ordered_cache_behavior {
-    path_pattern    = "/healthcheck"
+    path_pattern    = "/version"
     allowed_methods = ["GET", "HEAD"]
     cached_methods  = ["GET", "HEAD"]
 

@@ -57,6 +57,6 @@ jobs:
       - name: API healthcheck
         uses: jtalk/url-health-check-action@61a0e49fff5cde3773b0bbe069d4ebbd04d24f07 # tag=v2
         with:
-          url: https://o.alpha.canada.ca/healthcheck
+          url: https://o.alpha.canada.ca/version
           max-attempts: 3
           retry-delay: 5s
