@@ -202,6 +202,16 @@ def test_resolve_short_url_returns_fixture_if_cypress_env_var_is_set():
     assert result == {"original_url": {"S": "https://digital.canada.ca/"}}
 
 
+def test_validate_and_shorten_url_returns_error_if_url_too_long():
+    original_url = f"https://example.com/{'x' * 2048}"
+    result = helpers.validate_and_shorten_url(original_url, "actor")
+    assert result == {
+        "error": "error_url_shorten_url_too_long",
+        "original_url": original_url,
+        "status": "ERROR",
+    }
+
+
 def test_validate_and_shorten_url_returns_error_if_invalid_url():
     original_url = "https://example.com"
     helpers.is_valid_url = MagicMock(return_value=False)

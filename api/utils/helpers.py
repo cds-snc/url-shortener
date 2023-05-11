@@ -17,6 +17,7 @@ from logger import log
 from notifications_python_client.notifications import NotificationsAPIClient
 
 
+MAX_URL_LENGTH = 2048
 NOTIFY_API_KEY = os.environ.get("NOTIFY_API_KEY", None)
 
 
@@ -208,6 +209,13 @@ def validate_and_shorten_url(original_url, created_by):
         elif not is_valid_scheme(original_url):
             data = {
                 "error": "error_url_shorten_invalid_scheme",
+                "original_url": original_url,
+                "status": "ERROR",
+            }
+        # Else if URL is too long
+        elif len(original_url) >= MAX_URL_LENGTH:
+            data = {
+                "error": "error_url_shorten_url_too_long",
                 "original_url": original_url,
                 "status": "ERROR",
             }
