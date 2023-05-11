@@ -78,8 +78,6 @@ To aid in automated ops workflows the API shall expose the following 'GET' endpo
 
 * /version - Which shall return the GIT_SHA of the currently deployed code
 
-* /healthcheck - Indicating the health of the service - the details of which are intentionally vague
-
 ## / - POST
 
 ## /v1/shorten - POST

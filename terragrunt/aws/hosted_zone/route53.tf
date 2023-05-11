@@ -11,7 +11,7 @@ resource "aws_route53_health_check" "sre_bot_healthcheck" {
   fqdn              = aws_route53_zone.url_shortener.name
   port              = 443
   type              = "HTTPS"
-  resource_path     = "/healthcheck"
+  resource_path     = "/version"
   failure_threshold = "3"
   request_interval  = "30"
 

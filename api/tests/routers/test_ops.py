@@ -3,8 +3,6 @@ from fastapi.testclient import TestClient
 from unittest.mock import patch
 import main
 
-import routers.ops as ops
-
 client = TestClient(main.app)
 
 
@@ -21,38 +19,3 @@ def test_version_with_GIT_SHA():
     response = client.get("/version")
     assert response.status_code == 200
     assert response.json() == {"version": "foo"}
-
-
-# Test that the healthcheck endpoint returns ERROR if the dynanoDB is down
-@patch("routers.ops.is_db_up")
-def test_healthcheck_failure(db_mock):
-    db_mock.return_value = False
-    response = client.get("/healthcheck")
-    assert response.status_code == 200
-    expected_val = {
-        "status": "ERROR",
-        "message": "Not able to connect to the database",
-    }
-    assert response.json() == expected_val
-
-
-# Test that the healthcheck endpoint returns OK if the dynanoDB is up
-@patch("routers.ops.is_db_up")
-def test_healthcheck_success(db_mock):
-    db_mock.return_value = True
-    response = client.get("/healthcheck")
-    assert response.status_code == 200
-    expected_val = {"status": "OK", "message": "Able to connect to the database"}
-    assert response.json() == expected_val
-
-
-@patch("routers.ops.boto3")
-def test_is_db_up_returns_true_if_can_connect(mock_boto3):
-    mock_boto3.client.return_value.describe_table.return_value = {}
-    assert ops.is_db_up() is True
-
-
-@patch("routers.ops.boto3")
-def test_is_db_up_returns_false_if_cannot_connect(mock_boto3):
-    mock_boto3.client.side_effect = Exception("foo")
-    assert ops.is_db_up() is False
