@@ -1,7 +1,7 @@
 import os
 import traceback
 from email.utils import parseaddr
-from models.MagicLinks import create, delete, get, check_if_exists
+from models.MagicLinks import create, get, check_if_exists
 from logger import log
 
 from utils.helpers import notification_client
@@ -74,7 +74,6 @@ def is_allowed_email_domain(domain_list, domain):
 def validate_magic_link(guid, email):
     link_email = get(guid)
     if email == link_email:
-        delete(guid)
         result = {"success": "success_email_valid"}
     else:
         log.warning("SUSPICIOUS: attempted login with invalid magic link")
