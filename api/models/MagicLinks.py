@@ -49,7 +49,8 @@ def get(guid):
     response = client.get_item(
         TableName=table,
         Key={"key_id": {"S": f"{MODEL_PREFIX}/{guid}"}},
-        ProjectionExpression="email",
+        ExpressionAttributeNames={"#ttl": "ttl"},
+        ProjectionExpression="email,#ttl",
     )
     if response["ResponseMetadata"]["HTTPStatusCode"] == 200 and "Item" in response:
         if (

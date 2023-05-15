@@ -61,7 +61,7 @@ def test_get_returns_none_if_get_item_succeeds_but_ttl_has_passed(
         },
     }
     assert MagicLinks.get("guid") is None
-    mock_delete.assert_called_once()
+    mock_delete.assert_called_with("guid")
 
 
 @patch("models.MagicLinks.client.query")
