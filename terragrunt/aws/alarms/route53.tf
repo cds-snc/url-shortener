@@ -1,5 +1,4 @@
 resource "aws_route53_health_check" "url_shortener" {
-  name              = "UrlShortenerAPI"
   fqdn              = var.domain
   port              = 443
   type              = "HTTPS"
@@ -8,6 +7,7 @@ resource "aws_route53_health_check" "url_shortener" {
   request_interval  = "30"
 
   tags = {
+    "Name"       = "url-shortener-api"
     "CostCentre" = var.billing_code
   }
 }
