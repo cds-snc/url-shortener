@@ -142,7 +142,7 @@ def resolve_short_url(short_url):
         return {"original_url": {"S": "https://digital.canada.ca/"}}
     result = ShortUrls.get_short_url(short_url)
     if result is None:
-        log.warning(f"Could not resolve url: {short_url}")
+        log.info(f"UNRESOLVABLE: Could not resolve url: {short_url}")
         return False
     elif not is_domain_allowed(result["original_url"]["S"]):
         log.warning(
