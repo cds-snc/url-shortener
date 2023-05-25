@@ -68,7 +68,7 @@ else
             echo "Failed to retrieve secrets"
             exit 1
         fi
-
+    fi
     load_non_existing_envs
 
    echo "Starting lambda handler"
