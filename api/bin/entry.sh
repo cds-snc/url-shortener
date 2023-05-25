@@ -42,7 +42,7 @@ if [ -z "${AWS_LAMBDA_RUNTIME_API}" ]; then
 
 # Running in AWS Lambda
 else
-    echo "Retrieving environment parameters"
+    echo "INFO Retrieving environment parameters"
     if [ ! -f "$ENV_PATH/.env" ]; then
         if [ ! -d "$ENV_PATH" ]; then
             mkdir "$ENV_PATH"
@@ -66,12 +66,12 @@ else
 
     # Check if secrets were retrieved
     if [ ! -s "$TMP_ENV_FILE" ]; then
-        echo "Failed to retrieve secrets"
+        echo "WARNING Failed to retrieve secrets during init"
         rm "$TMP_ENV_FILE"
         exit 1
     fi
     load_non_existing_envs
     
-    echo "Starting lambda handler"
+    echo "INFO Starting lambda handler"
     exec /usr/local/bin/python -m awslambdaric "$1"
 fi
