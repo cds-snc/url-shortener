@@ -48,55 +48,27 @@ else
             mkdir "$ENV_PATH"
         fi
 
+        # Load secrets
         aws ssm get-parameters \
-            --region ca-central-1 \
-            --with-decryption \
-            --names auth_token_app \
-            --query 'Parameters[*].Value' \
-            --output text > "$TMP_ENV_FILE"
+          --region ca-central-1 \
+          --with-decryption \
+          --names \
+              auth_token_app \
+              auth_token_notify \
+              cloudfront_header \
+              hashing_peppers \
+              login_token_salt \
+              notify_api_key \
+              notify_contact_email \
+          --query 'Parameters[*].Value' \
+          --output text | sed 's/\t\t*/\n/g' > "$TMP_ENV_FILE"
 
-        aws ssm get-parameters \
-            --region ca-central-1 \
-            --with-decryption \
-            --names auth_token_notify \
-            --query 'Parameters[*].Value' \
-            --output text >> "$TMP_ENV_FILE"
+        # Check if secrets were retrieved
+        if [ ! -s "$TMP_ENV_FILE" ]; then
+            echo "Failed to retrieve secrets"
+            exit 1
+        fi
 
-        aws ssm get-parameters \
-            --region ca-central-1 \
-            --with-decryption \
-            --names cloudfront_header \
-            --query 'Parameters[*].Value' \
-            --output text >> "$TMP_ENV_FILE"            
-
-        aws ssm get-parameters \
-            --region ca-central-1 \
-            --with-decryption \
-            --names hashing_peppers \
-            --query 'Parameters[*].Value' \
-            --output text >> "$TMP_ENV_FILE"
-
-        aws ssm get-parameters \
-            --region ca-central-1 \
-            --with-decryption \
-            --names login_token_salt \
-            --query 'Parameters[*].Value' \
-            --output text >> "$TMP_ENV_FILE"            
-
-        aws ssm get-parameters \
-            --region ca-central-1 \
-            --with-decryption \
-            --names notify_api_key \
-            --query 'Parameters[*].Value' \
-            --output text >> "$TMP_ENV_FILE"
-
-        aws ssm get-parameters \
-            --region ca-central-1 \
-            --with-decryption \
-            --names notify_contact_email \
-            --query 'Parameters[*].Value' \
-            --output text >> "$TMP_ENV_FILE"            
-    fi
     load_non_existing_envs
 
    echo "Starting lambda handler"
