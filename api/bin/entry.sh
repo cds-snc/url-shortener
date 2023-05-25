@@ -62,15 +62,15 @@ else
               notify_contact_email \
           --query 'Parameters[*].Value' \
           --output text | sed 's/\t\t*/\n/g' > "$TMP_ENV_FILE"
+    fi
 
-        # Check if secrets were retrieved
-        if [ ! -s "$TMP_ENV_FILE" ]; then
-            echo "Failed to retrieve secrets"
-            exit 1
-        fi
+    # Check if secrets were retrieved
+    if [ ! -s "$TMP_ENV_FILE" ]; then
+        echo "Failed to retrieve secrets"
+        exit 1
     fi
     load_non_existing_envs
-
-   echo "Starting lambda handler"
-   exec /usr/local/bin/python -m awslambdaric "$1"
+    
+    echo "Starting lambda handler"
+    exec /usr/local/bin/python -m awslambdaric "$1"
 fi
