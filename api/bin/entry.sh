@@ -67,6 +67,7 @@ else
     # Check if secrets were retrieved
     if [ ! -s "$TMP_ENV_FILE" ]; then
         echo "Failed to retrieve secrets"
+        rm "$TMP_ENV_FILE"
         exit 1
     fi
     load_non_existing_envs
