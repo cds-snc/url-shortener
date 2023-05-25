@@ -11,23 +11,11 @@ resource "aws_route53_record" "url_shortener_A" {
 }
 
 #
-# Route53 DNS logging and query firewall
+# Route53 DNS logging
 #
 module "resolver_dns" {
-  source           = "github.com/cds-snc/terraform-modules?ref=v5.0.2//resolver_dns"
-  vpc_id           = var.vpc_id
-  firewall_enabled = true
-
-  allowed_domains = [
-    "*.akamaiedge.net.",
-    "*.amazonaws.com.",
-    "*.edgekey.net.",
-    "*.gc.ca.",
-    "*.gg.ca.",
-    "*.canada.ca.",
-    "canada.ca.",
-    "gg.ca.",
-  ]
-
+  source            = "github.com/cds-snc/terraform-modules?ref=v5.0.2//resolver_dns"
+  vpc_id            = var.vpc_id
+  firewall_enabled  = false
   billing_tag_value = var.billing_code
 }
