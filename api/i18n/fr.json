@@ -20,7 +20,7 @@
     "error_url_shorten_invalid": "Impossible de raccourcir l'URL.",
     "error_url_shorten_invalid_host": "L'URL n'est pas reconnu comme un domaine officiel du gouvernement du Canada.",
     "error_url_shorten_invalid_scheme": "Impossible de raccourcir l'URL. Schéma non valide ; seul https est autorisé.",
-    "error_url_shorten_url_too_long": "L'URL est trop long.",
+    "error_url_shorten_url_too_long": "L'URL est trop longue.",
     "error_url_shorten_url_not_valid": "L'URL n'est pas valide.",
     "gc_link_shortener": "Raccourcisseur d'URLs GC",
     "how_can_we_help" : "Quel est votre besoin ?",
