@@ -1,10 +1,10 @@
 # DB choice and design
 
-Date: 2023-04-13
+Date: `2023-04-13`
 
 ## Status
 
-**DRAFT**.
+`APPROVED`
 
 ## Context
 

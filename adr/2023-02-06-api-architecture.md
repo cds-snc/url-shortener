@@ -1,10 +1,10 @@
 # API Decisions
 
-Date: 2023-02-06
+Date: `2023-02-06`
 
 ## Status
 
-**DRAFT**.
+`APPROVED`
 
 ## Framework Context
 

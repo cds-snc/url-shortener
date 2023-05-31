@@ -4,7 +4,7 @@ Date: `2023-01-31`
 
 ## Status
 
-`DRAFT`
+`APPROVED`
 
 ## Context
 
