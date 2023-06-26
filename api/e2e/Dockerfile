@@ -1,4 +1,4 @@
-FROM cypress/included:12.14.0@sha256:583f7423be297b5695846098292d21d015db163fc62c947ebecc186073683237 
+FROM cypress/included:12.15.0@sha256:074f3db5a81bfd0da47749a6bac4ae6e82aa4acf65cc89069ee28d8a7bcdb6b0 
 
 # install dependencies
 ENV NODE_PATH=/usr/local/lib/node_modules
