@@ -1,5 +1,5 @@
 module "conformance_pack" {
-  source = "github.com/cds-snc/terraform-modules?ref=v5.1.8//cds_conformance_pack"
+  source = "github.com/cds-snc/terraform-modules//cds_conformance_pack?ref=v6.1.1"
 
   cloudwatch_alarm_action_check_param_insufficient_data_action_required = false
   internet_gateway_authorized_vpc_only_param_authorized_vpc_ids         = var.vpc_id
