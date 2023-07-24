@@ -5,7 +5,7 @@ locals {
 }
 
 module "sentinel_forwarder" {
-  source            = "github.com/cds-snc/terraform-modules//sentinel_forwarder?ref=v6.1.1"
+  source            = "github.com/cds-snc/terraform-modules//sentinel_forwarder?ref=v6.1.5"
   function_name     = "sentinel-cloudwatch-forwarder"
   billing_tag_value = var.billing_code
 
