@@ -3,7 +3,7 @@
 #
 
 module "url_shortener_vpc" {
-  source            = "github.com/cds-snc/terraform-modules//vpc?ref=v6.1.1"
+  source            = "github.com/cds-snc/terraform-modules//vpc?ref=v6.1.5"
   name              = var.product_name
   billing_tag_value = var.billing_code
   high_availability = true
