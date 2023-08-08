@@ -1,12 +1,12 @@
 advocate==1.0.0
-boto3==1.28.9
-fastapi==0.100.0
+boto3==1.28.16
+fastapi==0.100.1
 Jinja2==3.1.2
 logger==1.4
 logzero==1.7.0
 mangum==0.17.0
 notifications-python-client==8.0.1
-pydantic==1.10.11
+pydantic==1.10.12
 python-multipart==0.0.6
 requests==2.31.0
 validators==0.20.0
