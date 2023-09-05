@@ -1,5 +1,5 @@
 advocate==1.0.0
-boto3==1.28.30
+boto3==1.28.36
 fastapi==0.101.1
 Jinja2==3.1.2
 logger==1.4
